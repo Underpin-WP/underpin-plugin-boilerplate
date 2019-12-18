@@ -5,7 +5,7 @@
  * @date  : 2019-07-29
  */
 
-namespace PLUGIN_NAME_REPLACE_ME\Abstracts;
+namespace Plugin_Name_Replace_Me\Abstracts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

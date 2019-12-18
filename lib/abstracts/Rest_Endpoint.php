@@ -6,7 +6,7 @@
  */
 
 
-namespace PLUGIN_NAME_REPLACE_ME\Abstracts;
+namespace Plugin_Name_Replace_Me\Abstracts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

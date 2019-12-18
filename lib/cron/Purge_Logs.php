@@ -7,10 +7,10 @@
  */
 
 
-namespace PLUGIN_NAME_REPLACE_ME\Cron;
+namespace Plugin_Name_Replace_Me\Cron;
 
 
-use PLUGIN_NAME_REPLACE_ME\Abstracts\Cron_Task;
+use Plugin_Name_Replace_Me\Abstracts\Cron_Task;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,6 +27,5 @@ class Purge_Logs extends Cron_Task {
 	 */
 	function cron_action() {
 		plugin_name_replace_me()->logger()->purge_old_logs( 30 );
-
 	}
 }

@@ -8,7 +8,7 @@
  * @author: Alex Standiford
  */
 
-namespace PLUGIN_NAME_REPLACE_ME\Traits;
+namespace Plugin_Name_Replace_Me\Traits;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Trait Templates
- * @since   1.0.0
+ * @since 1.0.0
  * @package plugin_name_replace_me\traits
  */
 trait Templates {
@@ -104,12 +104,28 @@ trait Templates {
 				$template = $this->include_template( $template_name, $params );
 			} else {
 				$template_path = $this->get_template_path( $template_name );
-				$template      = plugin_name_replace_me()->logger()->error( 'plugin_name_replace_me_template_does_not_exist', "Template $template_name was not loaded because the file located at $template_path does not exist." );
+				$template      = plugin_name_replace_me()->logger()->log(
+					'plugin_name_replace_me_error',
+					'template_file_does_not_exist',
+					__( "Template $template_name was not loaded because the file located at $template_path does not exist." )
+				);
+
+				/**
+				 * Fires just after the template loader determines that the template file does not exist.
+				 */
 				do_action( 'plugin_name_replace_me/templates/invalid_template_file_doesnt_exist', $template_name, $params, $template_path, $template );
 			}
 		} else {
 			$class    = __CLASS__;
-			$template = plugin_name_replace_me()->logger()->error( 'plugin_name_replace_me_invalid_template', "Template $template_name was not loaded because it is not in the list of use-able templates for $class" );
+			$template = plugin_name_replace_me()->logger()->log(
+				'plugin_name_replace_me_error',
+				'plugin_name_replace_me_invalid_template',
+				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class" )
+			);
+
+			/**
+			 * Fires just after the template loader determines that the template is not in the current class template schema.
+			 */
 			do_action( 'plugin_name_replace_me/templates/invalid_template_not_in_schema', $template_name, $params, $template );
 		}
 
@@ -273,10 +289,18 @@ trait Templates {
 
 				$result = isset( $templates[ $arg ] ) ? $templates[ $arg ] : $this->get_template_arg_defaults()[ $arg ];
 			} else {
-				$result = plugin_name_replace_me()->logger()->error('plugin_name_replace_me_get_arg_invalid_template', "Template $template_name argument $arg was not fetched because $template_name is not a valid template." );
+				$result = plugin_name_replace_me()->logger()->log(
+					'plugin_name_replace_me_error',
+					'plugin_name_replace_me_get_arg_invalid_template',
+					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." )
+				);
 			}
 		} else {
-			$result = plugin_name_replace_me()->logger()->error('plugin_name_replace_me_get_arg_invalid_argument', "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." );
+			$result = plugin_name_replace_me()->logger()->log(
+				'plugin_name_replace_me_error',
+				'plugin_name_replace_me_get_arg_invalid_argument',
+				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." )
+			);
 		}
 
 		return $result;
@@ -327,12 +351,20 @@ trait Templates {
 		}
 
 		if ( 'private' !== $this->get_template_visibility( $template_name ) ) {
+			/**
+			 * Fires just before the template output buffer begins.
+			 */
 			do_action( 'plugin_name_replace_me/templates/before_template_buffer', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 
 		ob_start();
 
 		if ( 'private' !== $this->get_template_visibility( $template_name ) ) {
+			/**
+			 * Fires inside of the output buffer, just before the template is rendered.
+			 *
+			 * Note that this only fires when the provided template is not private.
+			 */
 			do_action( 'plugin_name_replace_me/templates/before_template', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 
@@ -341,12 +373,24 @@ trait Templates {
 		] );
 
 		if ( 'private' !== $this->get_template_visibility( $template_name ) ) {
+
+			/**
+			 * Fires inside of the output buffer, just after the template is rendered.
+			 *
+			 * Note that this only fires when the provided template is not private.
+			 */
 			do_action( 'plugin_name_replace_me/templates/after_template', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 
 		$result = ob_get_clean();
 
 		if ( 'private' !== $this->get_template_visibility( $template_name ) ) {
+
+			/**
+			 * Fires outside of the output buffer, just after the template is rendered.
+			 *
+			 * Note that this only fires when the provided template is not private.
+			 */
 			do_action( 'plugin_name_replace_me/templates/after_template_buffer', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 

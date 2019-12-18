@@ -7,8 +7,12 @@ Boilerplates change all the time, but this is what I'm using right now. Supports
 Do two find/replaces.
 
 1. Clone this repo, and delete the `.git` directory. Since this is a boilerplate, it's not intended to be updated by the source once cloned.
-1. Replace `PLUGIN_NAME_REPLACE_ME` with the abbreviation of your plugin, using Upper_Snake_Case format.
+1. Replace `PLUGIN_NAME_REPLACE_ME` with the abbreviation of your plugin, using UPPER_CASE format.
+1. Replace `Plugin_Name_Replace_Me` with the abbreviation of your plugin, using Upper_Snake_Case format.
+1. Replace `plugin-name-replace-me` with the abbreviation of your plugin, using lower-dash-case format.
 1. Replace `plugin_name_replace_me` with the abbreviation of your plugin, using snake_case format.
+1. Replace `plugin name replace me` with the abbreviation of your plugin, using Plugin Name format.
+1. Rename the file name located in `lib/utilities/events/Plugin_Name_Replace_Me_Error.php` to match the file's class name.
 1. Start writing.
 
 ## Registering Things
