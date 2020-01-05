@@ -287,7 +287,7 @@ trait Templates {
 			if ( $this->is_valid_template( $template_name ) ) {
 				$templates = $this->get_templates();
 
-				$result = isset( $templates[ $arg ] ) ? $templates[ $arg ] : $this->get_template_arg_defaults()[ $arg ];
+				$result = isset( $templates[ $template_name ][ $arg ] ) ? $templates[ $template_name ][ $arg ] : $this->get_template_arg_defaults()[ $arg ];
 			} else {
 				$result = plugin_name_replace_me()->logger()->log(
 					'plugin_name_replace_me_error',
