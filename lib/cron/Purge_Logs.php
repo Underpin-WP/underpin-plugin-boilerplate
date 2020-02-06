@@ -1,9 +1,9 @@
 <?php
 /**
- * Cron task to update the sync queue$
+ * Cron task to purge error logs.
  *
- * @author: Alex Standiford
- * @date  : 12/4/19
+ * @since 1.0.0
+ * @package Plugin_Name_Replace_Me\Cron
  */
 
 
@@ -16,8 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class Purge_Logs
+ *
+ * @since 1.0.0
+ * @package Plugin_Name_Replace_Me\Cron
+ */
 class Purge_Logs extends Cron_Task {
 
+	/**
+	 * Purge_Logs constructor.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct( 'plugin_name_replace_me_purge_logs', 'daily' );
 	}
@@ -26,6 +37,6 @@ class Purge_Logs extends Cron_Task {
 	 * @inheritDoc
 	 */
 	function cron_action() {
-		plugin_name_replace_me()->logger()->purge_old_logs( 30 );
+		plugin_name_replace_me()->logger()->purge( 30 );
 	}
 }

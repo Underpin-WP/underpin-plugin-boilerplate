@@ -4,8 +4,7 @@
  * Handles template loading and template inheritance.
  *
  * @since 1.0.0
- *
- * @author: Alex Standiford
+ * @package Plugin_Name_Replace_Me\Traits
  */
 
 namespace Plugin_Name_Replace_Me\Traits;
@@ -16,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Trait Templates
+ *
  * @since 1.0.0
  * @package plugin_name_replace_me\traits
  */
@@ -64,7 +64,7 @@ trait Templates {
 	protected abstract function get_templates();
 
 	/**
-	 * Fetches the template group name.
+	 * Fetches the template group name. This determines the sub-directory for the templates.
 	 *
 	 * @since 1.0.0
 	 *
@@ -81,8 +81,8 @@ trait Templates {
 	 */
 	protected function get_template_arg_defaults() {
 		return [
-				'override_visibility' => 'private',
-				'visible_in_api'      => false,
+			'override_visibility' => 'private',
+			'visible_in_api'      => false,
 		];
 	}
 
@@ -107,7 +107,7 @@ trait Templates {
 				$template      = plugin_name_replace_me()->logger()->log(
 					'plugin_name_replace_me_error',
 					'template_file_does_not_exist',
-					__( "Template $template_name was not loaded because the file located at $template_path does not exist." )
+					__( "Template $template_name was not loaded because the file located at $template_path does not exist." ,'plugin-name-replace-me' )
 				);
 
 				/**
@@ -120,7 +120,7 @@ trait Templates {
 			$template = plugin_name_replace_me()->logger()->log(
 				'plugin_name_replace_me_error',
 				'plugin_name_replace_me_invalid_template',
-				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class" )
+				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class" ,'plugin-name-replace-me' )
 			);
 
 			/**
@@ -165,6 +165,21 @@ trait Templates {
 		}
 
 		return $param;
+	}
+
+	/**
+	 * Retrieves all of the params for the current template.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array List of params for the current template
+	 */
+	public function get_params() {
+		if ( isset( $this->params[ $this->depth ] ) ) {
+			return $this->params[ $this->depth ];
+		}
+
+		return [];
 	}
 
 	/**
@@ -224,14 +239,14 @@ trait Templates {
 	 * @param $template_name string The template name to locate.
 	 * @return string The path to the located template.
 	 */
-	private function locate_template( $template_name ) {
+	protected function locate_template( $template_name ) {
 		$template_visibility = $this->get_template_visibility( $template_name );
 		// Bail early if the template is private.
 		if ( 'private' === $template_visibility ) {
 			return $this->get_template_path( $template_name );
 		}
 
-		$override_dir       = 'plugin_name_replace_me-templates/';
+		$override_dir       = 'plugin-name-replace-me-templates/';
 		$template_group     = trailingslashit( $this->get_template_group() );
 		$override_path      = $override_dir . $template_group;
 		$override_path      = apply_filters( "plugin_name_replace_me/templates/template_directory", $override_path, $template_name, $template_group, $template_visibility );
@@ -287,19 +302,19 @@ trait Templates {
 			if ( $this->is_valid_template( $template_name ) ) {
 				$templates = $this->get_templates();
 
-				$result = isset( $templates[ $template_name ][ $arg ] ) ? $templates[ $template_name ][ $arg ] : $this->get_template_arg_defaults()[ $arg ];
+				$result = isset( $templates[$template_name][ $arg ] ) ? $templates[$template_name][ $arg ] : $this->get_template_arg_defaults()[ $arg ];
 			} else {
 				$result = plugin_name_replace_me()->logger()->log(
 					'plugin_name_replace_me_error',
 					'plugin_name_replace_me_get_arg_invalid_template',
-					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." )
+					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." ,'plugin-name-replace-me' )
 				);
 			}
 		} else {
 			$result = plugin_name_replace_me()->logger()->log(
 				'plugin_name_replace_me_error',
 				'plugin_name_replace_me_get_arg_invalid_argument',
-				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." )
+				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." ,'plugin-name-replace-me' )
 			);
 		}
 
@@ -328,7 +343,7 @@ trait Templates {
 	 * @param $template_name string The template name to check.
 	 * @return bool True if the template file exists, false otherwise.
 	 */
-	private function template_file_exists( $template_name ) {
+	protected function template_file_exists( $template_name ) {
 		return file_exists( $this->get_template_path( $template_name ) );
 	}
 
@@ -368,8 +383,8 @@ trait Templates {
 			do_action( 'plugin_name_replace_me/templates/before_template', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 
-		plugin_name_replace_me_include_file_with_scope( $this->locate_template( $template_name ), [
-				'template' => $this,
+		rvs_include_file_with_scope( $this->locate_template( $template_name ), [
+			'template' => $this,
 		] );
 
 		if ( 'private' !== $this->get_template_visibility( $template_name ) ) {

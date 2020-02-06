@@ -1,8 +1,9 @@
 <?php
 /**
  * Event Logger class
- * @author: Alex Standiford
- * @date  : 12/7/19
+ *
+ * @since 1.0.0
+ * @package Plugin_Name_Replace_Me\Abstracts
  */
 
 
@@ -16,6 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class Logger
+ *
+ * @since 1.0.0
+ * @package Plugin_Name_Replace_Me\Abstracts
+ */
 abstract class Logger {
 
 	/**
@@ -61,6 +68,4 @@ abstract class Logger {
 	public function log_exception( $type, Exception $exception, $ref = null, $data = array() ) {
 		return $this->log( $type, $exception->getCode(), $exception->getMessage(), $ref, $data );
 	}
-
-	public function purge_logs() { }
 }

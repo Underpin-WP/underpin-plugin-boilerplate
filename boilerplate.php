@@ -17,31 +17,81 @@ namespace Plugin_Name_Replace_Me {
 		exit;
 	}
 
+	/**
+	 * Plugin Name Replace Me Base Class
+	 *
+	 * @since 1.0.0
+	 */
 	final class Plugin_Name_Replace_Me {
-		private static $instance = null;
 
-		private function __construct() {
-		}
+		/**
+		 * Base class instance.
+		 *
+		 * @since 1.0.0
+		 * @var Plugin_Name_Replace_Me|null The one true instance of Plugin_Name_Replace_Me
+		 */
+		private static $instance = null;
 
 
 		/**
-		 * Fetches the specified class, and constructs the class if it hasn't been constructed yet.
+		 * Fires up the plugin.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param $class
-		 * @return mixed
+		 * @return self
 		 */
-		private function _get_class( $class ) {
-			$exploded_class = explode( '\\', $class );
-			$variable       = strtolower( array_pop( $exploded_class ) );
+		public static function init() {
+			if ( ! isset( self::$instance ) ) {
+				global $wp_version;
+				$supports_wp_version  = version_compare( $wp_version, '4.7', '>=' );
+				$supports_php_version = version_compare( phpversion(), '5.6', '>=' );
 
-			if ( ! $this->$variable ) {
-				$class           = __NAMESPACE__ . '\\' . $class;
-				$this->$variable = new $class;
+				if ( $supports_wp_version && $supports_php_version ) {
+
+					/**
+					 * Fires just before the Plugin Name Replace Me plugin starts up.
+					 *
+					 * @since 1.0.0
+					 */
+					do_action( 'plugin_name_replace_me/before_setup' );
+
+					self::$instance = new self;
+					self::$instance->_define_constants();
+					require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
+					self::$instance->_setup_autoloader();
+					self::$instance->_register_scripts();
+					self::$instance->_setup_classes();
+
+					/**
+					 * Fires just after the Plugin Name Replace Me is completely set-up.
+					 *
+					 * @since 1.0.0
+					 */
+					do_action( 'plugin_name_replace_me/after_setup' );
+
+					// If this installation is using the DFS Monitor plugin, register the custom events.
+					if ( ! did_action( 'dfsm\after_setup' ) ) {
+						add_action( 'dfsm\after_setup', [ self::$instance, 'setup_events' ] );
+					} else {
+						self::$instance->setup_events();
+					}
+
+					// Handles block editor block rendering.
+					add_filter( 'pre_render_block', [ self::$instance->rv_listings(), 'render_block_action' ], 10, 2 );
+
+				} else {
+					$self           = new self;
+					self::$instance = new \WP_Error(
+						'minimum_version_not_met',
+						__( "The Plugin Name Replace Me plugin requires at least WordPress 4.7, and PHP 5.6.", 'plugin-name-replace-me' ),
+						array( 'current_wp_version' => $wp_version, 'php_version' => phpversion() )
+					);
+
+					add_action( 'admin_notices', array( $self, 'below_version_notice' ) );
+				}
 			}
 
-			return $this->$variable;
+			return self::$instance;
 		}
 
 		/**
@@ -63,60 +113,35 @@ namespace Plugin_Name_Replace_Me {
 		}
 
 		/**
-		 * Fires up the plugin.
+		 * Fetches the specified class, and constructs the class if it hasn't been constructed yet.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @return self
+		 * @param $class
+		 * @return mixed
 		 */
-		public static function init() {
-			if ( ! isset( self::$instance ) ) {
-				global $wp_version;
-				$supports_wp_version  = version_compare( $wp_version, '4.7', '>=' );
-				$supports_php_version = version_compare( phpversion(), '5.6', '>=' );
+		private function _get_class( $class ) {
+			$exploded_class = explode( '\\', $class );
+			$variable       = strtolower( array_pop( $exploded_class ) );
 
-				if ( $supports_wp_version && $supports_php_version ) {
-
-					/**
-					 * Fires just before the plugin name replace me plugin starts up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'plugin_name_replace_me/before_setup' );
-
-					self::$instance = new self;
-					self::$instance->_define_constants();
-					require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
-					require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/actions.php' );
-					self::$instance->_register_scripts();
-					self::$instance->_setup_autoloader();
-					self::$instance->_setup_classes();
-
-					/**
-					 * Fires just after the plugin name replace me is completely set-up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'plugin_name_replace_me/after_setup' );
-
-					// If this installation is using the DFS Monitor plugin, register the custom events.
-					add_action( 'dfsm\after_setup', function() {
-						new Utilities\Events\Plugin_Name_Replace_Me_Error;
-					} );
-
-				} else {
-					$self           = new self;
-					self::$instance = new \WP_Error(
-						'minimum_version_not_met',
-						__( "The plugin name replace me plugin requires at least WordPress 4.7, and PHP 5.6." ),
-						array( 'current_wp_version' => $wp_version, 'php_version' => phpversion() )
-					);
-
-					add_action( 'admin_notices', array( $self, 'below_version_notice' ) );
-				}
+			if ( ! $this->$variable ) {
+				$class           = __NAMESPACE__ . '\\' . $class;
+				$this->$variable = new $class;
 			}
 
-			return self::$instance;
+			return $this->$variable;
+		}
+
+
+		/**
+		 * Registers custom event log types for DFS Monitor Log, if the plugin is active.
+		 *
+		 * @since 1.0.0
+		 */
+		public function setup_events() {
+			if ( class_exists( '\DFS_Monitor\Abstracts\Event_Log_Type' ) ) {
+				new Utilities\Events\Plugin_Name_Replace_Me_Error;
+			}
 		}
 
 		/**
@@ -129,13 +154,13 @@ namespace Plugin_Name_Replace_Me {
 
 			if ( version_compare( $wp_version, '4.7', '<' ) ) {
 				echo '<div class="error">
-							<p>' . __( "plugin name replace me plugin is not activated. The plugin requires at least WordPress 4.7 to function." ) . '</p>
+							<p>' . __( "Plugin Name Replace Me plugin is not activated. The plugin requires at least WordPress 4.7 to function.", 'plugin-name-replace-me' ) . '</p>
 						</div>';
 			}
 
 			if ( version_compare( phpversion(), '5.6', '<' ) ) {
 				echo '<div class="error">
-							<p>' . __( "plugin name replace me plugin is not activated. The plugin requires at least PHP 5.6 to function." ) . '</p>
+							<p>' . __( "Plugin Name Replace Me plugin is not activated. The plugin requires at least PHP 5.6 to function.", 'plugin-name-replace-me' ) . '</p>
 						</div>';
 			}
 		}
@@ -152,12 +177,16 @@ namespace Plugin_Name_Replace_Me {
 			// REST Endpoints
 			// new Rest\...
 
-			// Cron Jobs Go Here
+			// Cron Jobs
 			new Cron\Purge_Logs;
-			// new Cron\...
 
-			// Shortcodes Go Here
-			// new Shortcode\...
+			// Shortcodes
+			// new Shortcodes\...
+
+			// Widgets
+//			add_action( 'widgets_init', function() {
+//				register_widget( 'Plugin_Name_Replace_Me\Widgets\RV_Listing' );
+//			} );
 
 		}
 
@@ -188,20 +217,13 @@ namespace Plugin_Name_Replace_Me {
 				// Root file for this plugin. Used in activation hooks.
 				define( 'PLUGIN_NAME_REPLACE_ME_ROOT_FILE', __FILE__ );
 
-				// The URL to the assets directory. Use when registering scripts and styles.
-				define( 'PLUGIN_NAME_REPLACE_ME_ASSETS_URL', PLUGIN_NAME_REPLACE_ME_URL . 'assets/' );
-
 				// The template directory. Used by the template loader to determine where templates are stored.
 				define( 'PLUGIN_NAME_REPLACE_ME_TEMPLATE_DIR', PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'templates/' );
-
-				// Text domain for translation strings.
-				define( 'PLUGIN_NAME_REPLACE_ME_TEXT_DOMAIN', 'plugin_name_replace_me' );
 
 				// The version of this plugin. Use when registering scripts and styles to bust cache.
 				define( 'PLUGIN_NAME_REPLACE_ME_VERSION', '1.0.0' );
 			}
 		}
-
 
 		/**
 		 * Registers the autoloader.
@@ -215,7 +237,7 @@ namespace Plugin_Name_Replace_Me {
 				spl_autoload_register( function( $class ) {
 					$class = explode( '\\', $class );
 
-					if ( __NAMESPACE__ === $class[ 0 ] ) {
+					if ( __NAMESPACE__ === $class[0] ) {
 						array_shift( $class );
 					}
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Catch-all for site actions, hooks, and filters
+ * Helper Functions, and public-facing functions for third parties.
  *
- * @author: Alex Standiford
- * @date  : 11/7/17
+ * @since   1.0.0
+ * @package Plugin_Name_Replace_Me
  */
 
 namespace Plugin_Name_Replace_Me\core;
