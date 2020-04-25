@@ -1,129 +1,75 @@
 /**
- * Webpack Config.
- *
- * This configuration is a fork of the config that comes with the block editor scripts.
+ * WordPress dependencies
  */
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config.js' );
 
 /**
  * External dependencies
  */
-const { BundleAnalyzerPlugin } = require( 'webpack-bundle-analyzer' );
-const LiveReloadPlugin = require( 'webpack-livereload-plugin' );
-const path = require( 'path' );
+const webpack = require( 'webpack' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const globImporter = require( 'node-sass-glob-importer' );
+const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+const OptimizeCssAssetsPlugin = require( 'optimize-css-assets-webpack-plugin' );
 
-/**
- * WordPress dependencies
- */
-const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-
-/**
- * Internal dependencies
- */
-const { hasBabelConfig } = require( './node_modules/@wordpress/scripts/utils' );
-
-const isProduction = process.env.NODE_ENV === 'production';
-const mode = isProduction ? 'production' : 'development';
-
-const config = {
-	mode,
-	entry: {
-		// index: path.resolve( process.cwd(), 'src', 'index.js' ),
-		// admin: path.resolve(process.cwd(), 'src', 'admin/admin.js'),
-		// blocks: path.resolve( process.cwd(), 'src', 'blocks.js' ),
-	},
-	output: {
-		filename: '[name].js',
-		path: path.resolve( process.cwd(), 'build' ),
+module.exports = {
+	...defaultConfig,
+	devtool: 'source-map',
+	// Override externals so dependencies can be packaged with the assets
+	// because the minimum WordPress version is still 4.9.
+	externals: {
+		jquery: 'jQuery',
+		$: 'jQuery',
 	},
 	resolve: {
-		alias: {
-			'lodash-es': 'lodash',
-		},
+		...defaultConfig.resolve,
+		modules: [
+			`${__dirname}/assets/js/src`,
+			'node_modules',
+		],
 	},
+
+	/**
+	 * Add your entry points for CSS and JS here.
+	 */
+	entry: {},
 	module: {
 		rules: [
-
+			...defaultConfig.module.rules,
 			{
-				test: /admin\/.*.js$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
-				query: {
-					"presets": ["@babel/preset-react"]
-				}
-			},
-
-			// Compile all Block Editor blocks using the build configuration that comes with WordPress
-			{
-				test: /.(js|jsx)$/,
-				exclude: /node_modules/,
+				test: /\.css$/,
 				use: [
-					require.resolve( 'thread-loader' ),
+					MiniCssExtractPlugin.loader,
 					{
-						loader: require.resolve( 'babel-loader' ),
+						loader: 'css-loader',
 						options: {
-							// Babel uses a directory within local node_modules
-							// by default. Use the environment variable option
-							// to enable more persistent caching.
-							cacheDirectory: process.env.BABEL_CACHE_DIRECTORY || true,
-
-							// Provide a fallback configuration if there's not
-							// one explicitly available in the project.
-							...( !hasBabelConfig() && {
-								babelrc: false,
-								configFile: false,
-								presets: [require.resolve( '@wordpress/babel-preset-default' )],
-							} ),
+							importLoaders: 1,
 						},
 					},
-				],
-			},
-
-			{
-				test: /\.s[ac]ss$|\.css$/i,
-				use: [
 					{
-						loader: MiniCssExtractPlugin.loader,
+						loader: 'postcss-loader',
 						options: {
-							hmr: process.env.NODE_ENV === 'development',
+							plugins: () => [
+								require( 'autoprefixer' ),
+							],
 						},
 					},
-					// Translates CSS into CommonJS
-					'css-loader',
-					// Compiles Sass to CSS
-					{
-						loader: 'sass-loader',
-						options: {
-							importer: globImporter()
-						}
-					}
 				],
 			},
 		],
 	},
-	plugins: [
-		// process.env.WP_BUNDLE_ANALYZER && new BundleAnalyzerPlugin(),
-		// !isProduction && new LiveReloadPlugin( { port: process.env.WP_LIVE_RELOAD_PORT || 35729 } ),
-		// new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
-		new MiniCssExtractPlugin( {
-			filename: '[name].css',
-		} ),
-	].filter( Boolean ),
-	stats: {
-		children: false,
+	output: {
+		filename: 'assets/js/build/[name].min.js',
+		path: __dirname,
 	},
+	plugins: [
+		new FixStyleOnlyEntriesPlugin(),
+		new OptimizeCssAssetsPlugin(),
+		new webpack.ProvidePlugin( {
+			Promise: 'es6-promise-promise',
+			$: 'jquery',
+		} ),
+		new MiniCssExtractPlugin( {
+			filename: 'assets/css/build/[name].min.css',
+		} ),
+	],
 };
-
-if( !isProduction ){
-	// WP_DEVTOOL global variable controls how source maps are generated.
-	// See: https://webpack.js.org/configuration/devtool/#devtool.
-	config.devtool = process.env.WP_DEVTOOL || 'source-map';
-	config.module.rules.unshift( {
-		test: /\.js$/,
-		use: require.resolve( 'source-map-loader' ),
-		enforce: 'pre',
-	} );
-}
-
-module.exports = config;

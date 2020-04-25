@@ -179,7 +179,7 @@ class Basic_Logger extends Logger {
 				$file = $this->file( $error_type );
 				if ( ! is_wp_error( $file ) ) {
 					$error_file = implode( "\n\n", $errors );
-					file_put_contents( $file, "\n\n" . $error_file, FILE_APPEND );
+					@file_put_contents( $file, "\n\n" . $error_file, FILE_APPEND );
 				}
 			}
 		}

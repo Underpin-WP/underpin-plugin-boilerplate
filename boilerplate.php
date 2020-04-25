@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name:
-Description:
+Plugin Name: Plugin Name Replace Me
+Description: Plugin Description Replace Me
 Version: 1.0.0
-Author:
+Author: DesignFrame Solutions
 Text Domain: plugin_name_replace_me
 Domain Path: /languages
 Requires at least: 4.7
@@ -12,6 +12,8 @@ Author URI:
 */
 
 namespace Plugin_Name_Replace_Me {
+
+	use Plugin_Name_Replace_Me\Registries\Loaders;
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
@@ -23,6 +25,15 @@ namespace Plugin_Name_Replace_Me {
 	 * @since 1.0.0
 	 */
 	final class Plugin_Name_Replace_Me {
+
+		/**
+		 * Houses all of the singleton classes used in this plugin.
+		 * Not intended to be manipulated directly.
+		 *
+		 * @since 1.0.0
+		 * @var array Array of class instance.
+		 */
+		private $class_registry = [];
 
 		/**
 		 * Base class instance.
@@ -59,7 +70,6 @@ namespace Plugin_Name_Replace_Me {
 					self::$instance->_define_constants();
 					require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
 					self::$instance->_setup_autoloader();
-					self::$instance->_register_scripts();
 					self::$instance->_setup_classes();
 
 					/**
@@ -75,9 +85,6 @@ namespace Plugin_Name_Replace_Me {
 					} else {
 						self::$instance->setup_events();
 					}
-
-					// Handles block editor block rendering.
-					add_filter( 'pre_render_block', [ self::$instance->rv_listings(), 'render_block_action' ], 10, 2 );
 
 				} else {
 					$self           = new self;
@@ -104,12 +111,62 @@ namespace Plugin_Name_Replace_Me {
 		public function logger() {
 			// If the DFS monitor plugin is active, use the dfsm logger
 			if ( function_exists( 'dfsm' ) ) {
-				return $this->_get_class( 'Utilities\\Enhanced_Logger' );
+				return $this->_get_class( 'Plugin_Name_Replace_Me\\Utilities\\Enhanced_Logger' );
 
 				// Otherwise use the built-in logger.
 			} else {
-				return $this->_get_class( 'Utilities\\Basic_Logger' );
+				return $this->_get_class( 'Plugin_Name_Replace_Me\\Utilities\\Basic_Logger' );
 			}
+		}
+
+		/**
+		 * Retrieves the scripts loader.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return \Plugin_Name_Replace_Me\Registries\Loaders\Scripts
+		 */
+		public function scripts() {
+			return $this->_get_class( '\Plugin_Name_Replace_Me\Registries\Loaders\Scripts' );
+		}
+
+		/**
+		 * Retrieves the Styles loader.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return \Plugin_Name_Replace_Me\Registries\Loaders\Styles
+		 */
+		public function styles() {
+			return $this->_get_class( '\Plugin_Name_Replace_Me\Registries\Loaders\Styles' );
+		}
+
+		/**
+		 * Set up classes that cannot be otherwise loaded via the autoloader.
+		 *
+		 * This is where you can add anything that needs "registered" to WordPress,
+		 * such as shortcodes, rest endpoints, blocks, and cron jobs.
+		 *
+		 * @since 1.0.0
+		 */
+		private function _setup_classes() {
+			// Cron Job Registry
+			new Loaders\Cron_Jobs;
+
+			// Scripts
+			$this->scripts();
+
+			// Styles
+			$this->styles();
+
+			// REST Endpoints
+			//new Loaders\Rest_Endpoints;
+
+			// Shortcodes
+			// new Loaders\Shortcodes;
+
+			// Widgets
+			// new Loaders\Widgets;
 		}
 
 		/**
@@ -121,15 +178,11 @@ namespace Plugin_Name_Replace_Me {
 		 * @return mixed
 		 */
 		private function _get_class( $class ) {
-			$exploded_class = explode( '\\', $class );
-			$variable       = strtolower( array_pop( $exploded_class ) );
-
-			if ( ! $this->$variable ) {
-				$class           = __NAMESPACE__ . '\\' . $class;
-				$this->$variable = new $class;
+			if ( ! isset( $this->class_registry[ $class ] ) ) {
+				$this->class_registry[ $class ] = new $class;
 			}
 
-			return $this->$variable;
+			return $this->class_registry[ $class ];
 		}
 
 
@@ -163,40 +216,6 @@ namespace Plugin_Name_Replace_Me {
 							<p>' . __( "Plugin Name Replace Me plugin is not activated. The plugin requires at least PHP 5.6 to function.", 'plugin-name-replace-me' ) . '</p>
 						</div>';
 			}
-		}
-
-		/**
-		 * Set up classes that cannot be otherwise loaded via the autoloader.
-		 *
-		 * This is where you can add anything that needs "registered" to WordPress,
-		 * such as shortcodes, rest endpoints, blocks, and cron jobs.
-		 *
-		 * @since 1.0.0
-		 */
-		private function _setup_classes() {
-			// REST Endpoints
-			// new Rest\...
-
-			// Cron Jobs
-			new Cron\Purge_Logs;
-
-			// Shortcodes
-			// new Shortcodes\...
-
-			// Widgets
-//			add_action( 'widgets_init', function() {
-//				register_widget( 'Plugin_Name_Replace_Me\Widgets\RV_Listing' );
-//			} );
-
-		}
-
-		/**
-		 * Registers styles and scripts.
-		 *
-		 * @since 1.0.0
-		 */
-		public function _register_scripts() {
-			// wp_register_script...
 		}
 
 		/**
