@@ -101,14 +101,13 @@ abstract class Bootstrap {
 			spl_autoload_register( function( $class ) {
 				$class = explode( '\\', $class );
 
-				if ( __NAMESPACE__ === $class[0] ) {
+				if ( 'Plugin_Name_Replace_Me' === $class[0] ) {
 					array_shift( $class );
 				}
 
 				$file_name = array_pop( $class );
 				$directory = str_replace( '_', '-', strtolower( implode( DIRECTORY_SEPARATOR, $class ) ) );
 				$file      = trailingslashit( PLUGIN_NAME_REPLACE_ME_ROOT_DIR ) . 'lib/' . $directory . '/' . $file_name . '.php';
-
 				if ( file_exists( $file ) ) {
 					require $file;
 
@@ -136,11 +135,11 @@ abstract class Bootstrap {
 	public function logger() {
 		// If the DFS monitor plugin is active, use the dfsm logger
 		if ( function_exists( 'dfsm' ) ) {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\\Utilities\\Enhanced_Logger' );
+			return $this->_get_class( '\Plugin_Name_Replace_Me\Core\Utilities\Enhanced_Logger' );
 
 			// Otherwise use the built-in logger.
 		} else {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\\Utilities\\Basic_Logger' );
+			return $this->_get_class( '\Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger' );
 		}
 	}
 

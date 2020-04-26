@@ -37,11 +37,11 @@ define( 'PLUGIN_NAME_REPLACE_ME_ROOT_FILE', __FILE__ );
 // The template directory. Used by the template loader to determine where templates are stored.
 define( 'PLUGIN_NAME_REPLACE_ME_TEMPLATE_DIR', PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'templates/' );
 
-// Load in the bootstrap trait. This holds most of the default values and keeps your bootstrap file clean.
-require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/core/traits/Bootstrap.php' );
+// Load in the bootstrap abstraction. This holds most of the default values and keeps your bootstrap file clean.
+require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/core/abstracts/Bootstrap.php' );
 
 // Load in the bootstrap that runs the rest of the plugin.
-require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/Bootstrap.php' );
+require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/Service_Locator.php' );
 
 /**
  * Fetches the instance of the plugin.
