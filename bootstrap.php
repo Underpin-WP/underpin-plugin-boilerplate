@@ -8,164 +8,54 @@ Text Domain: plugin_name_replace_me
 Domain Path: /languages
 Requires at least: 4.7
 Requires PHP: 5.6
-Author URI:
+Author URI: https://www.designframesolutions.com
 */
 
-namespace Plugin_Name_Replace_Me {
-
-	use Plugin_Name_Replace_Me\Core\Traits\Bootstrap;
-	use Plugin_Name_Replace_Me\Loaders;
-
-	if ( ! defined( 'ABSPATH' ) ) {
-		exit;
-	}
-
-	/**
-	 * Plugin Name Replace Me Base Class
-	 *
-	 * @since 1.0.0
-	 */
-	final class Plugin_Name_Replace_Me {
-		use Bootstrap;
-
-		/**
-		 * Set up classes that cannot be otherwise loaded via the autoloader.
-		 *
-		 * This is where you can add anything that needs "registered" to WordPress,
-		 * such as shortcodes, rest endpoints, blocks, and cron jobs.
-		 *
-		 * @since 1.0.0
-		 */
-		protected function _setup_classes() {
-			// Cron Job Registry
-			new Loaders\Cron_Jobs;
-
-			// Scripts
-			$this->scripts();
-
-			// Styles
-			$this->styles();
-
-			// REST Endpoints
-			//new Loaders\Rest_Endpoints;
-
-			// Shortcodes
-			// new Loaders\Shortcodes;
-
-			// Widgets
-			// new Loaders\Widgets;
-		}
-
-		/**
-		 * Fetches the Logger instance.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @return Core\Abstracts\Logger
-		 */
-		public function logger() {
-			// If the DFS monitor plugin is active, use the dfsm logger
-			if ( function_exists( 'dfsm' ) ) {
-				return $this->_get_class( 'Plugin_Name_Replace_Me\\Utilities\\Enhanced_Logger' );
-
-				// Otherwise use the built-in logger.
-			} else {
-				return $this->_get_class( 'Plugin_Name_Replace_Me\\Utilities\\Basic_Logger' );
-			}
-		}
-
-		/**
-		 * Retrieves the scripts loader.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @return Loaders\Scripts
-		 */
-		public function scripts() {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Scripts' );
-		}
-
-		/**
-		 * Retrieves the Styles loader.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @return Loaders\Styles
-		 */
-		public function styles() {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Styles' );
-		}
-
-		/**
-		 * Fires up the plugin.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @return \Plugin_Name_Replace_Me\Plugin_Name_Replace_Me
-		 */
-		public static function init() {
-			if ( ! isset( self::$instance ) ) {
-				global $wp_version;
-				$supports_wp_version  = version_compare( $wp_version, self::$minimum_wp_version, '>=' );
-				$supports_php_version = version_compare( phpversion(), self::$minimum_php_version, '>=' );
-
-				if ( $supports_wp_version && $supports_php_version ) {
-
-					/**
-					 * Fires just before the Plugin Name Replace Me plugin starts up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'plugin_name_replace_me/before_setup' );
-
-					self::$instance = new self;
-					self::$instance->_define_constants();
-					require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
-					self::$instance->_setup_autoloader();
-					self::$instance->_setup_classes();
-
-					/**
-					 * Fires just after the Plugin Name Replace Me is completely set-up.
-					 *
-					 * @since 1.0.0
-					 */
-					do_action( 'plugin_name_replace_me/after_setup' );
-
-				} else {
-					$self           = new self;
-					self::$instance = new \WP_Error(
-						'minimum_version_not_met',
-						__( sprintf(
-							"The Plugin Name Replace Me plugin requires at least WordPress %s, and PHP %s.",
-							$self->minimum_wp_version(),
-							$self->minimum_php_version()
-						), 'plugin-name-replace-me' ),
-						array( 'current_wp_version' => $wp_version, 'php_version' => phpversion() )
-					);
-
-					add_action( 'admin_notices', array( $self, 'below_version_notice' ) );
-				}
-			}
-
-			return self::$instance;
-		}
-	}
+// Bail if someone's trying to be cute, and access this file directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-namespace {
+// The current version of this plugin. Bump this when you release an update.
+define( 'PLUGIN_NAME_REPLACE_ME_PLUGIN_VERSION', '1.0.0' );
 
-	use Plugin_Name_Replace_Me\Plugin_Name_Replace_Me;
+// The minimum WP version this plugin supports.
+define( 'PLUGIN_NAME_REPLACE_ME_MINIMUM_WP_VERSION', '5.0' );
 
-	/**
-	 * Fetches the instance
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return Plugin_Name_Replace_Me
-	 */
-	function plugin_name_replace_me() {
-		return Plugin_Name_Replace_Me::init();
-	}
+// The minimum PHP version this plugin supports.
+define( 'PLUGIN_NAME_REPLACE_ME_MINIMUM_PHP_VERSION', '5.6' );
 
-	plugin_name_replace_me();
+// The URL for this plugin. Used in asset loading.
+define( 'PLUGIN_NAME_REPLACE_ME_URL', plugin_dir_url( __FILE__ ) );
+
+// Root directory for this plugin.
+define( 'PLUGIN_NAME_REPLACE_ME_ROOT_DIR', plugin_dir_path( __FILE__ ) );
+
+// Root file for this plugin. Used in activation hooks.
+define( 'PLUGIN_NAME_REPLACE_ME_ROOT_FILE', __FILE__ );
+
+// The template directory. Used by the template loader to determine where templates are stored.
+define( 'PLUGIN_NAME_REPLACE_ME_TEMPLATE_DIR', PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'templates/' );
+
+// Load in the bootstrap trait. This holds most of the default values and keeps your bootstrap file clean.
+require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/core/traits/Bootstrap.php' );
+
+// Load in the bootstrap that runs the rest of the plugin.
+require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/Bootstrap.php' );
+
+/**
+ * Fetches the instance of the plugin.
+ * This function makes it possible to access everything else in this plugin.
+ * It will automatically initiate the plugin, if necessary.
+ * It also handles autoloading for any class in the plugin.
+ *
+ * @since 1.0.0
+ *
+ * @return Plugin_Name_Replace_Me\Service_Locator
+ */
+function plugin_name_replace_me() {
+	return Plugin_Name_Replace_Me\Service_Locator::init();
 }
+
+//Instantiate, and set up the plugin.
+plugin_name_replace_me();
