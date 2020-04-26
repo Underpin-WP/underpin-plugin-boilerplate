@@ -9,9 +9,8 @@
 
 namespace Plugin_Name_Replace_Me\Registries\Loaders;
 
-
-use Plugin_Name_Replace_Me\Abstracts\Registries\Loader_Registry;
-use Plugin_Name_Replace_Me\Abstracts\Style;
+use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Style;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,14 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Styles extends Loader_Registry {
 
 	public function __construct() {
-		parent::__construct( '\Plugin_Name_Replace_Me\Abstracts\Style' );
+		parent::__construct( '\Plugin_Name_Replace_Me\Core\Abstracts\Style' );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'style-handle', '\Plugin_Name_Replace_Me\Loaders\Styles\Style_Name' );
+//		$this->add( 'style-handle', '\Plugin_Name_Replace_Me\Core\Loaders\Styles\Style_Name' );
 	}
 
 	/**

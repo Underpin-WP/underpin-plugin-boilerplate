@@ -9,9 +9,8 @@
 
 namespace Plugin_Name_Replace_Me\Registries\Loaders;
 
-
-use Plugin_Name_Replace_Me\Abstracts\Registries\Loader_Registry;
-use Plugin_Name_Replace_Me\Abstracts\Script;
+use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Script;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,14 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Scripts extends Loader_Registry {
 
 	public function __construct() {
-		parent::__construct( '\Plugin_Name_Replace_Me\Abstracts\Script' );
+		parent::__construct( '\Plugin_Name_Replace_Me\Core\Abstracts\Script' );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'scriptName', '\Plugin_Name_Replace_Me\Loaders\Scripts\Script_Name' );
+//		$this->add( 'scriptName', '\Plugin_Name_Replace_Me\Core\Loaders\Scripts\Script_Name' );
 	}
 
 	/**

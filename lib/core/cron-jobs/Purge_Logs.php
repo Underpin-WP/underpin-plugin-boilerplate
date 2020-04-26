@@ -7,10 +7,9 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Loaders\Cron_Jobs;
+namespace Plugin_Name_Replace_Me\Core\Loaders\Cron_Jobs;
 
-
-use Plugin_Name_Replace_Me\Abstracts\Cron_Task;
+use Plugin_Name_Replace_Me\Core\Abstracts\Cron_Task;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
