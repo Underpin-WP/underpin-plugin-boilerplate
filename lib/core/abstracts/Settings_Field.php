@@ -7,9 +7,9 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Abstracts;
+namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
-use Plugin_Name_Replace_Me\Traits\Templates;
+use Plugin_Name_Replace_Me\Core\Traits\Templates;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -7,7 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Core\Loaders\Cron_Jobs;
+namespace Plugin_Name_Replace_Me\Core\Cron_Jobs;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Cron_Task;
 

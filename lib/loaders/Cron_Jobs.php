@@ -7,7 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Registries\Loaders;
+namespace Plugin_Name_Replace_Me\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
 
@@ -34,7 +34,7 @@ class Cron_Jobs extends Loader_Registry {
 	 */
 	protected function set_default_items() {
 
-		$this->add( 'purge_logs', 'Plugin_Name_Replace_Me\Loaders\Cron_Jobs\Purge_Logs' );
+		$this->add( 'purge_logs', 'Plugin_Name_Replace_Me\Core\Cron_Jobs\Purge_Logs' );
 	}
 
 }

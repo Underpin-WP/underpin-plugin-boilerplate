@@ -8,7 +8,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Abstracts\Registries;
+namespace Plugin_Name_Replace_Me\Core\Abstracts\Registries;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

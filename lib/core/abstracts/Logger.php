@@ -7,8 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Abstracts;
-
+namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
 use Exception;
 use WP_Error;

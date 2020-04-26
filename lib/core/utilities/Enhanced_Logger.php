@@ -8,10 +8,10 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Utilities;
+namespace Plugin_Name_Replace_Me\Core\Utilities;
 
 
-use Plugin_Name_Replace_Me\Abstracts\Logger;
+use Plugin_Name_Replace_Me\Core\Abstracts\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

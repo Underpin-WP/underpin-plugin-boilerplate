@@ -7,8 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Abstracts;
-
+namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +34,7 @@ abstract class Style {
 		$this->handle = $handle;
 
 		if ( false === $ver ) {
-			$ver = PLUGIN_NAME_REPLACE_ME_VERSION;
+			$ver = PLUGIN_NAME_REPLACE_ME_PLUGIN_VERSION;
 		}
 
 		if ( false === $src ) {

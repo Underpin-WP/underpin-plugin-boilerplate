@@ -6,11 +6,9 @@
  * @package Plugin_Name_Replace_Me\Factories\Settings_Fields
  */
 
+namespace Plugin_Name_Replace_Me\Core\Factories\Settings_Fields;
 
-namespace Plugin_Name_Replace_Me\Factories\Settings_Fields;
-
-
-use Plugin_Name_Replace_Me\Abstracts\Settings_Field;
+use Plugin_Name_Replace_Me\Core\Abstracts\Settings_Field;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

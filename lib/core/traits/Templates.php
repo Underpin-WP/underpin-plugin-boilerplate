@@ -7,7 +7,7 @@
  * @package Plugin_Name_Replace_Me\Traits
  */
 
-namespace Plugin_Name_Replace_Me\Traits;
+namespace Plugin_Name_Replace_Me\Core\Traits;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Trait Templates
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package plugin_name_replace_me\traits
  */
 trait Templates {
@@ -383,7 +383,7 @@ trait Templates {
 			do_action( 'plugin_name_replace_me/templates/before_template', $template_name, $this->depth, $this->params[ $this->depth ] );
 		}
 
-		rvs_include_file_with_scope( $this->locate_template( $template_name ), [
+		include_file_with_scope( $this->locate_template( $template_name ), [
 			'template' => $this,
 		] );
 
@@ -414,4 +414,24 @@ trait Templates {
 
 		return $result;
 	}
+}
+
+/**
+ * Includes a file and passes the specified scope items as local scope.
+ *
+ * @since 1.0.0
+ *
+ * @param $file  string The file to include
+ * @param $scope array The scope items keyed by their variable name.
+ * @return bool True if include was successful, false otherwise.
+ */
+function include_file_with_scope( $file, $scope ) {
+	if ( file_exists( $file ) ) {
+		extract( $scope );
+		include $file;
+
+		return true;
+	}
+
+	return false;
 }

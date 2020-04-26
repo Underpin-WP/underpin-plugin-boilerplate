@@ -7,7 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Registries\Loaders;
+namespace Plugin_Name_Replace_Me\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
 

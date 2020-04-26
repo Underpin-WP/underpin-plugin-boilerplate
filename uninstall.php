@@ -11,6 +11,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // Destroy Error Log
-if ( plugin_name_replace_me()->logger() instanceof Plugin_Name_Replace_Me\Utilities\Basic_Logger ) {
+if ( plugin_name_replace_me()->logger() instanceof Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger ) {
 	plugin_name_replace_me()->logger()->wipe();
 }
