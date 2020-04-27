@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Abstracts
  */
-abstract class Style {
+abstract class Style extends Feature_Extension {
 
 	/**
 	 * The handle for this script.
@@ -74,16 +74,12 @@ abstract class Style {
 	public function __construct() {
 		$this->ver = false === $this->ver ? PLUGIN_NAME_REPLACE_ME_PLUGIN_VERSION : $this->ver;
 		$this->src = false === $this->src ? PLUGIN_NAME_REPLACE_ME_CSS_URL . $this->handle . '.min.css' : $this->src;
-
-		$this->register_actions();
 	}
 
 	/**
-	 * Registers the actions for this script.
-	 *
-	 * @since 1.0.0
+	 * @inheritDoc
 	 */
-	public function register_actions() {
+	public function do_actions() {
 		if ( in_array( 'site', $this->contexts ) ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'register' ] );
 		}

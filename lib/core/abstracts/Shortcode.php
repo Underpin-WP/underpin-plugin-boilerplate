@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Abstracts
  */
-abstract class Shortcode {
+abstract class Shortcode extends Feature_Extension {
 
 	/**
 	 * The shortcode attributes, parsed by shortcode atts.
@@ -40,6 +40,15 @@ abstract class Shortcode {
 	private $defaults;
 
 	/**
+	 * The name of this shortcode.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private $shortcode;
+
+	/**
 	 * The actions this shortcode should take when called. use $this->atts to access the parsed shortcode atts.
 	 *
 	 * @since 1.0.0
@@ -57,8 +66,15 @@ abstract class Shortcode {
 	 * @param array  $defaults  The default attribute values.
 	 */
 	public function __construct( $shortcode, array $defaults ) {
-		$this->defaults = $defaults;
-		add_shortcode( $shortcode, [ $this, 'shortcode' ] );
+		$this->defaults  = $defaults;
+		$this->shortcode = $shortcode;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function do_actions() {
+		add_shortcode( $this->shortcode, [ $this, 'shortcode' ] );
 	}
 
 	/**

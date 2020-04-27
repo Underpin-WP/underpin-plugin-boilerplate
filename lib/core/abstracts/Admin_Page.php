@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Core\Abstracts
  */
-abstract class Admin_Page {
+abstract class Admin_Page extends Feature_Extension {
 	use Templates;
 
 	/**
@@ -125,7 +125,12 @@ abstract class Admin_Page {
 		 * @param array $sections List of sections for this admin page.
 		 */
 		$this->sections = apply_filters( 'plugin_name_replace_me/admin_pages/' . $this->menu_slug . '/sections', $sections );
+	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function do_actions() {
 		$this->update_actions();
 		$this->register_actions();
 	}

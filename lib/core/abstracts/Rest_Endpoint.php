@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package Plugin_Name_Replace_Me\Abstracts
  */
-abstract class Rest_Endpoint {
+abstract class Rest_Endpoint extends Feature_Extension {
 
 	/**
 	 * Registry of endpoints.
@@ -56,9 +56,6 @@ abstract class Rest_Endpoint {
 	 * @param array  $methods Optiona. Array of methods this route supports. Default GET
 	 */
 	public function __construct( $route, $methods = [ 'GET' ] ) {
-		if ( empty( self::$endpoints ) ) {
-			add_action( 'rest_api_init', [ $this, 'register_endpoints' ] );
-		}
 
 		$args = [
 			'route' => $route,
@@ -69,6 +66,15 @@ abstract class Rest_Endpoint {
 		];
 
 		self::$endpoints[ get_class( $this ) ] = $args;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function do_actions() {
+		if ( empty( self::$endpoints ) ) {
+			add_action( 'rest_api_init', [ $this, 'register_endpoints' ] );
+		}
 	}
 
 	/**

@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Abstracts
  */
-abstract class Cron_Task {
+abstract class Cron_Task extends Feature_Extension {
 
 	/**
 	 * How often the cron task should recur. See wp_get_schedules() for accepted values.
@@ -62,23 +62,28 @@ abstract class Cron_Task {
 			$this->event     = 'plugin_name_replace_me\sessions\\' . $event;
 			$this->frequency = $frequency;
 
-			// Registers this cron job to activate when the plugin is activated.
-			register_activation_hook( PLUGIN_NAME_REPLACE_ME_ROOT_FILE, [ $this, 'activate' ] );
-
-			// Registers the action that fires when the cron job runs
-			add_action( $this->event, [ $this, 'cron_action' ] );
-
 			// Adds the job to the registry.
 			self::$registered_events[ $this->event ] = $this->frequency;
 		} else {
 			plugin_name_replace_me()->logger()->log(
-				'',
-				'',
+				'plugin_name_replace_me_error',
+				'cron_event_exists',
 				__( 'A cron event was not registered because an event of the same name has already been registered.' ),
 				'',
 				array( 'event' => $event, 'frequency' => $frequency )
 			);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function do_actions() {
+		// Registers this cron job to activate when the plugin is activated.
+		register_activation_hook( PLUGIN_NAME_REPLACE_ME_ROOT_FILE, [ $this, 'activate' ] );
+
+		// Registers the action that fires when the cron job runs
+		add_action( $this->event, [ $this, 'cron_action' ] );
 	}
 
 	/**
