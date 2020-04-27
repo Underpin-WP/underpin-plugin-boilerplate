@@ -185,10 +185,11 @@ abstract class Admin_Page {
 			return $this->sections[ $section ];
 		}
 
-		return new \WP_Error(
-			'no_section_found',
+		return plugin_name_replace_me()->logger()->log(
+			'plugin_name_replace_me_error',
+			'no_admin_section_found',
 			'No valid section could be found',
-			[ 'sections' => $this->sections ]
+			[ 'sections' => $this->sections, 'admin_page' => $this->parent_slug ]
 		);
 	}
 
@@ -316,6 +317,15 @@ abstract class Admin_Page {
 			if ( is_wp_error( $saved ) ) {
 				$errors->add( $saved->get_error_code(), $saved->get_error_message(), $saved->get_error_data() );
 			}
+		}
+
+		if ( $errors->has_errors() ) {
+			plugin_name_replace_me()->logger()->log(
+				'plugin_name_replace_me_error',
+				'failed_to_save_settings',
+				'some settings failed to save',
+				[ 'errors' => $errors ]
+			);
 		}
 
 		return $errors->has_errors() ? true : $errors;

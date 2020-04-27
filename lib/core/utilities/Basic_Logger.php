@@ -31,7 +31,7 @@ class Basic_Logger extends Logger {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	private $events = [];
+	protected $events = [];
 
 	/**
 	 * Registry of event types, correlated by the file they log to.
@@ -71,34 +71,6 @@ class Basic_Logger extends Logger {
 		$this->reset_events();
 
 		add_action( 'shutdown', array( $this, 'log_events' ) );
-	}
-
-	/**
-	 * Enqueues an event to be logged in the system
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $type    Event log type
-	 * @param string $code    The event code to use.
-	 * @param string $message The message to log.
-	 * @param int    $ref     A reference ID related to this error, such as a post ID.
-	 * @param array  $data    Arbitrary data associated with this event message.
-	 * @return \WP_Error WP Error, with error message.
-	 */
-	public function log( $type, $code, $message, $ref = null, $data = array() ) {
-		$log_message = $code . ' - ' . $message;
-
-		if ( $ref !== null ) {
-			$data['ref'] = $ref;
-		}
-
-		if ( ! empty( $data ) ) {
-			$log_message .= "\n data:" . var_export( (object) $data, true );
-		}
-
-		$this->events[ $type ][] = date( 'm/d/Y H:i' ) . ': ' . $log_message;
-
-		return new \WP_Error( $code, $message, $data );
 	}
 
 	/**

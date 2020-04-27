@@ -36,6 +36,9 @@ final class Service_Locator extends Bootstrap {
 		// Cron Job Registry
 		new Loaders\Cron_Jobs;
 
+		// Admin Bar Menus
+		new Loaders\Admin_Bar_Menus;
+
 		// Scripts
 		$this->scripts();
 

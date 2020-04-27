@@ -33,7 +33,7 @@ class Styles extends Loader_Registry {
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'style-handle', '\Plugin_Name_Replace_Me\Core\Loaders\Styles\Style_Name' );
+		$this->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Style' );
 	}
 
 	/**

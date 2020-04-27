@@ -33,7 +33,7 @@ class Scripts extends Loader_Registry {
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'scriptName', '\Plugin_Name_Replace_Me\Core\Loaders\Scripts\Script_Name' );
+		$this->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Script' );
 	}
 
 	/**

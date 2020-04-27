@@ -46,9 +46,8 @@ class Enhanced_Logger extends Logger {
 				$data
 			);
 
-			return new \WP_Error( $code, $message, $data );
-		} else {
-			return new \WP_Error( 'dfsm_not_active', 'Error log failed - DFS Monitor plugin is not active.' );
 		}
+
+		return parent::log( $type, $code, $message, $ref, $data );
 	}
 }

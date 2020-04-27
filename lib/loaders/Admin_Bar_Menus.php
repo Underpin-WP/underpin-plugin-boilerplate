@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Pages
+ * Admin Bar Menu Registry
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
@@ -9,7 +9,7 @@
 
 namespace Plugin_Name_Replace_Me\Loaders;
 
-use Plugin_Name_Replace_Me\Core\Abstracts\Admin_Page;
+use Plugin_Name_Replace_Me\Core\Abstracts\Admin_Bar_Menu;
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,28 +17,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Admin_Pages
+ * Class Admin_Bar_Menus
  * Registry for Admin Pages
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
  */
-class Admin_Pages extends Loader_Registry {
+class Admin_Bar_Menus extends Loader_Registry {
 
 	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Admin_Page' );
+		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Admin_Bar_Menu' );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'admin_page', 'Plugin_Name_Replace_Me\Admin_Page' );
+
+		// If WP_DEBUG is active, turn on the debug bar.
+		if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+			$this->add( 'debug_bar', 'Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar' );
+		}
+
 	}
 
 	/**
 	 * @param string $key
-	 * @return Admin_Page|\WP_Error Script Resulting admin page class, if it exists. WP_Error, otherwise.
+	 * @return Admin_Bar_Menu|\WP_Error Script Resulting admin page class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

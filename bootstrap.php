@@ -28,6 +28,12 @@ define( 'PLUGIN_NAME_REPLACE_ME_MINIMUM_PHP_VERSION', '5.6' );
 // The URL for this plugin. Used in asset loading.
 define( 'PLUGIN_NAME_REPLACE_ME_URL', plugin_dir_url( __FILE__ ) );
 
+// The CSS URL for this plugin. Used in asset loading.
+define( 'PLUGIN_NAME_REPLACE_ME_CSS_URL', PLUGIN_NAME_REPLACE_ME_URL . 'assets/css/build/' );
+
+// The JS URL for this plugin. Used in asset loading.
+define( 'PLUGIN_NAME_REPLACE_ME_JS_URL', PLUGIN_NAME_REPLACE_ME_URL . 'assets/js/build/' );
+
 // Root directory for this plugin.
 define( 'PLUGIN_NAME_REPLACE_ME_ROOT_DIR', plugin_dir_path( __FILE__ ) );
 
