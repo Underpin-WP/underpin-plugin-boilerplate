@@ -28,6 +28,7 @@ things use nearly _exact_ same set of steps to register:
 1. Cron Jobs
 1. REST Endpoints
 1. Admin Submenu Pages
+1. Menu bar Items
 
 It doesn't support these right now, but it will someday:
 
