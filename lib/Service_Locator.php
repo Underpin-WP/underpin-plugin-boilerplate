@@ -46,7 +46,10 @@ final class Service_Locator extends Bootstrap {
 		$this->styles();
 
 		// REST Endpoints
-		//new Loaders\Rest_Endpoints;
+		// new Loaders\Rest_Endpoints;
+
+		// Custom Post Types
+		// new Loaders\Custom_Post_Types;
 
 		// Shortcodes
 		// new Loaders\Shortcodes;

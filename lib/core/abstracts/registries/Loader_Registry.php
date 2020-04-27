@@ -10,6 +10,8 @@
 
 namespace Plugin_Name_Replace_Me\Core\Abstracts\Registries;
 
+use Plugin_Name_Replace_Me\Core\Abstracts\Feature_Extension;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -66,6 +68,13 @@ abstract class Loader_Registry extends Registry {
 		if ( true === $valid ) {
 			$this[ $key ] = new $value;
 		}
+
+		// If this implements registry actions, go ahead and start those up, too.
+		if ( $this->get( $key ) instanceof Feature_Extension ) {
+			$this->get( $key )->do_actions();
+		}
+
+		return $valid;
 	}
 
 	/**
@@ -79,7 +88,7 @@ abstract class Loader_Registry extends Registry {
 		return plugin_name_replace_me()->logger()->log(
 			'plugin_name_replace_me_error',
 			'invalid_service_type',
-			'The specified item could not be instantiated. Valid instance type',
+			'The specified item could not be instantiated. Invalid instance type',
 			$key,
 			[ 'key' => $key, 'value' => $value, 'expects_type' => $this->abstraction_class ]
 		);
