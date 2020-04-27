@@ -51,6 +51,9 @@ final class Service_Locator extends Bootstrap {
 		// Custom Post Types
 		// new Loaders\Custom_Post_Types;
 
+		// Taxonomies
+		// new Loaders\Taxonomies;
+
 		// Shortcodes
 		// new Loaders\Shortcodes;
 
