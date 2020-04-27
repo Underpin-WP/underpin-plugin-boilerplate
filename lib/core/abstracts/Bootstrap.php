@@ -76,13 +76,13 @@ abstract class Bootstrap {
 	public function below_version_notice() {
 		global $wp_version;
 
-		if ( version_compare( $wp_version, self::MINIMUM_WP_VERSION, '<' ) ) {
+		if ( version_compare( $wp_version, PLUGIN_NAME_REPLACE_ME_MINIMUM_WP_VERSION, '<' ) ) {
 			echo '<div class="error">
 							<p>' . __( sprintf( "Plugin Name Replace Me plugin is not activated. The plugin requires at least WordPress %s to function.", self::MINIMUM_WP_VERSION ), 'plugin-name-replace-me' ) . '</p>
 						</div>';
 		}
 
-		if ( version_compare( phpversion(), self::MINIMUM_PHP_VERSION, '<' ) ) {
+		if ( version_compare( phpversion(), PLUGIN_NAME_REPLACE_ME_MINIMUM_PHP_VERSION, '<' ) ) {
 			echo '<div class="error">
 							<p>' . __( sprintf( "Plugin Name Replace Me plugin is not activated. The plugin requires at least PHP %s to function.", self::MINIMUM_PHP_VERSION ), 'plugin-name-replace-me' ) . '</p>
 						</div>';

@@ -10,6 +10,7 @@
 namespace Plugin_Name_Replace_Me\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Shortcode;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Shortcodes extends Loader_Registry {
 
 	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Abstracts\Shortcode' );
+		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Shortcode' );
 	}
 
 	/**
@@ -36,4 +37,11 @@ class Shortcodes extends Loader_Registry {
 		//$this->add( 'key','namespaced_class' );
 	}
 
+	/**
+	 * @param string $key
+	 * @return Shortcode|\WP_Error Script Resulting shortcode class, if it exists. WP_Error, otherwise.
+	 */
+	public function get( $key ) {
+		return parent::get( $key );
+	}
 }

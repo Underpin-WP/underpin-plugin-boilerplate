@@ -63,7 +63,6 @@ abstract class Loader_Registry extends Registry {
 	 */
 	public function add( $key, $value ) {
 		$valid = $this->validate_item( $key, $value );
-
 		if ( true === $valid ) {
 			$this[ $key ] = new $value;
 		}

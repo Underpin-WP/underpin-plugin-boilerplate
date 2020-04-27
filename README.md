@@ -27,12 +27,12 @@ things use nearly _exact_ same set of steps to register:
 1. Widgets
 1. Cron Jobs
 1. REST Endpoints
+1. Admin Submenu Pages
 
-It doesn't support these right now, but it could someday:
+It doesn't support these right now, but it will someday:
 
-1. Admin Pages
 1. Post Types
-1. Customizer
+1. Customizer Items
 1. Block
 
 It is also fairly straightforward to create custom loaders, so if you have your own extend-able registry of items, you

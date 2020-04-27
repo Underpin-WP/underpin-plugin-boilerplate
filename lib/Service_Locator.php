@@ -50,14 +50,10 @@ final class Service_Locator extends Bootstrap {
 
 		// Widgets
 		// new Loaders\Widgets;
-	}
 
-	/**
-	 * Here is an example on how to
-	 */
-	//	public function example_service() {
-	//		$this->>_get_class('\Plugin_Name_Replace_Me\Namespace\To\Class\Class_Name.php');
-	//	}
+		// Admin Pages
+		// new Loaders\Admin_Pages;
+	}
 
 	/**
 	 * Fires up the plugin.

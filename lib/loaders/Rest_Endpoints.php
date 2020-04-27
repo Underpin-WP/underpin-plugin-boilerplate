@@ -10,6 +10,7 @@
 namespace Plugin_Name_Replace_Me\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Rest_Endpoints extends Loader_Registry {
 
 	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Abstracts\Rest_Endpoint' );
+		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint' );
 	}
 
 	/**
@@ -36,4 +37,11 @@ class Rest_Endpoints extends Loader_Registry {
 		//$this->add( 'key','namespaced_class' );
 	}
 
+	/**
+	 * @param string $key
+	 * @return Rest_Endpoint|\WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
+	 */
+	public function get( $key ) {
+		return parent::get( $key );
+	}
 }

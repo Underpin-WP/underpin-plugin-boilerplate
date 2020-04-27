@@ -75,7 +75,7 @@ abstract class Settings_Field {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $param The param to retrieve.
+	 * @param string $param The param to retrieve.
 	 * @return mixed|\WP_Error The param value, or a \WP_Error object if the param could not be retrieved.
 	 */
 	public function get_field_param( $param ) {
