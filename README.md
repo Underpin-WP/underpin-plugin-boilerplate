@@ -29,10 +29,11 @@ things use nearly _exact_ same set of steps to register:
 1. REST Endpoints
 1. Admin Submenu Pages
 1. Menu bar Items
+1. Post Types
+1. Taxonomies
 
 It doesn't support these right now, but it will someday:
 
-1. Post Types
 1. Customizer Items
 1. Block
 
