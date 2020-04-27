@@ -37,7 +37,7 @@ abstract class Shortcode extends Feature_Extension {
 	 *
 	 * @var array
 	 */
-	private $defaults;
+	protected $defaults = [];
 
 	/**
 	 * The name of this shortcode.
@@ -46,7 +46,7 @@ abstract class Shortcode extends Feature_Extension {
 	 *
 	 * @var string
 	 */
-	private $shortcode;
+	protected $shortcode;
 
 	/**
 	 * The actions this shortcode should take when called. use $this->atts to access the parsed shortcode atts.
@@ -56,19 +56,6 @@ abstract class Shortcode extends Feature_Extension {
 	 * @return mixed The shortcode action result.
 	 */
 	public abstract function shortcode_actions();
-
-	/**
-	 * Shortcode constructor.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $shortcode The name of the shortcode.
-	 * @param array  $defaults  The default attribute values.
-	 */
-	public function __construct( $shortcode, array $defaults ) {
-		$this->defaults  = $defaults;
-		$this->shortcode = $shortcode;
-	}
 
 	/**
 	 * @inheritDoc
