@@ -14,8 +14,6 @@ const OptimizeCssAssetsPlugin = require( 'optimize-css-assets-webpack-plugin' );
 module.exports = {
 	...defaultConfig,
 	devtool: 'source-map',
-	// Override externals so dependencies can be packaged with the assets
-	// because the minimum WordPress version is still 4.9.
 	externals: {
 		jquery: 'jQuery',
 		$: 'jQuery',
@@ -31,7 +29,10 @@ module.exports = {
 	/**
 	 * Add your entry points for CSS and JS here.
 	 */
-	entry: {},
+	entry: {
+		debug: './assets/js/src/debug',
+		debugStyle: './assets/css/src/debug.css',
+	},
 	module: {
 		rules: [
 			...defaultConfig.module.rules,

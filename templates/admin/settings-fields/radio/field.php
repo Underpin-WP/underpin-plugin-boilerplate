@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $template ) || ! $template instanceof \Plugin_Name_Replace_Me\Abstracts\Settings_Field ) {
+if ( ! isset( $template ) || ! $template instanceof Plugin_Name_Replace_Me\Core\Abstracts\Settings_Field ) {
 	return;
 }
 

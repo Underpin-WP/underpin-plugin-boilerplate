@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $template ) || ! $template instanceof \Plugin_Name_Replace_Me\Factories\Settings_Fields\Select ) {
+if ( ! isset( $template ) || ! $template instanceof Plugin_Name_Replace_Me\Core\Factories\Settings_Fields\Select ) {
 	return;
 }
 

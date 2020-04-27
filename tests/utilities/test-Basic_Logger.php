@@ -17,7 +17,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::log
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::log
 	 */
 	public function test_log_logs_the_error_if_type_is_valid() {
 		plugin_name_replace_me()->logger()->log(
@@ -41,7 +41,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::log
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::log
 	 */
 	public function test_log_returns_wp_error_object() {
 		$event = plugin_name_replace_me()->logger()->log( 'plugin_name_replace_me_api_event', '', '' );
@@ -50,7 +50,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::file
 	 */
 	public function test_get_log_file_creates_log_file_path_if_type_is_valid() {
 		plugin_name_replace_me()->logger()->file( 'plugin_name_replace_me_api_event' );
@@ -59,7 +59,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::file
 	 */
 	public function test_get_log_file_returns_log_file_path_if_type_is_valid() {
 		$path = plugin_name_replace_me()->logger()->file( 'plugin_name_replace_me_api_event' );
@@ -68,7 +68,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::file
 	 */
 	public function test_get_log_file_returns_error_if_type_is_invalid() {
 		$file = plugin_name_replace_me()->logger()->file( 'invalid_event_type' );
@@ -77,7 +77,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::path
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::path
 	 */
 	public function test_get_log_path_returns_error_if_type_is_invalid() {
 		$file = plugin_name_replace_me()->logger()->path( 'invalid_event_type' );
@@ -86,7 +86,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::events
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::events
 	 */
 	public function test_events_returns_array_of_event_types() {
 		plugin_name_replace_me()->logger()->log(
@@ -103,7 +103,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::reset_events
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::reset_events
 	 */
 	public function test_reset_events_clears_request_events() {
 		plugin_name_replace_me()->logger()->log( 'plugin_name_replace_me_api_event', 'test_event', 'Test Event' );
@@ -117,7 +117,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::log_events
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::log_events
 	 */
 	public function test_log_events_should_write_events_to_log_file() {
 		plugin_name_replace_me()->logger()->log( 'plugin_name_replace_me_api_event', 'test_event', 'Test Event' );
@@ -135,7 +135,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::clear_log
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::clear_log
 	 */
 	public function test_clear_log_should_clear_log_files_for_event_type() {
 		plugin_name_replace_me()->logger()->log( 'plugin_name_replace_me_api_event', 'test_event', 'Test Event' );
@@ -147,7 +147,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::wipe_log
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::wipe_log
 	 */
 	public function test_wipe_should_clear_all_log_files() {
 		plugin_name_replace_me()->logger()->log( 'plugin_name_replace_me_api_event', 'test_event', 'Test Event' );
@@ -160,7 +160,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::parse_file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::parse_file
 	 */
 	public function test_parse_file_should_return_log_file_info_with_path() {
 		$path   = plugin_name_replace_me()->logger()->path( 'plugin_name_replace_me_api_event' );
@@ -175,7 +175,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::parse_file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::parse_file
 	 */
 	public function test_parse_file_should_return_log_file_info_with_file_name_only() {
 		$date   = date( 'M-d-Y', strtotime( 'today' ) );
@@ -189,7 +189,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::parse_file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::parse_file
 	 */
 	public function test_parse_file_should_return_error_if_type_is_invalid() {
 		$date   = date( 'M-d-Y', strtotime( 'today' ) );
@@ -199,7 +199,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::parse_file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::parse_file
 	 */
 	public function test_parse_file_should_return_error_if_file_is_not_a_log() {
 		$date   = date( 'M-d-Y', strtotime( 'today' ) );
@@ -209,7 +209,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::parse_file
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::parse_file
 	 */
 	public function test_parse_file_should_return_error_if_name_is_malformed() {
 		$parsed = plugin_name_replace_me()->logger()->parse_file( 'invalid-type_and_such.log' );
@@ -218,7 +218,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::purge
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::purge
 	 */
 	public function test_purge_should_purge_files_older_than_specified_date() {
 		// Write an old file of the specified type to the system.
@@ -230,7 +230,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::purge
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::purge
 	 */
 	public function test_purge_should_not_purge_files_newer_than_specified_date() {
 		$test = [];
@@ -246,7 +246,7 @@ class Basic_Logger_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers \Plugin_Name_Replace_Me\Utilities\Basic_Logger::purge
+	 * @covers use Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger::purge
 	 */
 	public function test_purge_should_return_wp_error_if_purge_is_negative_number() {
 		$this->assertInstanceOf( '\WP_Error', plugin_name_replace_me()->logger()->purge( -1 ) );

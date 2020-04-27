@@ -27,12 +27,12 @@ things use nearly _exact_ same set of steps to register:
 1. Widgets
 1. Cron Jobs
 1. REST Endpoints
+1. Admin Submenu Pages
 
-It doesn't support these right now, but it could someday:
+It doesn't support these right now, but it will someday:
 
-1. Admin Pages
 1. Post Types
-1. Customizer
+1. Customizer Items
 1. Block
 
 It is also fairly straightforward to create custom loaders, so if you have your own extend-able registry of items, you
@@ -69,15 +69,13 @@ with the template loader, these fields make it easy to generate form fields usin
 
 ## Initial Setup
 
-Do two find/replaces.
-
 1. Clone this repo, and delete the `.git` directory. Since this is a boilerplate, it's not intended to be updated by the source once cloned.
 1. Replace `PLUGIN_NAME_REPLACE_ME` with the abbreviation of your plugin, using UPPER_CASE format.
 1. Replace `Plugin_Name_Replace_Me` with the abbreviation of your plugin, using Upper_Snake_Case format.
 1. Replace `plugin-name-replace-me` with the abbreviation of your plugin, using lower-dash-case format.
 1. Replace `plugin_name_replace_me` with the abbreviation of your plugin, using snake_case format.
 1. Replace `plugin name replace me` with the abbreviation of your plugin, using Plugin Name format.
-1. Rename the file name located in `lib/utilities/events/Plugin_Name_Replace_Me_Error.php` to match the file's class name.
+1. (Optional) Open `bootstra.php` and change the constants as-necessary.
 1. Start writing.
 
 ## Registering Things
@@ -134,7 +132,7 @@ class Get_Server_Time extends Rest_Endpoint{
 
 This plugin comes pre-packaged with some common loaders, which need to be "activated" to use.
 
-To activate, simply un-comment the loader you wish you use inside the base class's `_setup_classes` method.
+To activate, simply un-comment the loader you wish you use inside the `Service_Locator.php`'s `_setup_classes` method.
 
 Alternatively, if you need to create a custom loader, you would create the class and then instantiate in `_setup_classes`.
 
@@ -269,7 +267,7 @@ Register the script in `set_default_items`.
 //...
 ```
 
-## Working With Style
+## Working With Styles
 
 Styles work in the exact same fashion as scripts. The only difference is you work with the `Styles` abstraction and the
 `Styles` loader registry.
