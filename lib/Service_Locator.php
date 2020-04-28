@@ -40,7 +40,7 @@ final class Service_Locator extends Bootstrap {
 		$this->admin_bar_menus();
 		// $this->scripts();
 		// $this->styles();
-		 $this->blocks();
+		// $this->blocks();
 		// $this->rest_endpoints();
 		// $this->custom_post_types();
 		// $this->taxonomies();
