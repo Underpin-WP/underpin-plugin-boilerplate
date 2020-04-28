@@ -11,6 +11,7 @@ namespace Plugin_Name_Replace_Me\Core\Utilities;
 
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Admin_Bar_Menu;
+use Plugin_Name_Replace_Me\Core\Factories\Debug_Bar_Section;
 use Plugin_Name_Replace_Me\Core\Traits\Templates;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -60,13 +61,19 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 */
 	protected function get_templates() {
 		return [
-			'wrapper'       => [
+			'wrapper' => [
 				'override_visibility' => 'public',
 			],
-			'event-listing' => [
+			'section' => [
 				'override_visibility' => 'public',
 			],
-			'event-tabs' => [
+			'console' => [
+				'override_visibility' => 'public',
+			],
+			'tabs'    => [
+				'override_visibility' => 'public',
+			],
+			'section-menu'    => [
 				'override_visibility' => 'public',
 			],
 		];
@@ -84,7 +91,20 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 */
 	public function render_callback() {
 		echo $this->get_template( 'wrapper', [
-			'events' => plugin_name_replace_me()->logger()->get_request_events(),
+			'sections' => [
+				new Debug_Bar_Section(
+					'logged-events',
+					plugin_name_replace_me()->logger()->get_request_events(),
+					'Logged Events',
+					"Here's what was logged during this session."
+				),
+				new Debug_Bar_Section(
+					'registered-items',
+					plugin_name_replace_me()->export_registered_items(),
+					'Registered Items',
+					"Here's what items were registered during this session."
+				),
+			],
 		] );
 	}
 }
