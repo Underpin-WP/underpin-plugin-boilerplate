@@ -4,6 +4,9 @@ $( document ).ready( () => {
 	const debugBarWrap = $( '#debug-bar-wrap' );
 	const debugClose = $( debugBarWrap ).find( '.debug-bar-close' );
 	const debugEventLogs = $( debugBarWrap ).find( 'pre' );
+	const debugMenuItems = $( '#plugin-name-replace-me-debug-bar-menu a' );
+	const debugSections = $( '.debug-bar-section' );
+
 
 	debugTarget.on( 'click', ( e ) => {
 		e.preventDefault();
@@ -22,6 +25,15 @@ $( document ).ready( () => {
 		debugTabs.removeClass( 'nav-tab-active' );
 		$( this ).addClass( 'nav-tab-active' );
 		$( '#' + event ).show();
+	} );
+
+	debugMenuItems.on( 'click', function( e ){
+		e.preventDefault();
+		const section = $( this ).data( 'section' );
+		debugSections.hide();
+		debugMenuItems.removeClass( 'section-active' );
+		$( this ).addClass( 'section-active' );
+		$( '#' + section ).show();
 	} );
 
 	$( document ).keyup( ( e ) => {
