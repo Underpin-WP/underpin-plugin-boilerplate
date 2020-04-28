@@ -25,43 +25,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Service_Locator extends Bootstrap {
 
 	/**
-	 * Set up classes that cannot be otherwise loaded via the autoloader.
+	 * Set up active loader classes.
 	 *
 	 * This is where you can add anything that needs "registered" to WordPress,
 	 * such as shortcodes, rest endpoints, blocks, and cron jobs.
 	 *
+	 * All supported loaders come pre-packaged with this plugin, they just need un-commented here
+	 * to begin using.
+	 *
 	 * @since 1.0.0
 	 */
-	protected function _setup_classes() {
-		// Cron Job Registry
-		new Loaders\Cron_Jobs;
-
-		// Admin Bar Menus
-		new Loaders\Admin_Bar_Menus;
-
-		// Scripts
+	protected function _setup_loaders() {
+		$this->cron_jobs();
+		$this->admin_bar_menus();
 		$this->scripts();
-
-		// Styles
 		$this->styles();
-
-		// REST Endpoints
-		// new Loaders\Rest_Endpoints;
-
-		// Custom Post Types
-		// new Loaders\Custom_Post_Types;
-
-		// Taxonomies
-		// new Loaders\Taxonomies;
-
-		// Shortcodes
-		// new Loaders\Shortcodes;
-
-		// Widgets
-		// new Loaders\Widgets;
-
-		// Admin Pages
-		// new Loaders\Admin_Pages;
+		// $this->rest_endpoints();
+		// $this->custom_post_types();
+		// $this->taxonomies();
+		// $this->shortcodes();
+		// $this->widgets();
+		// $this->admin_pages();
 	}
 
 	/**

@@ -50,7 +50,7 @@ abstract class Bootstrap {
 	 *
 	 * @since 1.0.0
 	 */
-	abstract protected function _setup_classes();
+	abstract protected function _setup_loaders();
 
 	/**
 	 * Fetches the specified class, and constructs the class if it hasn't been constructed yet.
@@ -155,6 +155,94 @@ abstract class Bootstrap {
 	}
 
 	/**
+	 * Retrieves the cron jobs loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Cron_Jobs
+	 */
+	public function cron_jobs() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Cron_Jobs' );
+	}
+
+	/**
+	 * Retrieves the admin bar menus loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Admin_Bar_Menus
+	 */
+	public function admin_bar_menus() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Admin_Bar_Menus' );
+	}
+
+	/**
+	 * Retrieves the rest endpoints loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Rest_Endpoints
+	 */
+	public function rest_endpoints() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Rest_Endpoints' );
+	}
+
+	/**
+	 * Retrieves the custom post types loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Custom_Post_Types
+	 */
+	public function custom_post_types() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Custom_Post_Types' );
+	}
+
+	/**
+	 * Retrieves the taxonomies loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Taxonomies
+	 */
+	public function taxonomies() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Taxonomies' );
+	}
+
+	/**
+	 * Retrieves the shortcodes loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Shortcodes
+	 */
+	public function shortcodes() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Shortcodes' );
+	}
+
+	/**
+	 * Retrieves the widgets loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Widgets
+	 */
+	public function widgets() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Widgets' );
+	}
+
+	/**
+	 * Retrieves the admin_pages loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Admin_Pages
+	 */
+	public function admin_pages() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Admin_Pages' );
+	}
+
+	/**
 	 * Retrieves the Styles loader.
 	 *
 	 * @since 1.0.0
@@ -239,14 +327,14 @@ abstract class Bootstrap {
 		 */
 		do_action( 'plugin_name_replace_me/before_setup' );
 
-		// Manually include generic functions.
-		require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
-
 		// Set up the autoloader for everything else.
 		$this->_setup_autoloader();
 
 		// Set up classes that register things.
-		$this->_setup_classes();
+		$this->_setup_loaders();
+
+		// Manually include generic functions.
+		require_once( PLUGIN_NAME_REPLACE_ME_ROOT_DIR . 'lib/functions.php' );
 
 		/**
 		 * Fires just after the Plugin Name Replace Me is completely set-up.
