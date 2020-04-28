@@ -62,15 +62,6 @@ abstract class Style extends Feature_Extension {
 	 */
 	protected $media = 'all';
 
-	/**
-	 * The page contexts in which this script should be registered.
-	 * This determines where this script is registered.
-	 *
-	 * @var array list of contexts. Can contain any of the following: 'site', 'admin', 'author'
-	 */
-	protected $contexts = [];
-
-
 	public function __construct() {
 		$this->ver = false === $this->ver ? PLUGIN_NAME_REPLACE_ME_PLUGIN_VERSION : $this->ver;
 		$this->src = false === $this->src ? PLUGIN_NAME_REPLACE_ME_CSS_URL . $this->handle . '.min.css' : $this->src;
@@ -80,15 +71,7 @@ abstract class Style extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		if ( in_array( 'site', $this->contexts ) ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'register' ] );
-		}
-		if ( in_array( 'admin', $this->contexts ) ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'register' ] );
-		}
-		if ( in_array( 'author', $this->contexts ) ) {
-			add_action( 'author_enqueue_scripts', [ $this, 'register' ] );
-		}
+		add_action( 'init', [ $this, 'register' ] );
 	}
 
 	public function register() {

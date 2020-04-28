@@ -25,15 +25,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Admin_Pages extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Admin_Page' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Admin_Page';
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'admin_page', 'Plugin_Name_Replace_Me\Admin_Page' );
+		// $this->add( 'admin_page', 'Plugin_Name_Replace_Me\Admin_Page' );
 	}
 
 	/**

@@ -26,9 +26,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Shortcodes extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Shortcode' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Shortcode';
 
 	/**
 	 * @inheritDoc

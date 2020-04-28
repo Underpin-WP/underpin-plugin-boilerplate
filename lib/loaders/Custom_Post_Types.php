@@ -25,15 +25,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Custom_Post_Types extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Custom_Post_Type' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Custom_Post_Type';
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-//		$this->add( 'post_type', 'Namespace\To\Class');
+		// $this->add( 'post_type', 'Namespace\To\Class');
 	}
 
 	/**

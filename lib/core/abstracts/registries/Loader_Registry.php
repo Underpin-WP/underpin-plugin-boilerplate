@@ -37,14 +37,10 @@ abstract class Loader_Registry extends Registry {
 	/**
 	 * Loader_Registry constructor.
 	 *
-	 * @param string $abstraction_class The namespaced instance of the abstraction class that items in this registry
-	 *                                  extend.
 	 * @param bool   $extendable        true if this is extendable with a hook.
 	 */
-	public function __construct( $abstraction_class, $extendable = false ) {
-		$this->abstraction_class = $abstraction_class;
-
-		parent::__construct( $this->get_registry_id(), $extendable );
+	public function __construct() {
+		parent::__construct( $this->get_registry_id() );
 	}
 
 	/**

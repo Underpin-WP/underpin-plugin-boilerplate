@@ -25,15 +25,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Styles extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( '\Plugin_Name_Replace_Me\Core\Abstracts\Style' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = '\Plugin_Name_Replace_Me\Core\Abstracts\Style';
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-		$this->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Style' );
+//		$this->add( 'debug', 'namespace\to\style\class' );
 	}
 
 	/**
