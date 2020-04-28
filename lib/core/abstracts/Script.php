@@ -63,14 +63,6 @@ abstract class Script extends Feature_Extension {
 	protected $in_footer = false;
 
 	/**
-	 * The page contexts in which this script should be registered.
-	 * This determines where this script is registered.
-	 *
-	 * @var array list of contexts. Can contain any of the following: 'site', 'admin', 'author'
-	 */
-	protected $contexts = [];
-
-	/**
 	 * Script constructor.
 	 *
 	 * @since 1.0.0
@@ -84,15 +76,7 @@ abstract class Script extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		if ( in_array( 'site', $this->contexts ) ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'register' ] );
-		}
-		if ( in_array( 'admin', $this->contexts ) ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'register' ] );
-		}
-		if ( in_array( 'author', $this->contexts ) ) {
-			add_action( 'author_enqueue_scripts', [ $this, 'register' ] );
-		}
+		add_action( 'init', [ $this, 'register' ] );
 	}
 
 	/**

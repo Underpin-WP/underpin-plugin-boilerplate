@@ -25,7 +25,6 @@ $( document ).ready( () => {
 	} );
 
 	$( document ).keyup( ( e ) => {
-		console.log( e.key );
 		if( e.key === 'Escape' ){
 			debugBarWrap.hide();
 		}

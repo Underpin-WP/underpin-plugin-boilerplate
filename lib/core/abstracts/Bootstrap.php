@@ -166,6 +166,17 @@ abstract class Bootstrap {
 	}
 
 	/**
+	 * Retrieves the blocks loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Blocks
+	 */
+	public function blocks() {
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Blocks' );
+	}
+
+	/**
 	 * Retrieves the admin bar menus loader.
 	 *
 	 * @since 1.0.0

@@ -29,8 +29,6 @@ class Debug_Bar_Script extends Script {
 
 	protected $deps = [ 'jquery' ];
 
-	protected $contexts = [ 'site', 'admin', 'author' ];
-
 	protected $in_footer = true;
 
 	public function __construct() {

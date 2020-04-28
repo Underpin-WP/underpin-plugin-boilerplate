@@ -24,9 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Widgets extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( '\WP_Widget' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = '\WP_Widget';
 
 	/**
 	 * @inheritDoc

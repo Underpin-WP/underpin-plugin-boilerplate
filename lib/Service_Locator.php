@@ -38,8 +38,9 @@ final class Service_Locator extends Bootstrap {
 	protected function _setup_loaders() {
 		$this->cron_jobs();
 		$this->admin_bar_menus();
-		$this->scripts();
-		$this->styles();
+		// $this->scripts();
+		// $this->styles();
+		 $this->blocks();
 		// $this->rest_endpoints();
 		// $this->custom_post_types();
 		// $this->taxonomies();

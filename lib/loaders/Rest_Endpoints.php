@@ -26,9 +26,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Rest_Endpoints extends Loader_Registry {
 
-	public function __construct() {
-		parent::__construct( 'Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint' );
-	}
+	/**
+	 * @inheritDoc
+	 */
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint';
 
 	/**
 	 * @inheritDoc
