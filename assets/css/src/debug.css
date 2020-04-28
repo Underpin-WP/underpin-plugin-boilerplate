@@ -40,9 +40,10 @@
 
 #debug-bar-wrap .section-listing {
 	background: #efefef;
+	position:fixed;
 	border: 1px solid #aaa;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 150px);
 	overflow: scroll;
 	color: black;
 	padding: 20px;

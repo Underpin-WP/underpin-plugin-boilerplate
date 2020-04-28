@@ -7,7 +7,6 @@ $( document ).ready( () => {
 	const debugMenuItems = $( '#plugin-name-replace-me-debug-bar-menu a' );
 	const debugSections = $( '.debug-bar-section' );
 
-
 	debugTarget.on( 'click', ( e ) => {
 		e.preventDefault();
 		debugBarWrap.toggle();
