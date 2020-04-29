@@ -189,7 +189,7 @@ trait Templates {
 	 *
 	 * @return string
 	 */
-	private function get_template_directory() {
+	protected function get_template_directory() {
 		$template_group     = $this->get_template_group();
 		$template_directory = trailingslashit( PLUGIN_NAME_REPLACE_ME_TEMPLATE_DIR ) . $template_group;
 

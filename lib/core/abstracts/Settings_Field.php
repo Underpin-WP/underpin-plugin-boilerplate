@@ -9,7 +9,7 @@
 
 namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
-use Plugin_Name_Replace_Me\Core\Traits\Templates;
+use Plugin_Name_Replace_Me\Core\Traits\Core_Templates;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package Plugin_Name_Replace_Me\Abstracts
  */
 abstract class Settings_Field {
-	use Templates;
+	use Core_Templates;
 
 	/**
 	 * Field parameters.
@@ -92,7 +92,7 @@ abstract class Settings_Field {
 				'available_params' => array_keys( $this->field_params ),
 				'field_type'       => $this->get_field_type(),
 			]
-		)->error();
+		);
 	}
 
 	/**

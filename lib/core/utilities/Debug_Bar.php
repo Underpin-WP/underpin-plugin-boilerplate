@@ -12,7 +12,7 @@ namespace Plugin_Name_Replace_Me\Core\Utilities;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Admin_Bar_Menu;
 use Plugin_Name_Replace_Me\Core\Factories\Debug_Bar_Section;
-use Plugin_Name_Replace_Me\Core\Traits\Templates;
+use Plugin_Name_Replace_Me\Core\Traits\Core_Templates;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package
  */
 class Debug_Bar extends Admin_Bar_Menu {
-	use Templates;
+	use Core_Templates;
 
 	/**
 	 * @inheritDoc
