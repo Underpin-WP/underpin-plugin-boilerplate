@@ -9,7 +9,6 @@
 
 namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
-use mysql_xdevapi\Exception;
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
 use Plugin_Name_Replace_Me\Core\Loaders;
 
