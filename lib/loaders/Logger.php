@@ -30,6 +30,6 @@ class Logger extends Event_Registry {
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-		$this->add( 'plugin_name_replace_me_error', 'Plugin_Name_Replace_Me\Core\Events\Error' );
+		$this->add( 'error', 'Plugin_Name_Replace_Me\Core\Events\Error' );
 	}
 }

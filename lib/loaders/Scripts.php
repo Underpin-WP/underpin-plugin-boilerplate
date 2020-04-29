@@ -62,7 +62,7 @@ class Scripts extends Loader_Registry {
 			return true;
 		} else {
 			return plugin_name_replace_me()->logger()->log_as_error(
-				'plugin_name_replace_me_error',
+				'error',
 				'script_not_enqueued',
 				'The specified script could not be enqueued because it has not been registered.',
 				$handle

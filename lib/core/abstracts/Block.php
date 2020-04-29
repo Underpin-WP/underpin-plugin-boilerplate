@@ -60,7 +60,7 @@ abstract class Block extends Feature_Extension {
 
 		if ( false === $this->type ) {
 			plugin_name_replace_me()->logger()->log(
-				'plugin_name_replace_me_error',
+				'error',
 				'invalid_block_type',
 				'The provided block does not appear to have a type set',
 				get_class( $this ),
@@ -85,7 +85,7 @@ abstract class Block extends Feature_Extension {
 		$registered = register_block_type( $this->type, $this->args );
 		if ( false === $registered ) {
 			plugin_name_replace_me()->logger()->log(
-				'plugin_name_replace_me_error',
+				'error',
 				'block_not_registered',
 				'The provided block failed to register. Register block type provides a __doing_it_wrong warning explaining more.',
 				$this->type,

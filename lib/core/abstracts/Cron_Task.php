@@ -66,7 +66,7 @@ abstract class Cron_Task extends Feature_Extension {
 			self::$registered_events[ $this->event ] = $this->frequency;
 		} else {
 			plugin_name_replace_me()->logger()->log(
-				'plugin_name_replace_me_error',
+				'error',
 				'cron_event_exists',
 				__( 'A cron event was not registered because an event of the same name has already been registered.' ),
 				'',

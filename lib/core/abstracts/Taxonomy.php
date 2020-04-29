@@ -63,7 +63,7 @@ abstract class Taxonomy extends Feature_Extension {
 		$registered = register_taxonomy( $this->name, $this->post_type, $this->args );
 
 		if ( is_wp_error( $registered ) ) {
-			plugin_name_replace_me()->logger()->log_wp_error( 'plugin_name_replace_me_error', $registered );
+			plugin_name_replace_me()->logger()->log_wp_error( 'error', $registered );
 		}
 	}
 

@@ -34,7 +34,7 @@ class Error extends Event_Type {
 	 *
 	 * @var string
 	 */
-	public $type = 'plugin_name_replace_me_error';
+	public $type = 'error';
 
 	/**
 	 * Writes this to the log.

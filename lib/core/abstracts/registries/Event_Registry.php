@@ -170,7 +170,7 @@ abstract class Event_Registry extends Loader_Registry {
 				$purged = $writer->purge( $max_file_age );
 
 				if ( is_wp_error( $purged ) ) {
-					$this->log_wp_error( 'plugin_name_replace_me_error', $purged );
+					$this->log_wp_error( 'error', $purged );
 				}
 			}
 		}

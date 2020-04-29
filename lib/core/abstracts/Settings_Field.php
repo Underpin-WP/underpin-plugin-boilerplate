@@ -84,7 +84,7 @@ abstract class Settings_Field {
 		}
 
 		return plugin_name_replace_me()->logger()->log_as_error(
-			'plugin_name_replace_me_error',
+			'error',
 			'invalid_field_type',
 			__( 'The requested param is not a valid param for this field.', 'plugin-name-replace-me' ),
 			[

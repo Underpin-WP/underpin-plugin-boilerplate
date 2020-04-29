@@ -57,7 +57,7 @@ abstract class Custom_Post_Type extends Feature_Extension {
 		$registered = register_post_type( $this->type, $this->args );
 
 		if ( is_wp_error( $registered ) ) {
-			plugin_name_replace_me()->logger()->log_wp_error( 'plugin_name_replace_me_error', $registered );
+			plugin_name_replace_me()->logger()->log_wp_error( 'error', $registered );
 		}
 	}
 

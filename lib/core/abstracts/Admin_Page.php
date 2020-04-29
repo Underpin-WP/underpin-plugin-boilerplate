@@ -163,7 +163,7 @@ abstract class Admin_Page extends Feature_Extension {
 
 		if ( true !== $updated ) {
 			$updated = plugin_name_replace_me()->logger()->log_as_error(
-				'plugin_name_replace_me_error',
+				'error',
 				'update_request_settings_failed_to_update',
 				__( 'The ' . $options_key . ' settings failed to update.' )
 			);
@@ -191,7 +191,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		return plugin_name_replace_me()->logger()->log_as_error(
-			'plugin_name_replace_me_error',
+			'error',
 			'no_admin_section_found',
 			'No valid section could be found',
 			[ 'sections' => $this->sections, 'admin_page' => $this->parent_slug ]
@@ -326,7 +326,7 @@ abstract class Admin_Page extends Feature_Extension {
 
 		if ( $errors->has_errors() ) {
 			plugin_name_replace_me()->logger()->log(
-				'plugin_name_replace_me_error',
+				'error',
 				'failed_to_save_settings',
 				'some settings failed to save',
 				[ 'errors' => $errors ]
