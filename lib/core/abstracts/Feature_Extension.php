@@ -14,6 +14,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 abstract class Feature_Extension {
 
+
+	/**
+	 * A human-readable description of this event type.
+	 * This is used in debug logs to make it easier to understand why this exists.
+	 *
+	 * @var string
+	 */
+	public $description = '';
+
+	/**
+	 * A human-readable name for this event type.
+	 * This is used in debug logs to make it easier to understand what this is.
+	 *
+	 * @var string
+	 */
+	public $name = '';
+
 	/**
 	 * Callback to do the actions to register whatever this class is intended to extend.
 	 *
