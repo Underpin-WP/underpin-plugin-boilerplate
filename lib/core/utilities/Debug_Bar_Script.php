@@ -31,6 +31,10 @@ class Debug_Bar_Script extends Script {
 
 	protected $in_footer = true;
 
+	public $description = 'Script that handles the debug bar interface.';
+
+	public $name = "Debug Bar Script";
+
 	public function __construct() {
 		$this->src = PLUGIN_NAME_REPLACE_ME_JS_URL . 'debug.min.js';
 		parent::__construct();

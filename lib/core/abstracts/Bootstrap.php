@@ -10,6 +10,7 @@
 namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Registry;
 use Plugin_Name_Replace_Me\Loaders;
 
 
@@ -80,12 +81,16 @@ abstract class Bootstrap {
 		$results = [];
 		foreach ( $this->class_registry as $key => $class ) {
 			if ( $class instanceof Loader_Registry ) {
-				$class = (array) $class;
 				if ( ! empty( $class ) ) {
 					ob_start();
 					foreach ( $class as $registered_key => $registered_class ) {
-						echo "******************************\n";
-						echo $registered_key;
+						echo "******************************";
+							echo "\n" . $registered_class->name;
+							echo "\n" . $registered_class->description;
+							echo "\n" . $registered_key;
+							unset( $registered_class->name );
+							unset( $registered_class->description );
+
 						echo "\n******************************\n";
 						echo var_export( $registered_class );
 					}
@@ -159,17 +164,10 @@ abstract class Bootstrap {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \Plugin_Name_Replace_Me\Core\Abstracts\Logger
+	 * @return Loaders\Logger
 	 */
 	public function logger() {
-		// If the DFS monitor plugin is active, use the dfsm logger
-		if ( function_exists( 'dfsm' ) ) {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\Core\Utilities\Enhanced_Logger' );
-
-			// Otherwise use the built-in logger.
-		} else {
-			return $this->_get_class( '\Plugin_Name_Replace_Me\Core\Utilities\Basic_Logger' );
-		}
+		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Logger' );
 	}
 
 	/**

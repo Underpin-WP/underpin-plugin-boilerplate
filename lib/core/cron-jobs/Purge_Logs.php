@@ -23,6 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Purge_Logs extends Cron_Task {
 
+	public $description = 'Purges logged events that are older than 30 days. This keeps the log files from becoming massive.';
+
+	public $name = 'Purge Logs';
+
 	/**
 	 * Purge_Logs constructor.
 	 *

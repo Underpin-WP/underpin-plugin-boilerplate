@@ -81,7 +81,7 @@ abstract class Loader_Registry extends Registry {
 			return true;
 		}
 
-		return plugin_name_replace_me()->logger()->log(
+		return plugin_name_replace_me()->logger()->log_as_error(
 			'plugin_name_replace_me_error',
 			'invalid_service_type',
 			'The specified item could not be instantiated. Invalid instance type',

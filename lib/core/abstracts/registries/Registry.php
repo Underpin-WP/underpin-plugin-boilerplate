@@ -39,6 +39,22 @@ abstract class Registry extends \ArrayIterator {
 	protected $is_extendable;
 
 	/**
+	 * A human-readable description of this event type.
+	 * This is used in debug logs to make it easier to understand why this exists.
+	 *
+	 * @var string
+	 */
+	public $description = '';
+
+	/**
+	 * A human-readable name for this event type.
+	 * This is used in debug logs to make it easier to understand what this is.
+	 *
+	 * @var string
+	 */
+	public $name = '';
+
+	/**
 	 * Registry constructor.
 	 *
 	 * @param string $registry_id The registry ID.

@@ -63,7 +63,7 @@ class Styles extends Loader_Registry {
 
 			return true;
 		} else {
-			return plugin_name_replace_me()->logger()->log(
+			return plugin_name_replace_me()->logger()->log_as_error(
 				'plugin_name_replace_me_error',
 				'style_not_enqueued',
 				'The specified style could not be enqueued because it has not been registered.',

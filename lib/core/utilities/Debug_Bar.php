@@ -28,6 +28,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Debug_Bar extends Admin_Bar_Menu {
 	use Templates;
 
+	/**
+	 * @inheritDoc
+	 */
+	public $description = 'This registers the actual debug bar button to the wp admin bar.';
+
+	public $name = "Debug Bar";
+
 	public function __construct() {
 		parent::__construct( 'plugin_name_replace_me_debugger', [
 			'parent' => 'top-secondary',

@@ -27,6 +27,10 @@ class Debug_Bar_Style extends Style {
 
 	protected $handle = 'plugin_name_replace_me_debug';
 
+	public $description = 'Styles that make the debug bar interface';
+
+	public $name = "Debug Bar Style";
+
 	public function __construct() {
 		$this->src = PLUGIN_NAME_REPLACE_ME_CSS_URL . 'debugStyle.min.css';
 		parent::__construct();

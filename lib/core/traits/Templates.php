@@ -104,7 +104,7 @@ trait Templates {
 				$template = $this->include_template( $template_name, $params );
 			} else {
 				$template_path = $this->get_template_path( $template_name );
-				$template      = plugin_name_replace_me()->logger()->log(
+				$template      = plugin_name_replace_me()->logger()->log_as_error(
 					'plugin_name_replace_me_error',
 					'template_file_does_not_exist',
 					__( "Template $template_name was not loaded because the file located at $template_path does not exist." ,'plugin-name-replace-me' )
@@ -117,7 +117,7 @@ trait Templates {
 			}
 		} else {
 			$class    = __CLASS__;
-			$template = plugin_name_replace_me()->logger()->log(
+			$template = plugin_name_replace_me()->logger()->log_as_error(
 				'plugin_name_replace_me_error',
 				'plugin_name_replace_me_invalid_template',
 				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class" ,'plugin-name-replace-me' )
@@ -304,14 +304,14 @@ trait Templates {
 
 				$result = isset( $templates[$template_name][ $arg ] ) ? $templates[$template_name][ $arg ] : $this->get_template_arg_defaults()[ $arg ];
 			} else {
-				$result = plugin_name_replace_me()->logger()->log(
+				$result = plugin_name_replace_me()->logger()->log_as_error(
 					'plugin_name_replace_me_error',
 					'plugin_name_replace_me_get_arg_invalid_template',
 					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." ,'plugin-name-replace-me' )
 				);
 			}
 		} else {
-			$result = plugin_name_replace_me()->logger()->log(
+			$result = plugin_name_replace_me()->logger()->log_as_error(
 				'plugin_name_replace_me_error',
 				'plugin_name_replace_me_get_arg_invalid_argument',
 				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." ,'plugin-name-replace-me' )

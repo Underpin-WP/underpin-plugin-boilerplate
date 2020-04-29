@@ -83,7 +83,7 @@ abstract class Settings_Field {
 			return $this->field_params[ $param ];
 		}
 
-		return plugin_name_replace_me()->logger()->log(
+		return plugin_name_replace_me()->logger()->log_as_error(
 			'plugin_name_replace_me_error',
 			'invalid_field_type',
 			__( 'The requested param is not a valid param for this field.', 'plugin-name-replace-me' ),
@@ -92,7 +92,7 @@ abstract class Settings_Field {
 				'available_params' => array_keys( $this->field_params ),
 				'field_type'       => $this->get_field_type(),
 			]
-		);
+		)->error();
 	}
 
 	/**
