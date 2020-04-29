@@ -9,9 +9,9 @@
 
 namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
+use mysql_xdevapi\Exception;
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
-use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Registry;
-use Plugin_Name_Replace_Me\Loaders;
+use Plugin_Name_Replace_Me\Core\Loaders;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -45,6 +45,15 @@ abstract class Bootstrap {
 	protected static $instance = null;
 
 	/**
+	 * The namespace for loaders. Used for loader autoloading.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string Complete namespace for all loaders.
+	 */
+	protected $loader_namespace = "Plugin_Name_Replace_Me\Core\Loaders";
+
+	/**
 	 * Set up classes that cannot be otherwise loaded via the autoloader.
 	 *
 	 * This is where you can add anything that needs "registered" to WordPress,
@@ -52,7 +61,10 @@ abstract class Bootstrap {
 	 *
 	 * @since 1.0.0
 	 */
-	abstract protected function _setup_loaders();
+	protected function _setup_loaders() {
+		$this->cron_jobs();
+		$this->admin_bar_menus();
+	}
 
 	/**
 	 * Fetches the specified class, and constructs the class if it hasn't been constructed yet.
@@ -64,10 +76,29 @@ abstract class Bootstrap {
 	 */
 	protected function _get_class( $class ) {
 		if ( ! isset( $this->class_registry[ $class ] ) ) {
-			$this->class_registry[ $class ] = new $class;
+			if ( class_exists( $class ) ) {
+				$this->class_registry[ $class ] = new $class;
+			} else {
+				$this->class_registry[ $class ] = new \WP_Error(
+					'class_could_not_be_found',
+					'The specified class could not be located',
+					[ 'class' => $class ]
+				);
+			}
 		}
 
 		return $this->class_registry[ $class ];
+	}
+
+	protected function _get_loader( $loader ) {
+		$class = $this->_get_class( $this->loader_namespace . '\\' . $loader );
+
+		// If we failed to get the class using the namespace, fallback to the default.
+		if ( is_wp_error( $class ) ) {
+			$class = $this->_get_class( 'Plugin_Name_Replace_Me\Core\Loaders\\' . $loader );
+		}
+
+		return $class;
 	}
 
 	/**
@@ -85,16 +116,19 @@ abstract class Bootstrap {
 					ob_start();
 					foreach ( $class as $registered_key => $registered_class ) {
 						echo "******************************";
-							echo "\n" . $registered_class->name;
-							echo "\n" . $registered_class->description;
-							echo "\n" . $registered_key;
-							unset( $registered_class->name );
-							unset( $registered_class->description );
+						echo "\n" . $registered_class->name;
+						echo "\n" . $registered_class->description;
+						echo "\n" . $registered_key;
+						unset( $registered_class->name );
+						unset( $registered_class->description );
 
 						echo "\n******************************\n";
 						echo var_export( $registered_class );
 					}
-					$results[ str_replace( '\Plugin_Name_Replace_Me\Loaders\\', '', $key ) ] = ob_get_clean();
+
+					$key             = explode( '\\', $key );
+					$key             = array_pop( $key );
+					$results[ $key ] = ob_get_clean();
 				}
 			}
 		}
@@ -167,7 +201,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Logger
 	 */
 	public function logger() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Logger' );
+		return $this->_get_loader( 'Logger' );
 	}
 
 	/**
@@ -178,7 +212,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Scripts
 	 */
 	public function scripts() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Scripts' );
+		return $this->_get_loader( 'Scripts' );
 	}
 
 	/**
@@ -189,7 +223,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Cron_Jobs
 	 */
 	public function cron_jobs() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Cron_Jobs' );
+		return $this->_get_loader( 'Cron_Jobs' );
 	}
 
 	/**
@@ -200,7 +234,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Blocks
 	 */
 	public function blocks() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Blocks' );
+		return $this->_get_loader( 'Blocks' );
 	}
 
 	/**
@@ -211,7 +245,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Admin_Bar_Menus
 	 */
 	public function admin_bar_menus() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Admin_Bar_Menus' );
+		return $this->_get_loader( 'Admin_Bar_Menus' );
 	}
 
 	/**
@@ -222,7 +256,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Rest_Endpoints
 	 */
 	public function rest_endpoints() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Rest_Endpoints' );
+		return $this->_get_loader( 'Rest_Endpoints' );
 	}
 
 	/**
@@ -233,7 +267,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Custom_Post_Types
 	 */
 	public function custom_post_types() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Custom_Post_Types' );
+		return $this->_get_loader( 'Custom_Post_Types' );
 	}
 
 	/**
@@ -244,7 +278,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Taxonomies
 	 */
 	public function taxonomies() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Taxonomies' );
+		return $this->_get_loader( 'Taxonomies' );
 	}
 
 	/**
@@ -255,7 +289,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Shortcodes
 	 */
 	public function shortcodes() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Shortcodes' );
+		return $this->_get_loader( 'Shortcodes' );
 	}
 
 	/**
@@ -266,7 +300,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Widgets
 	 */
 	public function widgets() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Widgets' );
+		return $this->_get_loader( 'Widgets' );
 	}
 
 	/**
@@ -277,7 +311,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Admin_Pages
 	 */
 	public function admin_pages() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Admin_Pages' );
+		return $this->_get_loader( 'Admin_Pages' );
 	}
 
 	/**
@@ -288,7 +322,7 @@ abstract class Bootstrap {
 	 * @return Loaders\Styles
 	 */
 	public function styles() {
-		return $this->_get_class( '\Plugin_Name_Replace_Me\Loaders\Styles' );
+		return $this->_get_loader( 'Styles' );
 	}
 
 	/**

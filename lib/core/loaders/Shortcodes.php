@@ -1,33 +1,35 @@
 <?php
 /**
- * Widgets
+ * Shortcodes
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
  */
 
 
-namespace Plugin_Name_Replace_Me\Loaders;
+namespace Plugin_Name_Replace_Me\Core\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
+use Plugin_Name_Replace_Me\Core\Abstracts\Shortcode;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class Widgets
+ * Class Shortcodes
  * Registry for Cron Jobs
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
  */
-class Widgets extends Loader_Registry {
+
+class Shortcodes extends Loader_Registry {
 
 	/**
 	 * @inheritDoc
 	 */
-	protected $abstraction_class = '\WP_Widget';
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Shortcode';
 
 	/**
 	 * @inheritDoc
@@ -37,24 +39,10 @@ class Widgets extends Loader_Registry {
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public function add( $key, $value ) {
-		$valid = $this->validate_item( $key, $value );
-
-		if ( true === $valid ) {
-			add_action( 'widgets_init', function() use ( $value ) {
-				register_widget( $value );
-			} );
-		}
-	}
-
-	/**
 	 * @param string $key
-	 * @return \WP_Widget|\WP_Error Script Resulting WP_Widget class, if it exists. WP_Error, otherwise.
+	 * @return Shortcode|\WP_Error Script Resulting shortcode class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
 	}
-
 }

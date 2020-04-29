@@ -25,6 +25,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Service_Locator extends Bootstrap {
 
 	/**
+	 * The namespace for any loaders.
+	 * The locator will look here before falling back to the default loader class.
+	 * Feel free to change this to whatever namespace you want to use for your loaders.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $loader_namespace = 'Plugin_Name_Replace_Me\Loaders';
+
+	/**
 	 * Set up active loader classes.
 	 *
 	 * This is where you can add anything that needs "registered" to WordPress,
@@ -36,8 +47,7 @@ final class Service_Locator extends Bootstrap {
 	 * @since 1.0.0
 	 */
 	protected function _setup_loaders() {
-		$this->cron_jobs();
-		$this->admin_bar_menus();
+		parent::_setup_loaders();
 		// $this->scripts();
 		// $this->styles();
 		// $this->blocks();

@@ -1,46 +1,46 @@
 <?php
 /**
- * Rest Endpoint Registry
+ * Blocks
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
  */
 
 
-namespace Plugin_Name_Replace_Me\Loaders;
+namespace Plugin_Name_Replace_Me\Core\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;
-use Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint;
+use Plugin_Name_Replace_Me\Core\Abstracts\Block;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class Rest_Endpoints
+ * Class Blocks
  * Registry for Cron Jobs
  *
  * @since   1.0.0
  * @package Plugin_Name_Replace_Me\Registries\Loaders
  */
 
-class Rest_Endpoints extends Loader_Registry {
+class Blocks extends Loader_Registry {
 
 	/**
 	 * @inheritDoc
 	 */
-	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Rest_Endpoint';
+	protected $abstraction_class = 'Plugin_Name_Replace_Me\Core\Abstracts\Block';
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-		//$this->add( 'key','namespaced_class' );
+		// $this->add( 'key','namespace\to\block\class' );
 	}
 
 	/**
 	 * @param string $key
-	 * @return Rest_Endpoint|\WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
+	 * @return Block|\WP_Error Script Resulting block class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

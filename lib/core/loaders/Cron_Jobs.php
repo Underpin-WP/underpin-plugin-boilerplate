@@ -7,7 +7,7 @@
  */
 
 
-namespace Plugin_Name_Replace_Me\Loaders;
+namespace Plugin_Name_Replace_Me\Core\Loaders;
 
 use Plugin_Name_Replace_Me\Core\Abstracts\Cron_Task;
 use Plugin_Name_Replace_Me\Core\Abstracts\Registries\Loader_Registry;

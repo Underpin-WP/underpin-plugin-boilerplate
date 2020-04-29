@@ -37,7 +37,6 @@ abstract class Loader_Registry extends Registry {
 	/**
 	 * Loader_Registry constructor.
 	 *
-	 * @param bool   $extendable        true if this is extendable with a hook.
 	 */
 	public function __construct() {
 		parent::__construct( $this->get_registry_id() );
