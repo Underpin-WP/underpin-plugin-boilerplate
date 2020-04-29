@@ -64,6 +64,8 @@ abstract class Bootstrap {
 	protected function _setup_loaders() {
 		$this->cron_jobs();
 		$this->admin_bar_menus();
+		$this->scripts();
+		$this->styles();
 	}
 
 	/**

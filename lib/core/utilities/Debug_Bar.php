@@ -45,9 +45,6 @@ class Debug_Bar extends Admin_Bar_Menu {
 			],
 		] );
 
-		plugin_name_replace_me()->scripts()->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Script' );
-		plugin_name_replace_me()->styles()->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Style' );
-
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ], 11 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ], 11 );
 		add_action( 'shutdown', [ $this, 'render_callback' ] );

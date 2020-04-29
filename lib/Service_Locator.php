@@ -48,8 +48,6 @@ final class Service_Locator extends Bootstrap {
 	 */
 	protected function _setup_loaders() {
 		parent::_setup_loaders();
-		// $this->scripts();
-		// $this->styles();
 		// $this->blocks();
 		// $this->rest_endpoints();
 		// $this->custom_post_types();
