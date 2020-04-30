@@ -22,20 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class Rest_Endpoint extends Feature_Extension {
 
 	/**
-	 * Registry of endpoints.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var array list of registered endpoints.
-	 */
-	private static $endpoints = [];
-
-	/**
 	 * The REST API's namespace.
 	 *
 	 * @since 1.0.0
 	 */
-	const REST_NAMESPACE = 'plugin-name-replace-me/v1';
+	public $rest_namespace = 'plugin-name-replace-me/v1';
+
+	public $route = '/';
+
+	public $args = [ 'methods' => 'GET' ];
 
 	/**
 	 * Endpoint callback.
@@ -51,30 +46,16 @@ abstract class Rest_Endpoint extends Feature_Extension {
 	 * Rest_Endpoint constructor.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @param string $route The rest route URI
-	 * @param array  $methods Optiona. Array of methods this route supports. Default GET
 	 */
-	public function __construct( $route, $methods = [ 'GET' ] ) {
-
-		$args = [
-			'route' => $route,
-			'args'  => [
-				'methods'  => $methods,
-				'callback' => [ $this, 'endpoint' ],
-			],
-		];
-
-		self::$endpoints[ get_class( $this ) ] = $args;
+	public function __construct() {
+		$this->args['callback'] = [ $this, 'endpoint' ];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		if ( empty( self::$endpoints ) ) {
-			add_action( 'rest_api_init', [ $this, 'register_endpoints' ] );
-		}
+		add_action( 'rest_api_init', [ $this, 'register' ] );
 	}
 
 	/**
@@ -84,9 +65,7 @@ abstract class Rest_Endpoint extends Feature_Extension {
 	 *
 	 * return void
 	 */
-	public function register_endpoints() {
-		foreach ( self::$endpoints as $endpoint ) {
-			register_rest_route( self::REST_NAMESPACE, $endpoint['route'], $endpoint['args'] );
-		}
+	public function register() {
+		register_rest_route( $this->rest_namespace, $this->route, $this->args );
 	}
 }

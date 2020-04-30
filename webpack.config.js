@@ -30,6 +30,8 @@ module.exports = {
 	 * Add your entry points for CSS and JS here.
 	 */
 	entry: {
+		batch: './assets/js/src/batch',
+		batchStyle: './assets/css/src/batch.css',
 		debug: './assets/js/src/debug',
 		debugStyle: './assets/css/src/debug.css',
 	},

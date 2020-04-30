@@ -62,6 +62,16 @@ abstract class Script extends Feature_Extension {
 	 */
 	protected $in_footer = false;
 
+
+	/**
+	 * Params to send to the script when it is enqueued.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array Array of params.
+	 */
+	protected $localized_params = [];
+
 	/**
 	 * Script constructor.
 	 *
@@ -87,7 +97,21 @@ abstract class Script extends Feature_Extension {
 	 * @return array list of localized params as key => value pairs.
 	 */
 	public function get_localized_params() {
-		return [];
+		return $this->localized_params;
+	}
+
+	public function set_param( $key, $value ) {
+		$this->localized_params[ $key ] = $value;
+
+		return true;
+	}
+
+	public function remove_param( $key ) {
+		if ( isset( $this->localized_params[ $key ] ) ) {
+			unset( $this->localized_params[ $key ] );
+		}
+
+		return true;
 	}
 
 	/**

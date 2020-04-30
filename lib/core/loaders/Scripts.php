@@ -35,6 +35,7 @@ class Scripts extends Loader_Registry {
 	 */
 	protected function set_default_items() {
 		$this->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Script' );
+		$this->add( 'batch', '\Plugin_Name_Replace_Me\Core\Utilities\Batch_Script' );
 	}
 
 	/**
@@ -43,6 +44,55 @@ class Scripts extends Loader_Registry {
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
+	}
+
+	/**
+	 * Sets a localized param for the specified script.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $script The script ID
+	 * @param string $key    Localized param key
+	 * @param mixed  $value  Localized param value
+	 * @return true|\WP_Error True if set, otherwise WP_Error.
+	 */
+	public function set_param( $script, $key, $value ) {
+		$script = $this->get( $script );
+
+		if ( is_wp_error( $script ) ) {
+			return plugin_name_replace_me()->logger()->log_as_error(
+				'error',
+				'set_param_inavlid_script',
+				'A param was not set because the script could not be found',
+				$script
+			);
+		}
+
+		return $script->set_param( $key, $value );
+	}
+
+	/**
+	 * removes a localized param for the specified script.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $script The script ID
+	 * @param string $key    Localized param key to remove
+	 * @return true|\WP_Error True if removed, otherwise WP_Error.
+	 */
+	public function remove_param( $script, $key ) {
+		$script = $this->get( $script );
+
+		if ( is_wp_error( $script ) ) {
+			return plugin_name_replace_me()->logger()->log_as_error(
+				'error',
+				'set_param_inavlid_script',
+				'A param was not set because the script could not be found',
+				$script
+			);
+		}
+
+		return $script->remove_param( $key );
 	}
 
 	/**

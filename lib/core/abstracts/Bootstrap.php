@@ -65,6 +65,7 @@ abstract class Bootstrap {
 		$this->admin_bar_menus();
 		$this->scripts();
 		$this->styles();
+		$this->options();
 	}
 
 	/**
@@ -117,14 +118,23 @@ abstract class Bootstrap {
 					ob_start();
 					foreach ( $class as $registered_key => $registered_class ) {
 						echo "******************************";
-						echo "\n" . $registered_class->name;
-						echo "\n" . $registered_class->description;
+						if ( isset( $registered_class->name ) ) {
+							echo "\n" . $registered_class->name;
+							unset( $registered_class->name );
+						}
+						if ( isset( $registered_class->description ) ) {
+							echo "\n" . $registered_class->description;
+							unset( $registered_class->description );
+						}
 						echo "\n" . $registered_key;
-						unset( $registered_class->name );
-						unset( $registered_class->description );
 
 						echo "\n******************************\n";
-						echo var_export( $registered_class );
+
+						if ( method_exists( $registered_class, 'export' ) ) {
+							var_dump( $registered_class->export() );
+						} else {
+							var_dump( $registered_class );
+						}
 					}
 
 					$key             = explode( '\\', $key );
@@ -203,6 +213,28 @@ abstract class Bootstrap {
 	 */
 	public function logger() {
 		return $this->_get_loader( 'Logger' );
+	}
+
+	/**
+	 * Fetches the Options instance.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Options
+	 */
+	public function options() {
+		return $this->_get_loader( 'Options' );
+	}
+
+	/**
+	 * Fetches the Batch_Tasks instance.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Batch_Tasks
+	 */
+	public function batch_tasks() {
+		return $this->_get_loader( 'Batch_Tasks' );
 	}
 
 	/**

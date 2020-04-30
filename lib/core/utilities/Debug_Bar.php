@@ -66,19 +66,19 @@ class Debug_Bar extends Admin_Bar_Menu {
 	protected function get_templates() {
 		return [
 			'wrapper' => [
-				'override_visibility' => 'public',
+				'override_visibility' => 'private',
 			],
 			'section' => [
-				'override_visibility' => 'public',
+				'override_visibility' => 'private',
 			],
 			'console' => [
-				'override_visibility' => 'public',
+				'override_visibility' => 'private',
 			],
 			'tabs'    => [
-				'override_visibility' => 'public',
+				'override_visibility' => 'private',
 			],
 			'section-menu'    => [
-				'override_visibility' => 'public',
+				'override_visibility' => 'private',
 			],
 		];
 	}
@@ -94,6 +94,12 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 * Renders the actual debug bar.
 	 */
 	public function render_callback() {
+
+		// If this is rest, or feed, don't output the render
+		if ( defined( 'REST_REQUEST' ) || isset( $request['feed'] ) || defined( 'DOING_AJAX' ) ) {
+			return;
+		}
+
 		echo $this->get_template( 'wrapper', [
 			'sections' => [
 				new Debug_Bar_Section(

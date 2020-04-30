@@ -3,7 +3,7 @@ $( document ).ready( () => {
 	const debugTabs = $( '#plugin-name-replace-me-debug-bar-tabs a' );
 	const debugBarWrap = $( '#debug-bar-wrap' );
 	const debugClose = $( debugBarWrap ).find( '.debug-bar-close' );
-	const debugEventLogs = $( debugBarWrap ).find( 'pre' );
+	const debugEventLogs = $( debugBarWrap ).find( '.console-wrap' );
 	const debugMenuItems = $( '#plugin-name-replace-me-debug-bar-menu a' );
 	const debugSections = $( '.debug-bar-section' );
 

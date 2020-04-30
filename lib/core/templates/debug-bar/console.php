@@ -27,7 +27,7 @@ if ( ! is_array( $items ) ) {
 }
 
 ?>
-<pre id="<?= $item_type ?>">
+<pre class="console-wrap" id="<?= $item_type ?>">
 <?php foreach ( $items as $item ): ?>
 <?php if($item instanceof Log_Item):?>
 <?= $item->format() . "\n\n" ?>

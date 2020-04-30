@@ -36,7 +36,7 @@ abstract class Registry extends \ArrayIterator {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	protected $is_extendable;
+	protected $is_extendable = false;
 
 	/**
 	 * A human-readable description of this event type.
@@ -58,11 +58,9 @@ abstract class Registry extends \ArrayIterator {
 	 * Registry constructor.
 	 *
 	 * @param string $registry_id The registry ID.
-	 * @param bool   $extendable  true if this is extendable with a hook.
 	 */
-	public function __construct( $registry_id, $extendable = false ) {
+	public function __construct( $registry_id ) {
 		$this->registry_id   = (string) $registry_id;
-		$this->is_extendable = (bool) $extendable;
 		parent::__construct();
 		$this->set_default_items();
 		$this->set_extended_items();

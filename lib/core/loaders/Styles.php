@@ -35,6 +35,7 @@ class Styles extends Loader_Registry {
 	 */
 	protected function set_default_items() {
 		$this->add( 'debug', '\Plugin_Name_Replace_Me\Core\Utilities\Debug_Bar_Style' );
+		$this->add( 'batch', '\Plugin_Name_Replace_Me\Core\Utilities\Batch_Style' );
 	}
 
 	/**

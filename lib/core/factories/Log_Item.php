@@ -117,6 +117,9 @@ class Log_Item {
 	 * @return \WP_Error
 	 */
 	public function error() {
-		return new \WP_Error($this->code, $this->message, $this->data );
+		$data        = $this->data;
+		$data['ref'] = $this->ref;
+
+		return new \WP_Error( $this->code, $this->message, $data );
 	}
 }

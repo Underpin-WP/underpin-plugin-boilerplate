@@ -61,7 +61,11 @@ abstract class Loader_Registry extends Registry {
 	public function add( $key, $value ) {
 		$valid = $this->validate_item( $key, $value );
 		if ( true === $valid ) {
-			$this[ $key ] = new $value;
+			if ( is_string( $value ) ) {
+				$this[ $key ] = new $value;
+			} else {
+				$this[ $key ] = $value;
+			}
 		}
 
 		// If this implements registry actions, go ahead and start those up, too.
@@ -76,7 +80,7 @@ abstract class Loader_Registry extends Registry {
 	 * @inheritDoc
 	 */
 	public function validate_item( $key, $value ) {
-		if ( is_subclass_of( $value, $this->abstraction_class ) ) {
+		if ( is_subclass_of( $value, $this->abstraction_class ) || $value instanceof $this->abstraction_class) {
 			return true;
 		}
 
@@ -88,5 +92,4 @@ abstract class Loader_Registry extends Registry {
 			[ 'key' => $key, 'value' => $value, 'expects_type' => $this->abstraction_class ]
 		);
 	}
-
 }
