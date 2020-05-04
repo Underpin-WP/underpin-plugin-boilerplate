@@ -1,6 +1,8 @@
 <?php
 /**
+ * Logs events to a file.
  *
+ * @since 1.0.0
  *
  * @since
  * @package
@@ -18,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Enhanced
+ * Class Basic Logger
  *
  *
  * @since

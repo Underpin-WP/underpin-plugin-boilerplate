@@ -11,8 +11,6 @@ namespace Plugin_Name_Replace_Me\Core\Abstracts;
 
 
 use Exception;
-use Plugin_Name_Replace_Me\Core\Factories\Basic_Logger;
-use Plugin_Name_Replace_Me\Core\Factories\Enhanced_Logger;
 use Plugin_Name_Replace_Me\Core\Factories\Log_Item;
 use WP_Error;
 
@@ -64,12 +62,50 @@ abstract class Event_Type extends \ArrayIterator {
 	public $name = '';
 
 	/**
+	 * The class to instantiate when writing to the error log.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string Namespaced instance of writer class.
+	 */
+	public $writer_class = 'Plugin_Name_Replace_Me\Core\Factories\Basic_Logger';
+
+	/**
+	 * The class to instantiate when logging a new item.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string Namespaced instance of log item class.
+	 */
+	public $log_item_class = 'Plugin_Name_Replace_Me\Core\Factories\Log_Item';
+
+	/**
 	 * Event_Type constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
 		parent::__construct();
+
+		/**
+		 * Filters the writer that is used when logging events.
+		 *
+		 * @since 1.0.0
+		 * @param string $writer_class   The writer class to instantiate when a writer is created.
+		 * @param string $type           The current event type.
+		 * @param string $log_item_class The writer class to instantiate when a writer is created.
+		 */
+		$this->writer_class = apply_filters( 'logger/writer_class', $this->writer_class, $this->type, $this->log_item_class );
+
+		/**
+		 * Filters the log item that is used when logging events.
+		 *
+		 * @since 1.0.0
+		 * @param string $log_item_class The writer class to instantiate when a writer is created.
+		 * @param string $type           The current event type.
+		 * @param string $writer_class   The writer class to instantiate when a writer is created.
+		 */
+		$this->log_item_class = apply_filters( 'logger/log_item_class', $this->log_item_class, $this->type, $this->writer_class );
 	}
 
 	/**
@@ -91,10 +127,12 @@ abstract class Event_Type extends \ArrayIterator {
 			$writer->write_events();
 			reset( $this );
 		}
+
+		do_action( 'logger/after_log_events', $this->writer_class, $this->type );
 	}
 
 	/**
-	 * Fetch the logger instance, if this class supports logging.
+	 * Fetch the log writer instance, if this class supports logging.
 	 *
 	 * @since 1.0.0
 	 *
@@ -109,11 +147,15 @@ abstract class Event_Type extends \ArrayIterator {
 			);
 		}
 
-		if ( function_exists( 'dfsm' ) ) {
-			return new Enhanced_Logger( $this );
-		} else {
-			return new Basic_Logger( $this );
+		if ( ! $this->writer_class instanceof Writer ) {
+			return new \WP_Error(
+				'writer_class_invalid',
+				'The writer class must be extend the Writer class.',
+				[ 'writer_class' => $this->writer_class ]
+			);
 		}
+
+		return new $this->writer_class( $this );
 	}
 
 
@@ -126,10 +168,19 @@ abstract class Event_Type extends \ArrayIterator {
 	 * @param string $message The message to log.
 	 * @param int    $ref     A reference ID related to this error, such as a post ID.
 	 * @param array  $data    Arbitrary data associated with this event message.
-	 * @return Log_Item The logged item.
+	 * @return Log_Item|WP_Error The logged item, or a WP_Error if something went wrong.
 	 */
 	public function log( $code, $message, $ref = null, $data = array() ) {
-		$item = new Log_Item( $this->type, $code, $message, $ref, $data );
+		$item = new $this->log_item_class( $this->type, $code, $message, $ref, $data );
+
+		if ( ! $this->log_item_class instanceof Log_Item ) {
+			return new \WP_Error(
+				'log_item_class_invalid',
+				'The log item class must be extend the Log_Item class.',
+				[ 'log_item_class' => $this->log_item_class ]
+			);
+		}
+
 
 		$this[] = $item;
 
