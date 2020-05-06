@@ -9,6 +9,8 @@
 
 namespace Plugin_Name_Replace_Me;
 
+use Underpin\Abstracts\Batch_Task;
+use Underpin\Abstracts\Event_Type;
 use Underpin\Abstracts\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -76,6 +78,6 @@ final class Service_Locator extends Underpin {
 	protected function _setup() {
 
 		// Manually require functions file
-		require_once( $this->root_dir . 'lib/functions.php' );
+		require_once( $this->dir . 'lib/functions.php' );
 	}
 }
