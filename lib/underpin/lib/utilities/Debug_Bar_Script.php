@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Debug_Bar_Script extends Script {
 
-	protected $handle = 'plugin_name_replace_me_debug';
+	protected $handle = 'underpin_debug';
 
 	protected $deps = [ 'jquery' ];
 

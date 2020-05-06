@@ -42,16 +42,16 @@ class Underpin_Setup extends Abstracts\Underpin {
 		 *
 		 * @since 1.0.0
 		 */
-		$this->root_file    = $file;
-		$this->root_dir     = plugin_dir_path( $file );
-		$this->root_url     = plugin_dir_url( $this->root_file );
-		$this->css_url      = $this->root_url . 'assets/css/build';
-		$this->js_url       = $this->root_url . 'assets/js/build';
-		$this->template_dir = $this->root_dir . 'templates/';
+		$this->file         = $file;
+		$this->dir          = plugin_dir_path( $file );
+		$this->url          = plugin_dir_url( $this->file );
+		$this->css_url      = $this->url . 'assets/css/build';
+		$this->js_url       = $this->url . 'assets/js/build';
+		$this->template_dir = $this->dir . 'templates/';
 	}
 
 	protected function _setup() {
-		var_dump( $this->cron_jobs() );
+		$this->cron_jobs();
 		$this->admin_bar_menus();
 		$this->scripts();
 		$this->styles();

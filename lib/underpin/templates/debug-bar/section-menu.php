@@ -20,7 +20,7 @@ if ( empty( $sections ) ) {
 }
 
 ?>
-<nav id="plugin-name-replace-me-debug-bar-menu">
+<nav id="underpin-debug-bar-menu">
 	<?php foreach ( $sections as $key => $section ): ?>
 		<a
 			class="debug-menu-item<?= $key === 0 ? ' section-active' : '' ?>"

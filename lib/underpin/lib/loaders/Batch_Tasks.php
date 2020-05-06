@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Batch_Task;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class Batch_Tasks
- * Registry for Cron Jobs
+ * Registry to run Batch Tasks
  *
  * @since   1.0.0
  * @package DFS_Monitor\Registries\Loaders
@@ -43,5 +44,25 @@ class Batch_Tasks extends Loader_Registry {
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
+	}
+
+	/**
+	 * Attempts to enqueue the specified batch action to run.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $key The key used to register this batch item.
+	 * @return true|\WP_Error True if enqueued, WP_Error if something went wrong.
+	 */
+	public function enqueue( $key ) {
+		$batch_task = $this->get( $key );
+
+		if ( is_wp_error( $batch_task ) ) {
+			return underpin()->logger()->log_wp_error( 'error', $batch_task );
+		}
+
+		$batch_task->enqueue();
+
+		return true;
 	}
 }

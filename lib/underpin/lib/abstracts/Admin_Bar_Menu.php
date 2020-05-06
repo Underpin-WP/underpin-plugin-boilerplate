@@ -75,7 +75,7 @@ abstract class Admin_Bar_Menu extends Feature_Extension {
 	 */
 	public function __construct( $item_id, $args ) {
 		$defaults = [
-			'title'  => 'Plugin Name Replace Me',
+			'title'  => 'Underpin',
 			'href'   => '#',
 			'parent' => false,
 			'meta'   => [],

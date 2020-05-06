@@ -41,7 +41,7 @@ class Basic_Logger extends Writer {
 
 		// Construct the log dir
 		$upload_dir    = wp_upload_dir( null, false );
-		$this->log_dir = trailingslashit( trailingslashit( $upload_dir['basedir'] ) . 'plugin-name-replace-me-event-logs/' );
+		$this->log_dir = trailingslashit( trailingslashit( $upload_dir['basedir'] ) . 'underpin-event-logs/' );
 
 		// If the log directory does not exist, create it and set permissions.
 		if ( ! is_writeable( $this->log_dir ) ) {

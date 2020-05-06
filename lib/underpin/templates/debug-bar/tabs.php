@@ -20,7 +20,7 @@ if ( empty( $template->get_param( 'items' ) ) ) {
 }
 
 ?>
-<nav id="plugin-name-replace-me-debug-bar-tabs" class="nav-tab-wrapper">
+<nav id="underpin-debug-bar-tabs" class="nav-tab-wrapper">
 	<?php foreach ( $template->get_param( 'items', [] ) as $key => $item ): ?>
 		<a class="nav-tab<?= $key === 0 ? ' nav-tab-active' : '' ?>" href="#" data-event="<?= $item ?>"><?= $item ?></a>
 	<?php endforeach; ?>

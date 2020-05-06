@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Trait Templates
  *
  * @since   1.0.0
- * @package plugin_name_replace_me\traits
+ * @package underpin\traits
  */
 trait Templates {
 
@@ -118,7 +118,7 @@ trait Templates {
 				$template      = underpin()->logger()->log_as_error(
 					'error',
 					'template_file_does_not_exist',
-					__( "Template $template_name was not loaded because the file located at $template_path does not exist.", 'plugin-name-replace-me' )
+					__( "Template $template_name was not loaded because the file located at $template_path does not exist.", 'underpin' )
 				);
 
 				/**
@@ -130,8 +130,8 @@ trait Templates {
 			$class    = __CLASS__;
 			$template = underpin()->logger()->log_as_error(
 				'error',
-				'plugin_name_replace_me_invalid_template',
-				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class", 'plugin-name-replace-me' )
+				'underpin_invalid_template',
+				__( "Template $template_name was not loaded because it is not in the list of use-able templates for $class", 'underpin' )
 			);
 
 			/**
@@ -257,7 +257,7 @@ trait Templates {
 			return $this->get_template_path( $template_name );
 		}
 
-		$override_dir       = 'plugin-name-replace-me-templates/';
+		$override_dir       = 'underpin-templates/';
 		$template_group     = trailingslashit( $this->get_template_group() );
 		$override_path      = $override_dir . $template_group;
 		$override_path      = apply_filters( "underpin/templates/template_directory", $override_path, $template_name, $template_group, $template_visibility );
@@ -317,15 +317,15 @@ trait Templates {
 			} else {
 				$result = underpin()->logger()->log_as_error(
 					'error',
-					'plugin_name_replace_me_get_arg_invalid_template',
-					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." ,'plugin-name-replace-me' )
+					'underpin_get_arg_invalid_template',
+					__( "Template $template_name argument $arg was not fetched because $template_name is not a valid template." ,'underpin' )
 				);
 			}
 		} else {
 			$result = underpin()->logger()->log_as_error(
 				'error',
-				'plugin_name_replace_me_get_arg_invalid_argument',
-				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." ,'plugin-name-replace-me' )
+				'underpin_get_arg_invalid_argument',
+				__( "Template $template_name argument $arg was not fetched because $arg is not a valid template argument." ,'underpin' )
 			);
 		}
 

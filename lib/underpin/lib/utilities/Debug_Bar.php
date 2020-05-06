@@ -14,6 +14,7 @@ use Underpin\Abstracts\Admin_Bar_Menu;
 use Underpin\Factories\Debug_Bar_Section;
 use Underpin\Traits\Underpin_Templates;
 use function Underpin\underpin;
+use Underpin\Abstracts\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -37,9 +38,9 @@ class Debug_Bar extends Admin_Bar_Menu {
 	public $name = "Debug Bar";
 
 	public function __construct() {
-		parent::__construct( 'plugin_name_replace_me_debugger', [
+		parent::__construct( 'underpin_debugger', [
 			'parent' => 'top-secondary',
-			'title'  => 'Plugin Name Replace Me Events',
+			'title'  => 'Underpin Events',
 			'href'   => '#',
 			'meta'   => [
 				'onclick' => '',
@@ -100,21 +101,24 @@ class Debug_Bar extends Admin_Bar_Menu {
 		if ( defined( 'WP_CLI' ) || wp_doing_ajax() || wp_doing_cron() || defined( 'REST_REQUEST' ) ) {
 			return;
 		}
+		$events_section = new Debug_Bar_Section(
+			'logged-events',
+			underpin()->logger()->get_request_events(),
+			'Logged Events',
+			"Here's what was logged during this session."
+		);
+
+		$registered_section = new Debug_Bar_Section(
+			'registered-items',
+			Underpin::export(),
+			'Registered Items',
+			"Here's what items were registered during this session."
+		);
 
 		echo $this->get_template( 'wrapper', [
 			'sections' => [
-				new Debug_Bar_Section(
-					'logged-events',
-					underpin()->logger()->get_request_events(),
-					'Logged Events',
-					"Here's what was logged during this session."
-				),
-				new Debug_Bar_Section(
-					'registered-items',
-					underpin()->export_registered_items(),
-					'Registered Items',
-					"Here's what items were registered during this session."
-				),
+				$events_section,
+				$registered_section,
 			],
 		] );
 	}

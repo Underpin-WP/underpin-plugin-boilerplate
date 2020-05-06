@@ -117,7 +117,7 @@
 	clear: both;
 }
 
-#plugin-name-replace-me-debug-bar-menu {
+#underpin-debug-bar-menu {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -128,7 +128,7 @@
 	background: #23282d;
 }
 
-#plugin-name-replace-me-debug-bar-menu a {
+#underpin-debug-bar-menu a {
 	color: white;
 	text-decoration: none;
 	padding: 10px 5px;
@@ -137,15 +137,15 @@
 	font-size:14px;
 }
 
-#plugin-name-replace-me-debug-bar-menu a:hover {
+#underpin-debug-bar-menu a:hover {
 	background: #191e23;
 }
 
-#plugin-name-replace-me-debug-bar-menu a.section-active {
+#underpin-debug-bar-menu a.section-active {
 	background: #0173aa;
 }
 
-#plugin-name-replace-me-debug-bar-menu a.section-active:after {
+#underpin-debug-bar-menu a.section-active:after {
 	content: "";
 	width: 0;
 	height: 0;

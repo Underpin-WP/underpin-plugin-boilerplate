@@ -62,7 +62,7 @@ abstract class Cron_Task extends Feature_Extension {
 	 */
 	public function __construct( $event, $file, $frequency = 'hourly' ) {
 		if ( ! isset( self::$registered_events[ $this->event ] ) ) {
-			$this->event     = 'plugin_name_replace_me\sessions\\' . $event;
+			$this->event     = 'underpin\sessions\\' . $event;
 			$this->frequency = $frequency;
 			$this->file      = $file;
 

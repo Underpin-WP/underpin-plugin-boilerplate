@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Batch_Script extends Script {
 
-	protected $handle = 'plugin_name_replace_me_batch';
+	protected $handle = 'underpin_batch';
 
 	protected $deps = [ 'jquery' ];
 

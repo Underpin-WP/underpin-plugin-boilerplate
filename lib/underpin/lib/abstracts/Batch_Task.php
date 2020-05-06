@@ -196,7 +196,13 @@ abstract class Batch_Task {
 		add_action( 'wp_ajax_' . $this->batch_id, [ $this, 'ajax_action' ] );
 	}
 
+	/**
+	 * Renders the batch task notice, and enqueues scripts.
+	 *
+	 * @since 1.0.0
+	 */
 	public function render_callback() {
+
 		if ( is_admin() && current_user_can( $this->capability ) ) {
 
 			$batch_params = [ 'total_items' => $this->total_items ];

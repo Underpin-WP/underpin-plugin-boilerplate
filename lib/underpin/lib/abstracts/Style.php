@@ -66,7 +66,7 @@ abstract class Style extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		add_action( 'get', [ $this, 'register' ] );
+		add_action( 'init', [ $this, 'register' ] );
 	}
 
 	public function register() {

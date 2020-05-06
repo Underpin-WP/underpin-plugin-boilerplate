@@ -55,11 +55,11 @@ abstract class Underpin {
 	protected $minimum_php_version;
 	protected $minimum_wp_version;
 	protected $version;
-	protected $root_url;
+	protected $url;
 	protected $css_url;
 	protected $js_url;
-	protected $root_dir;
-	protected $root_file;
+	protected $dir;
+	protected $file;
 	protected $template_dir;
 
 	public function minimum_php_version() {
@@ -74,28 +74,28 @@ abstract class Underpin {
 		return $this->version;
 	}
 
-	public function root_url() {
-		return $this->root_url;
+	public function url() {
+		return trailingslashit( $this->url );
 	}
 
 	public function css_url() {
-		return $this->css_url;
+		return trailingslashit( $this->css_url );
 	}
 
 	public function js_url() {
-		return $this->js_url;
+		return trailingslashit( $this->js_url );
 	}
 
-	public function root_dir() {
-		return $this->root_dir;
+	public function dir() {
+		return trailingslashit( $this->dir );
 	}
 
-	public function root_file() {
-		return $this->root_file;
+	public function file() {
+		return $this->file;
 	}
 
 	public function template_dir() {
-		return $this->template_dir;
+		return trailingslashit( $this->template_dir );
 	}
 
 	abstract protected function _setup();
@@ -135,6 +135,18 @@ abstract class Underpin {
 		return $class;
 	}
 
+	public static function export() {
+		$results = [];
+
+		foreach ( Underpin::$instances as $key => $instance ) {
+			if ( $instance instanceof Underpin ) {
+				$results = $instance->export_registered_items( $results );
+			}
+		}
+
+		return $results;
+	}
+
 	/**
 	 * Retrieves a list of registered loader items from the registry.
 	 *
@@ -142,8 +154,7 @@ abstract class Underpin {
 	 *
 	 * @return array
 	 */
-	public function export_registered_items() {
-		$results = [];
+	public function export_registered_items( $results = [] ) {
 		foreach ( $this->class_registry as $key => $class ) {
 			if ( $class instanceof Loader_Registry ) {
 				if ( ! empty( $class ) ) {
@@ -189,13 +200,13 @@ abstract class Underpin {
 
 		if ( version_compare( $wp_version, $this->minimum_wp_version, '<' ) ) {
 			echo '<div class="error">
-							<p>' . __( sprintf( "Plugin Name Replace Me plugin is not activated. The plugin requires at least WordPress %s to function.", self::MINIMUM_WP_VERSION ), 'plugin-name-replace-me' ) . '</p>
+							<p>' . __( sprintf( "Underpin plugin is not activated. The plugin requires at least WordPress %s to function.", $this->minimum_wp_version() ), 'underpin' ) . '</p>
 						</div>';
 		}
 
 		if ( version_compare( phpversion(), $this->minimum_php_version, '<' ) ) {
 			echo '<div class="error">
-							<p>' . __( sprintf( "Plugin Name Replace Me plugin is not activated. The plugin requires at least PHP %s to function.", self::MINIMUM_PHP_VERSION ), 'plugin-name-replace-me' ) . '</p>
+							<p>' . __( sprintf( "Underpin plugin is not activated. The plugin requires at least PHP %s to function.", $this->minimum_php_version() ), 'underpin' ) . '</p>
 						</div>';
 		}
 	}
@@ -212,7 +223,7 @@ abstract class Underpin {
 			spl_autoload_register( function( $class ) {
 				$class = explode( '\\', $class );
 
-				$root = trailingslashit( $this->root_dir ) . 'lib/';
+				$root = trailingslashit( $this->dir ) . 'lib/';
 
 				array_shift( $class );
 
@@ -439,10 +450,10 @@ abstract class Underpin {
 		self::$instances[ __CLASS__ ] = new \WP_Error(
 			'minimum_version_not_met',
 			__( sprintf(
-				"The Plugin Name Replace Me plugin requires at least WordPress %s, and PHP %s.",
+				"The Underpin plugin requires at least WordPress %s, and PHP %s.",
 				$this->minimum_wp_version,
 				$this->minimum_php_version
-			), 'plugin-name-replace-me' ),
+			), 'underpin' ),
 			array( 'current_wp_version' => $wp_version, 'php_version' => phpversion() )
 		);
 
@@ -483,50 +494,51 @@ abstract class Underpin {
 	protected function _setup_params( $file ) {
 
 		// Root file for this plugin. Used in activation hooks.
-		$this->root_file = $file;
+		$this->file = $file;
 
 		// The URL for this plugin. Used in asset loading.
-		$this->root_url = plugin_dir_url( $file );
+		$this->url = plugin_dir_url( $file );
 
 		// Root directory for this plugin.
-		$this->root_dir = plugin_dir_path( $file );
+		$this->dir = plugin_dir_path( $file );
 
 		// The CSS URL for this plugin. Used in asset loading.
-		$this->css_url = $this->root_url . 'assets/css/build';
+		$this->css_url = $this->url . 'assets/css/build';
 
 		// The JS URL for this plugin. Used in asset loading.
-		$this->js_url = $this->root_url . 'assets/js/build';
+		$this->js_url = $this->url . 'assets/js/build';
 
 		// The template directory. Used by the template loader to determine where templates are stored.
-		$this->template_dir = $this->root_dir . 'templates/';
+		$this->template_dir = $this->dir . 'templates/';
 	}
 
 	/**
 	 * Fires up the plugin.
 	 *
-	 * @since 1.0.0
+	 * @since        1.0.0
 	 *
 	 * @param string $file The complete path to the root file in this plugin. Usually the __FILE__ const.
 	 * @return self
+	 * @noinspection PhpUndefinedMethodInspection
 	 */
 	public function get( $file ) {
-		if ( ! isset( self::$instances[ __CLASS__ ] ) ) {
+		$class = get_called_class();
+		if ( ! isset( self::$instances[ $class ] ) ) {
 			$this->_setup_params( $file );
 
 			// First, check to make sure the minimum requirements are met.
 			if ( $this->plugin_is_supported() ) {
+				self::$instances[ $class ] = $this;
 
 				// Setup the plugin, if requirements were met.
-				$this->setup();
+				self::$instances[ $class ]->setup();
 
 			} else {
 				// Run unsupported actions if requirements are not met.
 				$this->unsupported_actions();
 			}
-
-			self::$instances[ __CLASS__ ] = $this;
 		}
 
-		return self::$instances[ __CLASS__ ];
+		return self::$instances[ $class ];
 	}
 }

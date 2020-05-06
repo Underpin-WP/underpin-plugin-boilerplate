@@ -87,7 +87,7 @@ abstract class Settings_Field {
 		return underpin()->logger()->log_as_error(
 			'error',
 			'invalid_field_type',
-			__( 'The requested param is not a valid param for this field.', 'plugin-name-replace-me' ),
+			__( 'The requested param is not a valid param for this field.', 'underpin' ),
 			[
 				'param'            => $param,
 				'available_params' => array_keys( $this->field_params ),
@@ -251,7 +251,7 @@ abstract class Settings_Field {
 	 * @return string The path to the admin template.
 	 */
 	private function get_admin_template_path( $template_name ) {
-		return trailingslashit( underpin()->root_dir() ) . 'templates/admin/settings-fields/' . $template_name . '.php';
+		return trailingslashit( underpin()->dir() ) . 'templates/admin/settings-fields/' . $template_name . '.php';
 	}
 
 	/**

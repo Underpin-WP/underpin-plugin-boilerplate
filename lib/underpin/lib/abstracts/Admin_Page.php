@@ -270,7 +270,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		// If we don't have a nonce, bail.
-		if ( ! isset( $_POST['plugin_name_replace_me_nonce'] ) ) {
+		if ( ! isset( $_POST['underpin_nonce'] ) ) {
 			$errors->add(
 				'update_request_settings_no_nonce',
 				__( 'An update request attempted to run without a nonce.' )
@@ -287,7 +287,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		// If the nonce is invalid, bail
-		if ( 1 !== wp_verify_nonce( $_POST['plugin_name_replace_me_nonce'], $this->nonce_action ) ) {
+		if ( 1 !== wp_verify_nonce( $_POST['underpin_nonce'], $this->nonce_action ) ) {
 			$errors->add(
 				'update_request_settings_invalid_nonce',
 				__( 'An update requested attempted to run with an invalid nonce.' )

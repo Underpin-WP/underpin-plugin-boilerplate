@@ -11,7 +11,7 @@ namespace Underpin\Abstracts;
 
 
 use Exception;
-use Underpin\Factories\Log_Item;
+use \Underpin\Factories\Log_Item;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -173,7 +173,7 @@ abstract class Event_Type extends \ArrayIterator {
 	public function log( $code, $message, $ref = null, $data = array() ) {
 		$item = new $this->log_item_class( $this->type, $code, $message, $ref, $data );
 
-		if ( ! $this->log_item_class instanceof Log_Item ) {
+		if ( ! $item instanceof Log_Item ) {
 			return new \WP_Error(
 				'log_item_class_invalid',
 				'The log item class must be extend the Log_Item class.',

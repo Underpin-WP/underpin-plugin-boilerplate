@@ -26,7 +26,7 @@ abstract class Rest_Endpoint extends Feature_Extension {
 	 *
 	 * @since 1.0.0
 	 */
-	public $rest_namespace = 'plugin-name-replace-me/v1';
+	public $rest_namespace = 'underpin/v1';
 
 	public $route = '/';
 

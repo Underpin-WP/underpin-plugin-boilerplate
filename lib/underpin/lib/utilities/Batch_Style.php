@@ -27,14 +27,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Batch_Style extends Style {
 
-	protected $handle = 'plugin_name_replace_me_batch';
+	protected $handle = 'underpin_batch';
 
 	public $description = 'Styles for batch tasks.';
 
 	public $name = "Batch Task Runner Styles";
 
 	public function __construct() {
-		$this->src = trailingslashit( underpin()->css_url() ) . 'batchStyle.min.css';
+		$this->src = underpin()->css_url() . 'batchStyle.min.css';
 	}
 
 }
