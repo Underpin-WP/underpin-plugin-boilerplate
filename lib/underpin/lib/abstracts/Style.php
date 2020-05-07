@@ -9,6 +9,8 @@
 
 namespace Underpin\Abstracts;
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -70,11 +72,34 @@ abstract class Style extends Feature_Extension {
 	}
 
 	public function register() {
-		wp_register_style( $this->handle, $this->src, $this->deps, $this->ver, $this->media );
+		$registered = wp_register_style( $this->handle, $this->src, $this->deps, $this->ver, $this->media );
+
+		if ( false === $registered ) {
+			underpin()->logger()->log(
+				'error',
+				'style_was_not_registered',
+				'The style ' . $this->handle . ' failed to register. That is all I know, unfortunately.',
+				$this->handle
+			);
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'style_was_registered',
+				'The style ' . $this->handle . ' registered successfully.',
+				$this->handle
+			);
+		}
 	}
 
 	public function enqueue() {
 		wp_enqueue_style( $this->handle );
+
+		underpin()->logger()->log(
+			'notice',
+			'style_was_enqueued',
+			'The style ' . $this->handle . ' has been enqueued.',
+			$this->handle
+		);
 	}
 
 }

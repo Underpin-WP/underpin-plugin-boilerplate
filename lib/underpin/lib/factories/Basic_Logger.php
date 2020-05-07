@@ -14,6 +14,7 @@ namespace Underpin\Factories;
 
 use Underpin\Abstracts\Event_Type;
 use Underpin\Abstracts\Writer;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -101,10 +102,14 @@ class Basic_Logger extends Writer {
 
 		// bail early if the max file age is less than zero.
 		if ( $max_file_age < 0 ) {
-			return new \WP_Error(
+			$error = new \WP_Error(
 				'invalid_max_age',
 				'The provided max file age is less than zero. File age must be greater than zero.'
 			);
+
+			underpin()->logger()->log_wp_error( 'warning', $error );
+
+			return $error;
 		}
 
 		$purged      = [];
@@ -158,6 +163,14 @@ class Basic_Logger extends Writer {
 
 		// Bail early if we have any errors.
 		if ( $errors->has_errors() ) {
+			underpin()->logger()->log(
+				'warning',
+				'errors_while_parsing_file',
+				'A file failed to parse',
+				$file,
+				[ 'errors' => $errors ]
+			);
+
 			return $errors;
 		}
 
@@ -185,7 +198,7 @@ class Basic_Logger extends Writer {
 
 		$file = $this->path( $date );
 
-		if ( ! is_wp_error( $file ) && ! @file_exists( $file ) ) {
+		if ( is_writeable( $this->log_dir ) && ! is_wp_error( $file ) && ! @file_exists( $file ) ) {
 			@fopen( $file, "w" );
 		}
 

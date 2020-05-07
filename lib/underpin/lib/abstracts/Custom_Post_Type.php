@@ -47,7 +47,7 @@ abstract class Custom_Post_Type extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		add_action( 'get', [ $this, 'register' ] );
+		add_action( 'init', [ $this, 'register' ] );
 	}
 
 	/**
@@ -60,6 +60,14 @@ abstract class Custom_Post_Type extends Feature_Extension {
 
 		if ( is_wp_error( $registered ) ) {
 			underpin()->logger()->log_wp_error( 'error', $registered );
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'custom_post_type_registered',
+				'The custom post type ' . $this->type . ' has been registered.',
+				$this->type,
+				[ 'args' => $this->args ]
+			);
 		}
 	}
 

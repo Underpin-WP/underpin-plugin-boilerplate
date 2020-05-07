@@ -24,6 +24,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class Block extends Feature_Extension {
 
+	/**
+	 * The registered block.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var bool
+	 */
 	public $type = false;
 
 	/**
@@ -75,7 +82,7 @@ abstract class Block extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		add_action( 'get', [ $this, 'register' ] );
+		add_action( 'init', [ $this, 'register' ] );
 	}
 
 	/**
@@ -92,6 +99,14 @@ abstract class Block extends Feature_Extension {
 				'The provided block failed to register. Register block type provides a __doing_it_wrong warning explaining more.',
 				$this->type,
 				[ 'type' => $this->type, 'expects' => 'string' ]
+			);
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'block_registered',
+				'The provided block was registered successfully.',
+				$this->type,
+				[ 'args' => $this->args ]
 			);
 		}
 	}

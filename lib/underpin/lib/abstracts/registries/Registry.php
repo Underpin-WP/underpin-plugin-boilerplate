@@ -10,6 +10,8 @@
 
 namespace Underpin\Abstracts\Registries;
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -29,14 +31,6 @@ abstract class Registry extends \ArrayIterator {
 	 * @var string A unique identifier for this registry.
 	 */
 	protected $registry_id;
-
-	/**
-	 * Determines if this registry is extendable.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $is_extendable = false;
 
 	/**
 	 * A human-readable description of this event type.
@@ -60,42 +54,15 @@ abstract class Registry extends \ArrayIterator {
 	 * @param string $registry_id The registry ID.
 	 */
 	public function __construct( $registry_id ) {
-		$this->registry_id   = (string) $registry_id;
+		$this->registry_id = (string) $registry_id;
 		parent::__construct();
 		$this->set_default_items();
-		$this->set_extended_items();
 	}
 
 	/**
 	 * Sets the default items for the registry.
 	 */
 	abstract protected function set_default_items();
-
-	/**
-	 * Makes it possible to set extended items for the current registry.
-	 *
-	 * @since 1.0.0
-	 * @void
-	 */
-	protected function set_extended_items() {
-		$extended_items = [];
-
-		if ( true === $this->is_extendable ) {
-
-			/**
-			 * Makes it possible to add extended items to this registry.
-			 *
-			 * @since 1.0.0
-			 * @param array $extended_items Array of extended items to register.
-			 */
-			$extended_items = apply_filters( "underpin/registry/{$this->registry_id}", [] );
-		}
-
-		// Loop through and set the items.
-		foreach ( $extended_items as $key => $value ) {
-			$this->add( $key, $value );
-		}
-	}
 
 	/**
 	 * Validates an item. This runs just before adding items to the registry.
@@ -121,7 +88,22 @@ abstract class Registry extends \ArrayIterator {
 		$valid = $this->validate_item( $key, $value );
 
 		if ( true === $valid ) {
-			$this[$key] = $value;
+			$this[ $key ] = $value;
+
+			underpin()->logger()->log(
+				'notice',
+				'valid_event_added',
+				'A valid item for the ' . $this->registry_id . ' registry called ' . $key . ' was registered.',
+				$this->registry_id,
+				[ 'key' => $key, 'value' => $value ]
+			);
+		} else {
+			underpin()->logger()->log(
+				'warning',
+				'invalid_event',
+				'An item for the ' . $this->registry_id . ' registry called ' . $key . ' could not be registered.',
+				array( 'key' => $key, 'value' => $value, 'registry' => $this->registry_id )
+			);
 		}
 
 		return $valid;
@@ -137,7 +119,13 @@ abstract class Registry extends \ArrayIterator {
 		if ( isset( $this[ $key ] ) ) {
 			return $this[$key];
 		} else {
-			return new \WP_Error( 'key_not_set', 'Specified key is not set.', [ 'key' => $key ] );
+			$error = new \WP_Error( 'key_not_set', 'Specified key is not set.', [ 'key' => $key ] );
+
+			if ( true === WP_DEBUG ) {
+				underpin()->logger()->log_wp_error( 'warning', $error );
+			}
+
+			return $error;
 		}
 	}
 

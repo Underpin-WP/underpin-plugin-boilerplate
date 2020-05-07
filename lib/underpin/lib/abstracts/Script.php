@@ -9,6 +9,8 @@
 
 namespace Underpin\Abstracts;
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -90,13 +92,65 @@ abstract class Script extends Feature_Extension {
 		return $this->localized_params;
 	}
 
+	/**
+	 * Returns true if the script has been enqueued. Bypasses doing it wrong check.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_enqueued() {
+		return (bool) wp_scripts()->query( $this->handle, 'enqueued' );
+	}
+
+	/**
+	 * Adds a param to localize to this script.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $key   The key for the localized value.
+	 * @param string $value The value
+	 * @return true|\WP_Error True if successful, \WP_Error if param was added too late.
+	 */
 	public function set_param( $key, $value ) {
+
+		// If the script is already enqueued, return an error.
+		if ( $this->is_enqueued() ) {
+			return underpin()->logger()->log_as_error(
+				'error',
+				'param_set_too_late',
+				'The localized param ' . $key . ' was set after the script was already enqueued.',
+				$this->handle,
+				[ 'key' => $key, 'value' => $value ]
+			);
+		}
+
 		$this->localized_params[ $key ] = $value;
 
 		return true;
 	}
 
+	/**
+	 * Removes a localized param.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $key The key to remove.
+	 * @return true|\WP_Error True if successful, \WP_Error if param was added too late.
+	 */
 	public function remove_param( $key ) {
+
+		// If the script is already enqueued, return an error.
+		if ( wp_script_is( $this->handle ) ) {
+			return underpin()->logger()->log_as_error(
+				'error',
+				'param_removed_too_late',
+				'The localized param ' . $key . ' attempted to be removed after the script was already enqueued.',
+				$this->handle,
+				[ 'key' => $key ]
+			);
+		}
+
 		if ( isset( $this->localized_params[ $key ] ) ) {
 			unset( $this->localized_params[ $key ] );
 		}
@@ -114,7 +168,25 @@ abstract class Script extends Feature_Extension {
 
 		// If we actually have localized params, localize and enqueue.
 		if ( ! empty( $localized_params ) ) {
-			wp_localize_script( $this->handle, $this->handle, $localized_params );
+			$localized = wp_localize_script( $this->handle, $this->handle, $localized_params );
+
+			if ( false === $localized ) {
+				underpin()->logger()->log(
+					'error',
+					'script_was_not_localized',
+					'The script ' . $this->handle . ' failed to localize. That is all I know, unfortunately.',
+					$this->handle,
+					[ 'params' => $localized_params ]
+				);
+			} else {
+				underpin()->logger()->log(
+					'notice',
+					'script_was_localized',
+					'The script ' . $this->handle . ' localized successfully.',
+					$this->handle,
+					[ 'params' => $localized_params ]
+				);
+			}
 		}
 	}
 
@@ -125,7 +197,24 @@ abstract class Script extends Feature_Extension {
 	 * @since 1.0.0
 	 */
 	public function register() {
-		wp_register_script( $this->handle, $this->src, $this->deps, $this->ver, $this->in_footer );
+		$registered = wp_register_script( $this->handle, $this->src, $this->deps, $this->ver, $this->in_footer );
+
+		if ( false === $registered ) {
+			underpin()->logger()->log(
+				'error',
+				'script_was_not_registered',
+				'The script ' . $this->handle . ' failed to register. That is all I know, unfortunately.',
+				$this->handle
+			);
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'script_was_registered',
+				'The script ' . $this->handle . ' registered successfully.',
+				$this->handle
+			);
+		}
+
 	}
 
 	/**
@@ -136,6 +225,13 @@ abstract class Script extends Feature_Extension {
 	public function enqueue() {
 		$this->localize();
 		wp_enqueue_script( $this->handle );
+
+		underpin()->logger()->log(
+			'notice',
+			'script_was_enqueued',
+			'The script ' . $this->handle . ' has been enqueued.',
+			$this->handle
+		);
 	}
 
 }

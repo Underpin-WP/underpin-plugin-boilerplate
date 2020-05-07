@@ -8,6 +8,8 @@
 
 namespace Underpin\Abstracts;
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -15,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Rest_Endpoint
  *
- * @since 1.0.0
+ * @since   1.0.0
  *
  * @package Underpin\Abstracts
  */
@@ -66,6 +68,24 @@ abstract class Rest_Endpoint extends Feature_Extension {
 	 * return void
 	 */
 	public function register() {
-		register_rest_route( $this->rest_namespace, $this->route, $this->args );
+		$registered = register_rest_route( $this->rest_namespace, $this->route, $this->args );
+
+		if ( false === $registered ) {
+			underpin()->logger()->log(
+				'error',
+				'rest_route_was_not_registered',
+				'The rest route ' . $this->route . ' was not registered. There is probably a __doing_it_wrong notice explaining this further.',
+				$this->route,
+				[ 'namespace' => $this->rest_namespace, 'args' => $this->args ]
+			);
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'rest_route_registered',
+				'The rest route ' . $this->route . ' was registered successfully',
+				$this->route,
+				[ 'namespace' => $this->rest_namespace, 'args' => $this->args ]
+			);
+		}
 	}
 }

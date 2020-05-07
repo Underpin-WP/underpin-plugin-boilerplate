@@ -72,6 +72,14 @@ abstract class Loader_Registry extends Registry {
 		// If this implements registry actions, go ahead and start those up, too.
 		if ( $this->get( $key ) instanceof Feature_Extension ) {
 			$this->get( $key )->do_actions();
+
+			underpin()->logger()->log(
+				'notice',
+				'loader_actions_ran',
+				'The actions for the ' . $this->registry_id . ' item called ' . $key . ' ran.',
+				$this->registry_id,
+				[ 'key' => $key, 'value' => $value ]
+			);
 		}
 
 		return $valid;

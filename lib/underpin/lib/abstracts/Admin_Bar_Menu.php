@@ -10,6 +10,8 @@
 namespace Underpin\Abstracts;
 
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -122,6 +124,12 @@ abstract class Admin_Bar_Menu extends Feature_Extension {
 			$args       = $this->args;
 			$args['id'] = $this->id;
 
+			underpin()->logger()->log(
+				'notice',
+				'child_menu_added',
+				'An admin bar menu item, ' . $this->id . ' was added'
+			);
+
 			$admin_bar->add_menu( $args );
 
 			foreach ( $this->children as $id => $child ) {
@@ -129,7 +137,20 @@ abstract class Admin_Bar_Menu extends Feature_Extension {
 				$child['parent'] = $this->id;
 
 				$admin_bar->add_menu( $child );
+
+				underpin()->logger()->log(
+					'notice',
+					'child_menu_added',
+					'A child menu item, ' . $id . ' was added to the ' . $this->name . ' admin bar menu.'
+				);
 			}
+		} else {
+			underpin()->logger()->log(
+				'warning',
+				'user_cannot_view_menu',
+				'The specified user cannot view the ' . $this->name . ' menu. It will not be displayed.',
+				array( 'menu' => $this->id, 'capability_required' => $this->capability )
+			);
 		}
 	}
 }

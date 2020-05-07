@@ -9,6 +9,8 @@
 
 namespace Underpin\Abstracts;
 
+use function Underpin\underpin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -62,6 +64,12 @@ abstract class Shortcode extends Feature_Extension {
 	 */
 	public function do_actions() {
 		add_shortcode( $this->shortcode, [ $this, 'shortcode' ] );
+
+		underpin()->logger()->log(
+			'notice',
+			'shortcode_added',
+			'The shortcode ' . $this->shortcode . ' has been added'
+		);
 	}
 
 	/**

@@ -51,7 +51,7 @@ class Batch_Tasks extends Loader_Registry {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $key The key used to register this batch item.
+	 * @param string $key The key used to register this batch item.
 	 * @return true|\WP_Error True if enqueued, WP_Error if something went wrong.
 	 */
 	public function enqueue( $key ) {

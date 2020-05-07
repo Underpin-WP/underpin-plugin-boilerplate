@@ -63,7 +63,7 @@
 	display: block;
 }
 
-#debug-bar-wrap pre {
+#debug-bar-wrap .console-wrap {
 	display: none;
 	padding: 0;
 	border: none;

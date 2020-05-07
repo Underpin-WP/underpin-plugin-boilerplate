@@ -58,13 +58,11 @@ abstract class Cron_Task extends Feature_Extension {
 	 *
 	 * @param string $event     The name of this event.
 	 * @param string $frequency How often the cron task should recur. See wp_get_schedules() for accepted values.
-	 * @param string $file      The file to use to register the activation hook.
 	 */
-	public function __construct( $event, $file, $frequency = 'hourly' ) {
+	public function __construct( $event, $frequency = 'hourly' ) {
 		if ( ! isset( self::$registered_events[ $this->event ] ) ) {
 			$this->event     = 'underpin\sessions\\' . $event;
 			$this->frequency = $frequency;
-			$this->file      = $file;
 
 				// Adds the job to the registry.
 			self::$registered_events[ $this->event ] = $this->frequency;
@@ -84,7 +82,7 @@ abstract class Cron_Task extends Feature_Extension {
 	 */
 	public function do_actions() {
 		// Registers this cron job to activate when the plugin is activated.
-		register_activation_hook( $this->file, [ $this, 'activate' ] );
+		add_action( 'init', [ $this, 'activate' ] );
 
 		// Registers the action that fires when the cron job runs
 		add_action( $this->event, [ $this, 'cron_action' ] );
@@ -99,6 +97,11 @@ abstract class Cron_Task extends Feature_Extension {
 		// If this event is not scheduled, schedule it.
 		if ( ! wp_next_scheduled( $this->event ) ) {
 			wp_schedule_event( time(), $this->frequency, $this->event );
+			underpin()->logger()->log(
+				'notice',
+				'cron_task_activated',
+				'The cron task ' . $this->event . ' has been scheduled'
+			);
 		}
 	}
 }

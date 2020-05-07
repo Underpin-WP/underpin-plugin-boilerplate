@@ -99,14 +99,14 @@ class Log_Item {
 		$log_message = $this->code . ' - ' . $this->message;
 
 		if ( $this->ref !== null ) {
-			$data['ref'] = $this->ref;
+			$this->data['ref'] = $this->ref;
 		}
 
-		if ( ! empty( $data ) ) {
-			$log_message .= "\n data:" . var_export( (object) $data, true );
+		if ( ! empty( $this->data ) ) {
+			$log_message .= "\n data:" . var_export( (object) $this->data, true );
 		}
 
-		return date( 'm/d/Y H:i' ) . ': ' . $log_message;
+		return date( 'm/d/Y H:i:s' ) . ': ' . $log_message;
 	}
 
 	/**

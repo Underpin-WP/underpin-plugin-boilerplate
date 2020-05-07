@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Core Template Trait.
+ * Underpin-specific Template Trait.
  * Creates templates based off of the location of Underpin.
  *
  * @since   1.0.0

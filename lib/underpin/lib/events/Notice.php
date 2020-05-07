@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Logs notices to the logger.
  *
  * @since
  * @package
@@ -17,15 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Error
- * Error event type.
+ * Class Warning
+ * Warning event type.
  *
  * @since 1.0.0
  *
  * @since
  * @package
  */
-class Error extends Event_Type {
+class Notice extends Event_Type {
 
 	/**
 	 * Event type
@@ -34,7 +34,7 @@ class Error extends Event_Type {
 	 *
 	 * @var string
 	 */
-	public $type = 'batch_error';
+	public $type = 'notice';
 
 	/**
 	 * Writes this to the log.
@@ -44,15 +44,15 @@ class Error extends Event_Type {
 	 *
 	 * @var bool
 	 */
-	protected $write_to_log = true;
+	protected $write_to_log = false;
 
 	/**
 	 * @var inheritDoc
 	 */
-	public $description = 'Logs when errors occur during batch tasks.';
+	public $description = 'Posts informative notices that do not necessarily mean anything is wrong.';
 
 	/**
 	 * @var inheritDoc
 	 */
-	public $name = "Upgrade Error";
+	public $name = "Notice";
 }

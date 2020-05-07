@@ -10,6 +10,7 @@
 namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Event_Registry;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,5 +30,10 @@ class Logger extends Event_Registry {
 	 */
 	protected function set_default_items() {
 		$this->add( 'error', 'Underpin\Events\Error' );
+
+		if ( true === WP_DEBUG ) {
+			$this->add( 'warning', 'Underpin\Events\Warning' );
+			$this->add( 'notice', 'Underpin\Events\Notice' );
+		}
 	}
 }

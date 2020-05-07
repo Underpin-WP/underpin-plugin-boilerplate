@@ -35,7 +35,7 @@ class Purge_Logs extends Cron_Task {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		parent::__construct( 'underpin_logs', underpin()->file(), 'daily' );
+		parent::__construct( 'underpin_logs', 'daily' );
 	}
 
 	/**

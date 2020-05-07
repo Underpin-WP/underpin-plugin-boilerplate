@@ -53,7 +53,7 @@ abstract class Taxonomy extends Feature_Extension {
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		add_action( 'get', [ $this, 'register' ], 11 );
+		add_action( 'init', [ $this, 'register' ], 11 );
 	}
 
 	/**
@@ -66,6 +66,12 @@ abstract class Taxonomy extends Feature_Extension {
 
 		if ( is_wp_error( $registered ) ) {
 			underpin()->logger()->log_wp_error( 'error', $registered );
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'registered_taxonomy',
+				'The taxonomy ' . $this->name . ' has been registered to ' . $this->post_type . '.',
+			);
 		}
 	}
 

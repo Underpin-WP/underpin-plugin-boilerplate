@@ -167,7 +167,13 @@ abstract class Admin_Page extends Feature_Extension {
 			$updated = underpin()->logger()->log_as_error(
 				'error',
 				'update_request_settings_failed_to_update',
-				__( 'The ' . $options_key . ' settings failed to update.' )
+				'The ' . $options_key . ' settings failed to update.'
+			);
+		} else {
+			underpin()->logger()->log(
+				'notice',
+				'update_request_settings_succeeded_to_update',
+				'The ' . $options_key . ' settings updated successfully.'
 			);
 		}
 
@@ -396,6 +402,14 @@ abstract class Admin_Page extends Feature_Extension {
 			$this->menu_slug,
 			[ $this, 'render_callback' ],
 			$this->position
+		);
+
+		underpin()->logger()->log(
+			'notice',
+			'submenu_page_added',
+			'The submenu page ' . $this->page_title . ' Has been added.',
+			$this->parent_slug,
+			[ 'parent' => $this->parent_slug, 'menu_title' => $this->menu_title ]
 		);
 	}
 

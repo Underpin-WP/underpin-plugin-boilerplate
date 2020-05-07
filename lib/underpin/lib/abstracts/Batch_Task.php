@@ -88,7 +88,7 @@ abstract class Batch_Task {
 	 *
 	 * @var string
 	 */
-	protected $batch_id = 'batch_task';
+	protected $batch_id = '';
 
 	/**
 	 * The human-readable description of this batch task.
@@ -108,9 +108,6 @@ abstract class Batch_Task {
 	 */
 	public $name = "";
 
-	public function __construct( $batch_id ) {
-		$this->batch_id = $batch_id;
-	}
 
 	/**
 	 * The actual upgrade task. Intended to run on a single item.
@@ -133,12 +130,21 @@ abstract class Batch_Task {
 		$valid = $this->is_valid();
 
 		if ( is_wp_error( $valid ) ) {
-			return underpin()->logger()->log_wp_error( 'batch_error', $valid );
+			return $valid;
 		}
 
 		for ( $i = 0; $i < $this->tasks_per_request; $i++ ) {
 
 			if ( $this->is_done( $current_tally ) ) {
+
+				underpin()->logger()->log(
+					'notice',
+					'batch_action_complete',
+					'The batch action called ' . $this->name . ' is complete.',
+					$this->batch_id,
+					[ 'tally' => $current_tally ]
+				);
+
 				return true;
 			}
 
@@ -149,6 +155,14 @@ abstract class Batch_Task {
 
 				// Bail early if we're supposed to stop when an error occurs.
 				if ( true === $this->stop_on_error ) {
+
+					underpin()->logger()->log(
+						'warning',
+						'batch_action_stopped_early',
+						'The batch action called ' . $this->name . ' stopped early because of an error.',
+						[ 'tally' => $current_tally, 'batch_id' => $this->batch_id, 'error' => $status ]
+					);
+
 					return $status;
 				}
 			}
@@ -171,6 +185,13 @@ abstract class Batch_Task {
 		return $current_tally >= $this->total_items;
 	}
 
+	/**
+	 * Returns true if the batch request is valid.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return true|\WP_Error True if valid, WP_Error otherwise.
+	 */
 	protected function is_valid() {
 
 		if ( ! current_user_can( $this->capability ) ) {
@@ -184,12 +205,19 @@ abstract class Batch_Task {
 		return true;
 	}
 
+	/**
+	 * The ajax action that runs when this batch task fires.
+	 *
+	 * @since 1.0.0
+	 */
 	public function ajax_action() {
 		return wp_send_json( $this->run( (int) $_POST['currentTally'] ) );
 	}
 
 	/**
-	 * Enqueues this task to run
+	 * Enqueues this task to run.
+	 *
+	 * @since 1.0.0
 	 */
 	public function enqueue() {
 		add_action( 'admin_notices', [ $this, 'render_callback' ] );
