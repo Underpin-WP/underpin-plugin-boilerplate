@@ -56,7 +56,7 @@ class Basic_Logger extends Writer {
 	/**
 	 * @inheritDoc
 	 */
-	protected function write( Log_Item $item ) {
+	public function write( Log_Item $item ) {
 		$message = $item->format();
 		$file    = $this->file();
 
@@ -71,9 +71,13 @@ class Basic_Logger extends Writer {
 	public function clear() {
 		$file = $this->file();
 
-		if ( ! is_wp_error( $file ) ) {
-			unlink( $file );
+		if ( is_wp_error( $file ) ) {
+			return $file;
 		}
+
+		unlink( $file );
+
+		return true;
 	}
 
 

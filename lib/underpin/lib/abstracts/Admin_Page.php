@@ -267,11 +267,11 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		// If this is not the correct settings page, bail
-		if ( $this->menu_slug !== $_GET['page'] ) {
+		if ( ! isset( $_GET['page'] ) || $this->menu_slug !== $_GET['page'] ) {
 			$errors->add(
 				'update_request_settings_invalid_settings_page',
 				__( 'An update request attempted to run outside of the specified settings settings page.' ),
-				[ 'actual_page' => $_GET['page'], 'expected_page' => $this->menu_slug ]
+				[ 'actual_page' => isset( $_GET['page'] ) ? $_GET['page'] : '', 'expected_page' => $this->menu_slug ]
 			);
 		}
 
@@ -293,7 +293,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		// If the nonce is invalid, bail
-		if ( 1 !== wp_verify_nonce( $_POST['underpin_nonce'], $this->nonce_action ) ) {
+		if ( isset( $_POST['underpin_nonce'] ) && 1 !== wp_verify_nonce( $_POST['underpin_nonce'], $this->nonce_action ) ) {
 			$errors->add(
 				'update_request_settings_invalid_nonce',
 				__( 'An update requested attempted to run with an invalid nonce.' )

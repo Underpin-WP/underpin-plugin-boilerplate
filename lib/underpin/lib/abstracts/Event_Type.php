@@ -147,7 +147,7 @@ abstract class Event_Type extends \ArrayIterator {
 			);
 		}
 
-		if ( ! $this->writer_class instanceof Writer ) {
+		if ( ! is_subclass_of( $this->writer_class, 'Underpin/Abstracts/Writer' ) ) {
 			return new \WP_Error(
 				'writer_class_invalid',
 				'The writer class must be extend the Writer class.',

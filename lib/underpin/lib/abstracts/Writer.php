@@ -42,12 +42,13 @@ abstract class Writer {
 	 * @param $item
 	 * @return mixed
 	 */
-	abstract protected function write( Log_Item $item );
+	abstract public function write( Log_Item $item );
 
 	/**
 	 * Clears the event log.
 	 *
 	 * @since 1.0.0
+	 * @return true|\WP_Error True if the clear was successful, or WP_Error.
 	 */
 	abstract public function clear();
 
