@@ -90,6 +90,16 @@ abstract class Registry extends \ArrayIterator {
 		if ( true === $valid ) {
 			$this[ $key ] = $value;
 
+			/**
+			 * Fires action after an item is added to the registry.
+			 *
+			 * @since 1.0.0
+			 * @param string $registry_id Unique registry ID in which this item was added.
+			 * @param string $key         The key that was added to the registry.
+			 * @param mixed  $value       The value of the item that was added.
+			 */
+			do_action( 'underpin/registry/after_added_item', $this->registry_id, $key, $value );
+
 			underpin()->logger()->log(
 				'notice',
 				'valid_event_added',

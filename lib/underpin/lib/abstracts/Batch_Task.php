@@ -120,6 +120,30 @@ abstract class Batch_Task {
 	abstract protected function task( $current_tally );
 
 	/**
+	 * This action runs when this batch processor has completely finished.
+	 * It is intended to be extended, but not required.
+	 *
+	 * @since 1.1.0
+	 */
+	protected function finish_process( $current_tally ) { }
+
+	/**
+	 * This action runs just before the current request has started.
+	 * It is intended to be extended, but not required.
+	 *
+	 * @since 1.1.0
+	 */
+	protected function prepare_task( $current_tally ) { }
+
+	/**
+	 * This action runs just before the current request has finished.
+	 * It is intended to be extended, but not required.
+	 *
+	 * @since 1.1.0
+	 */
+	protected function finish_task( $current_tally ) { }
+
+	/**
 	 * Runs the actual batch task for this request.
 	 *
 	 * @param int $current_tally The current number of times this task has ran.
@@ -133,9 +157,13 @@ abstract class Batch_Task {
 			return $valid;
 		}
 
+		$this->prepare_task( $current_tally );
+
 		for ( $i = 0; $i < $this->tasks_per_request; $i++ ) {
 
 			if ( $this->is_done( $current_tally ) ) {
+
+				$this->finish_process( $current_tally );
 
 				underpin()->logger()->log(
 					'notice',
@@ -169,6 +197,8 @@ abstract class Batch_Task {
 
 			$current_tally++;
 		}
+
+		$this->finish_task( $current_tally );
 
 		return $current_tally;
 	}

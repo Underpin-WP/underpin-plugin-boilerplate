@@ -25,7 +25,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package Underpin\Abstracts
  */
 abstract class Event_Type extends \ArrayIterator {
-
 	/**
 	 * Event type
 	 *
@@ -62,6 +61,16 @@ abstract class Event_Type extends \ArrayIterator {
 	public $name = '';
 
 	/**
+	 * Arbitrary metadata associated with this event type.
+	 * Can be used to extend logger events.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array
+	 */
+	public $meta = [];
+
+	/**
 	 * The class to instantiate when writing to the error log.
 	 *
 	 * @since 1.0.0
@@ -95,7 +104,7 @@ abstract class Event_Type extends \ArrayIterator {
 		 * @param string $type           The current event type.
 		 * @param string $log_item_class The writer class to instantiate when a writer is created.
 		 */
-		$this->writer_class = apply_filters( 'logger/writer_class', $this->writer_class, $this->type, $this->log_item_class );
+		$this->writer_class = apply_filters( 'underpin/event_type/writer_class', $this->writer_class, $this->type, $this->log_item_class );
 
 		/**
 		 * Filters the log item that is used when logging events.
@@ -105,7 +114,7 @@ abstract class Event_Type extends \ArrayIterator {
 		 * @param string $type           The current event type.
 		 * @param string $writer_class   The writer class to instantiate when a writer is created.
 		 */
-		$this->log_item_class = apply_filters( 'logger/log_item_class', $this->log_item_class, $this->type, $this->writer_class );
+		$this->log_item_class = apply_filters( 'underpin/event_type/log_item_class', $this->log_item_class, $this->type, $this->writer_class );
 	}
 
 	/**

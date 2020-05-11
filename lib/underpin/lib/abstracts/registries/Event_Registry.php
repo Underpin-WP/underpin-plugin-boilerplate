@@ -144,7 +144,7 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @return \WP_Error WP Error, with error message.
 	 */
 	public function log_exception( $type, Exception $exception, $ref = null, $data = array() ) {
-		return $this->log( $type, $exception->getCode(), $exception->getMessage(), $ref, $data );
+		return $this->log_as_error( $type, $exception->getCode(), $exception->getMessage(), $ref, $data );
 	}
 
 	/**
