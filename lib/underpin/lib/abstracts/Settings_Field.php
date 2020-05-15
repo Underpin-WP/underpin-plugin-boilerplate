@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 use Underpin\Traits\Underpin_Templates;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -69,6 +70,47 @@ abstract class Settings_Field {
 	public function __construct( $value, array $params ) {
 		$this->value        = $value;
 		$this->field_params = $params;
+
+		if ( ! isset( $this->field_params['wrapper_class'] ) ) {
+			$this->field_params['wrapper_class'] = false;
+		}
+
+		$errors = underpin()->logger()->gather_errors(
+			$this->get_field_param( 'name' ),
+			);
+
+		if ( $errors->has_errors() ) {
+			underpin()->logger()->log(
+				'warning',
+				'invalid_field_missing_required_field_params',
+				'A constructed field is missing required field params.',
+				[ 'required_params' => [ 'name' ], 'field' => $this ]
+			);
+		}
+
+
+	}
+
+	/**
+	 * Retrieve the setting key.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|WP_Error The setting key, if valid. WP_Error otherwise.
+	 */
+	public function get_setting_key() {
+		if ( ! isset( $this->field_params['setting_key'] ) && isset( $this->field_params['name'] ) ) {
+			return $this->field_params['name'];
+		} elseif ( isset( $this->field_params['setting_key'] ) ) {
+			return $this->field_params['setting_key'];
+		} else {
+			return underpin()->logger()->log_as_error(
+				'error',
+				'setting_key_not_set',
+				'You must specify a name, or a setting key to use a setting key.',
+				[ 'field_params' => $this->field_params, 'field' => get_called_class( $this ) ]
+			);
+		}
 	}
 
 	/**
@@ -77,15 +119,14 @@ abstract class Settings_Field {
 	 * @since 1.0.0
 	 *
 	 * @param string $param The param to retrieve.
-	 * @return mixed|\WP_Error The param value, or a \WP_Error object if the param could not be retrieved.
+	 * @return mixed|WP_Error The param value, or a \WP_Error object if the param could not be retrieved.
 	 */
 	public function get_field_param( $param ) {
 		if ( isset( $this->field_params[ $param ] ) ) {
 			return $this->field_params[ $param ];
 		}
 
-		return underpin()->logger()->log_as_error(
-			'error',
+		return new WP_Error(
 			'invalid_field_type',
 			__( 'The requested param is not a valid param for this field.', 'underpin' ),
 			[

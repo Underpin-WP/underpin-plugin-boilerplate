@@ -10,6 +10,8 @@
 
 namespace Underpin\Abstracts\Registries;
 
+use ArrayIterator;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Registry extends \ArrayIterator {
+abstract class Registry extends ArrayIterator {
 
 	/**
 	 * Unique identifier for this registry.
@@ -71,7 +73,7 @@ abstract class Registry extends \ArrayIterator {
 	 *
 	 * @param string $key   The key to validate.
 	 * @param mixed  $value The value to validate.
-	 * @return true|\WP_Error true if the item is valid, WP_Error otherwise.
+	 * @return true|WP_Error true if the item is valid, WP_Error otherwise.
 	 */
 	abstract protected function validate_item( $key, $value );
 
@@ -82,7 +84,7 @@ abstract class Registry extends \ArrayIterator {
 	 *
 	 * @param string $key   The key to validate.
 	 * @param mixed  $value The value to validate.
-	 * @return true|\WP_Error true if the item is valid, WP_Error otherwise.
+	 * @return true|WP_Error true if the item is valid, WP_Error otherwise.
 	 */
 	public function add( $key, $value ) {
 		$valid = $this->validate_item( $key, $value );
@@ -129,7 +131,7 @@ abstract class Registry extends \ArrayIterator {
 		if ( isset( $this[ $key ] ) ) {
 			return $this[$key];
 		} else {
-			$error = new \WP_Error( 'key_not_set', 'Specified key is not set.', [ 'key' => $key ] );
+			$error = new WP_Error( 'key_not_set', 'Specified key is not set.', [ 'key' => $key ] );
 
 			if ( true === WP_DEBUG ) {
 				underpin()->logger()->log_wp_error( 'warning', $error );

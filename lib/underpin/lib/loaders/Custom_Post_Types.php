@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Custom_Post_Type;
 use Underpin\Abstracts\Registries\Loader_Registry;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -39,7 +40,7 @@ class Custom_Post_Types extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Custom_Post_Type|\WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
+	 * @return Custom_Post_Type|WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

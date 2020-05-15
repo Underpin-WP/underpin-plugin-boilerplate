@@ -15,13 +15,19 @@ if ( ! isset( $template ) || ! $template instanceof Underpin\Abstracts\Settings_
 	return;
 }
 
-$name            = $template->get_param( 'name', '' );
-$description     = $template->get_param( 'description', '' );
+$name          = $template->get_param( 'name', '' );
+$description   = $template->get_param( 'description', '' );
+$wrapper_class = $template->get_field_param( 'wrapper_class' );
+
+if ( is_wp_error( $wrapper_class ) ) {
+	$wrapper_class = false;
+}
+
 $has_description = ! empty( $description );
 $field_params    = array_merge( [ 'has_description' => $has_description ], $template->get_params() );
 ?>
 
-<tr>
+<tr<?= false !== $wrapper_class ? ' class="' . $wrapper_class . '"' : '' ?>>
 	<th scope="row">
 
 		<label for="<?= $name ?>">

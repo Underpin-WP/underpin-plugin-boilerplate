@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Admin_Bar_Menu;
 use Underpin\Abstracts\Registries\Loader_Registry;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -44,7 +45,7 @@ class Admin_Bar_Menus extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Admin_Bar_Menu|\WP_Error Script Resulting admin page class, if it exists. WP_Error, otherwise.
+	 * @return Admin_Bar_Menu|WP_Error Script Resulting admin page class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

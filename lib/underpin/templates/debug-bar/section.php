@@ -5,7 +5,6 @@
  * @since   1.0.0
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -16,11 +15,12 @@ if ( ! isset( $template ) || ! $template instanceof Underpin\Utilities\Debug_Bar
 
 $section = $template->get_param( 'section' );
 
-if ( ! $section instanceof \Underpin\Factories\Debug_Bar_Section ) {
+if ( ! $section instanceof Underpin\Factories\Debug_Bar_Section ) {
 	return;
 }
 
 $class = $template->get_param( 'active' ) ? " active" : "";
+
 ?>
 <div class="debug-bar-section<?= $class ?>" id="<?= $section->id; ?>">
 	<h2><?= $section->title ?></h2>

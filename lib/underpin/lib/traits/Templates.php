@@ -9,6 +9,7 @@
 
 namespace Underpin\Traits;
 
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -104,7 +105,7 @@ trait Templates {
 	 *
 	 * @param $template_name string The template name to get.
 	 * @param $params        array of param values that can be used in the template via get_param().
-	 * @return string|\WP_Error The template contents, or a WP_Error explaining why the template failed to load.
+	 * @return string|WP_Error The template contents, or a WP_Error explaining why the template failed to load.
 	 */
 	public function get_template( $template_name, array $params = [] ) {
 
@@ -306,7 +307,7 @@ trait Templates {
 	 *
 	 * @param string $template_name The template name to get the argument from.
 	 * @param string $arg           The argument to fetch.
-	 * @return \WP_Error|mixed A WP Error object if something went wrong, the argument for the current value otherwise.
+	 * @return WP_Error|mixed A WP Error object if something went wrong, the argument for the current value otherwise.
 	 */
 	private function get_template_arg( $template_name, $arg ) {
 		if ( isset( $this->get_template_arg_defaults()[ $arg ] ) ) {

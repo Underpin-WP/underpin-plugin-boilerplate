@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Script;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,7 +42,7 @@ class Scripts extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Script|\WP_Error Script Resulting script class, if it exists. WP_Error, otherwise.
+	 * @return Script|WP_Error Script Resulting script class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
@@ -55,7 +56,7 @@ class Scripts extends Loader_Registry {
 	 * @param string $script The script ID
 	 * @param string $key    Localized param key
 	 * @param mixed  $value  Localized param value
-	 * @return true|\WP_Error True if set, otherwise WP_Error.
+	 * @return true|WP_Error True if set, otherwise WP_Error.
 	 */
 	public function set_param( $script, $key, $value ) {
 		$script = $this->get( $script );
@@ -79,7 +80,7 @@ class Scripts extends Loader_Registry {
 	 *
 	 * @param string $script The script ID
 	 * @param string $key    Localized param key to remove
-	 * @return true|\WP_Error True if removed, otherwise WP_Error.
+	 * @return true|WP_Error True if removed, otherwise WP_Error.
 	 */
 	public function remove_param( $script, $key ) {
 		$script = $this->get( $script );
@@ -102,7 +103,7 @@ class Scripts extends Loader_Registry {
 	 * @since 1.0.0
 	 *
 	 * @param string $handle The script that should be enqueued.
-	 * @return true|\WP_Error true if the script was enqueued. A WP Error otherwise.
+	 * @return true|WP_Error true if the script was enqueued. A WP Error otherwise.
 	 */
 	public function enqueue( $handle ) {
 		$script = $this->get( $handle );

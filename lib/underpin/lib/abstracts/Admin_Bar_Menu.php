@@ -10,6 +10,8 @@
 namespace Underpin\Abstracts;
 
 
+use WP_Admin_Bar;
+use WP_User;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -92,7 +94,7 @@ abstract class Admin_Bar_Menu extends Feature_Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param false|int|\WP_User $user The user to check. If not specified, this will use the current user.
+	 * @param false|int|WP_User $user The user to check. If not specified, this will use the current user.
 	 * @return bool True if the user can view the menu. False otherwise.
 	 */
 	public function user_can_view_menu( $user = false ) {
@@ -117,9 +119,9 @@ abstract class Admin_Bar_Menu extends Feature_Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \WP_Admin_Bar $admin_bar The admin bar object.
+	 * @param WP_Admin_Bar $admin_bar The admin bar object.
 	 */
-	public function add_admin_bar( \WP_Admin_Bar $admin_bar ) {
+	public function add_admin_bar( WP_Admin_Bar $admin_bar ) {
 		if ( $this->user_can_view_menu() ) {
 			$args       = $this->args;
 			$args['id'] = $this->id;

@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Shortcode;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +41,7 @@ class Shortcodes extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Shortcode|\WP_Error Script Resulting shortcode class, if it exists. WP_Error, otherwise.
+	 * @return Shortcode|WP_Error Script Resulting shortcode class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

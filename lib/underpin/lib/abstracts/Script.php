@@ -9,6 +9,7 @@
 
 namespace Underpin\Abstracts;
 
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -110,7 +111,7 @@ abstract class Script extends Feature_Extension {
 	 *
 	 * @param string $key   The key for the localized value.
 	 * @param string $value The value
-	 * @return true|\WP_Error True if successful, \WP_Error if param was added too late.
+	 * @return true|WP_Error True if successful, \WP_Error if param was added too late.
 	 */
 	public function set_param( $key, $value ) {
 
@@ -136,7 +137,7 @@ abstract class Script extends Feature_Extension {
 	 * @since 1.0.0
 	 *
 	 * @param string $key The key to remove.
-	 * @return true|\WP_Error True if successful, \WP_Error if param was added too late.
+	 * @return true|WP_Error True if successful, \WP_Error if param was added too late.
 	 */
 	public function remove_param( $key ) {
 

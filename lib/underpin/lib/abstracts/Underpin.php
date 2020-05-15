@@ -9,8 +9,11 @@
 
 namespace Underpin\Abstracts;
 
+use Exception;
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Loaders;
+use WP_Error;
+use function Underpin\underpin;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -113,7 +116,7 @@ abstract class Underpin {
 			if ( class_exists( $class ) ) {
 				$this->class_registry[ $class ] = new $class;
 			} else {
-				$this->class_registry[ $class ] = new \WP_Error(
+				$this->class_registry[ $class ] = new WP_Error(
 					'class_could_not_be_found',
 					'The specified class could not be located',
 					[ 'class' => $class ]
@@ -125,7 +128,7 @@ abstract class Underpin {
 	}
 
 	protected function _get_loader( $loader ) {
-		$class = $this->_get_class( 'Underpin\Loaders\\' . $loader );
+		$class = underpin()->_get_class( 'Underpin\Loaders\\' . $loader );
 
 		// If this is not a core loader, attempt to get it from this plugin.
 		if ( is_wp_error( $class ) ) {
@@ -239,7 +242,7 @@ abstract class Underpin {
 
 				return false;
 			} );
-		}catch( \Exception $e ){
+		}catch( Exception $e ){
 			$this->logger()->log_exception( 'autoload_failed', $e );
 
 			return $e->getMessage();
@@ -279,6 +282,17 @@ abstract class Underpin {
 	 */
 	public function batch_tasks() {
 		return $this->_get_loader( 'Batch_Tasks' );
+	}
+
+	/**
+	 * Fetches the Batch_Tasks instance.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Decision_Lists
+	 */
+	public function decision_lists() {
+		return $this->_get_loader( 'Decision_Lists' );
 	}
 
 	/**
@@ -447,7 +461,7 @@ abstract class Underpin {
 	protected function unsupported_actions() {
 		global $wp_version;
 
-		self::$instances[ __CLASS__ ] = new \WP_Error(
+		self::$instances[ __CLASS__ ] = new WP_Error(
 			'minimum_version_not_met',
 			__( sprintf(
 				"The Underpin plugin requires at least WordPress %s, and PHP %s.",

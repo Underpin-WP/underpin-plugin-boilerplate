@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Cron_Task;
 use Underpin\Abstracts\Registries\Loader_Registry;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +41,7 @@ class Cron_Jobs extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Cron_Task|\WP_Error Script Resulting cron task class, if it exists. WP_Error, otherwise.
+	 * @return Cron_Task|WP_Error Script Resulting cron task class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

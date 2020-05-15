@@ -10,7 +10,8 @@
 namespace Underpin\Abstracts;
 
 
-use Underpin\Traits\Templates;
+use Underpin\Traits\Underpin_Templates;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package Underpin\Abstracts
  */
 abstract class Admin_Page extends Feature_Extension {
-	use Templates;
+	use Underpin_Templates;
 
 	/**
 	 * List of sections.
@@ -73,15 +74,6 @@ abstract class Admin_Page extends Feature_Extension {
 	protected $capability = 'administrator';
 
 	/**
-	 * Determines if third parties can extend this admin page.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var bool
-	 */
-	protected $extendable = false;
-
-	/**
 	 * The unique identifier for this menu.
 	 *
 	 * @since 1.0.0
@@ -115,7 +107,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 *
 	 * @var string The options key
 	 */
-	private $options_key = false;
+	protected $options_key = false;
 
 	/**
 	 * Admin_Page constructor.
@@ -137,30 +129,55 @@ abstract class Admin_Page extends Feature_Extension {
 		$this->register_actions();
 	}
 
+	protected function update_field( Settings_Field $field ) {
+		// Get the field name.
+		$field_name = $field->get_field_param( 'name' );
+
+		// If the field type is a checkbox, update value based on if the field was included.
+		if ( 'checkbox' === $field->get_field_type() ) {
+			$checked = isset( $_POST[ $field_name ] );
+			$updated = $field->update_value( $checked );
+
+			// Otherwise, Update the value if the field is provided.
+		} elseif ( isset( $_POST[ $field_name ] ) && $_POST[ $field_name ] !== $field->get_field_value() ) {
+			$updated = $field->update_value( $_POST[ $field_name ] );
+		}
+
+		if ( ! isset( $updated ) ) {
+			return new WP_Error(
+				'field_not_changed',
+				'The field was not updated because the value is the same as the current field value',
+				[
+					'field_name' => $field_name,
+					'value'      => $_POST[ $field_name ],
+				]
+			);
+		}
+
+		return $updated;
+	}
+
 	/**
 	 * Function that necessitates saving a single field however it needs to be saved.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param Settings_Field $field The field to save.
-	 * @return true|\WP_Error true if the field saved, WP_Error otherwise.
+	 * @return true|WP_Error true if the field saved, WP_Error otherwise.
 	 */
 	public function save_field( Settings_Field $field ) {
 		$options_key = $this->options_key;
 		$options     = get_option( $options_key );
-		// Get the field name.
-		$field_name = $field->get_field_param( 'name' );
+		$updated     = $this->update_field( $field );
 
-		// If the field type is a checkbox, update value based on if the field was included.
-		if ( 'checkbox' === $field->get_field_type() ) {
-			$checked                = isset( $_POST[ $field_name ] );
-			$options[ $field_name ] = $field->update_value( $checked );
+		// Bail early if this field was already set.
+		if ( is_wp_error( $updated ) ) {
+			underpin()->logger()->log_wp_error( 'notice', $updated );
 
-			// Otherwise, Update the value if the field is provided.
-		} elseif ( isset( $_POST[ $field_name ] ) ) {
-			$options[ $field_name ] = $field->update_value( $_POST[ $field_name ] );
+			return $updated;
 		}
 
+		$options[ $field->get_field_param( 'settings_key' ) ] = $field->get_field_value();
 		$updated = update_option( $options_key, $options );
 
 		if ( true !== $updated ) {
@@ -186,7 +203,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @since 1.0.0
 	 *
 	 * @param string $section The section to retrieve. If left blank, this will automatically retrieve from GET.
-	 * @return mixed|\WP_Error
+	 * @return mixed|WP_Error
 	 */
 	public function get_section( $section = '' ) {
 
@@ -234,7 +251,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @return void
 	 */
 	public function update_actions() {
-		add_action( 'wp_loaded', [ $this, 'handle_update_request' ] );
+		add_action( 'admin_init', [ $this, 'handle_update_request' ], 99 );
 	}
 
 	/**
@@ -248,14 +265,36 @@ abstract class Admin_Page extends Feature_Extension {
 	}
 
 	/**
+	 * Determines if the current page is the specified section.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $section The section to check
+	 * @return bool
+	 */
+	public function is_admin_section( $section ) {
+		return $this->is_admin_page() && isset( $_GET['section'] ) && $section === $_GET['section'];
+	}
+
+	/**
+	 * Determines if the current page is this admin page.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function is_admin_page() {
+		return is_admin() && isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'];
+	}
+
+	/**
 	 * Validates this request.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return true|\WP_Error True if request is validated, otherwise WP_Error containing what went wrong.
+	 * @return true|WP_Error True if request is validated, otherwise WP_Error containing what went wrong.
 	 */
 	public function validate_request() {
-		$errors = new \WP_Error;
+		$errors = new WP_Error;
 
 		// If this is not an admin page, bail
 		if ( ! is_admin() ) {
@@ -267,7 +306,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		// If this is not the correct settings page, bail
-		if ( ! isset( $_GET['page'] ) || $this->menu_slug !== $_GET['page'] ) {
+		if ( ! $this->is_admin_page() ) {
 			$errors->add(
 				'update_request_settings_invalid_settings_page',
 				__( 'An update request attempted to run outside of the specified settings settings page.' ),
@@ -318,10 +357,10 @@ abstract class Admin_Page extends Feature_Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return true|\WP_Error True if all fields were saved, WP_Error containing errors if not.
+	 * @return true|WP_Error True if all fields were saved, WP_Error containing errors if not.
 	 */
 	public function save() {
-		$errors = new \WP_Error;
+		$errors = new WP_Error;
 
 		foreach ( $this->get_section_fields() as $field ) {
 
@@ -349,7 +388,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return true|\WP_Error True if saved successfully, otherwise WP_Error.
+	 * @return true|WP_Error True if saved successfully, otherwise WP_Error.
 	 */
 	public function handle_update_request() {
 		$valid = $this->validate_request();
@@ -368,7 +407,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @since 1.0.0
 	 *
 	 * @param string $section The name of the section.
-	 * @return array|\WP_Error
+	 * @return array|WP_Error
 	 */
 	public function get_section_fields( $section = '' ) {
 		$section = $this->get_section( $section );
@@ -378,7 +417,7 @@ abstract class Admin_Page extends Feature_Extension {
 		}
 
 		if ( ! isset( $section['fields'] ) ) {
-			return new \WP_Error(
+			return new WP_Error(
 				'section_has_no_fields',
 				'The specified section has no fields',
 				[ 'section' => $section ]

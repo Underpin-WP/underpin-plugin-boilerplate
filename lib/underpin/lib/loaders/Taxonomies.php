@@ -12,6 +12,7 @@ namespace Underpin\Loaders;
 use Underpin\Abstracts\Custom_Post_Type;
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Taxonomy;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +41,7 @@ class Taxonomies extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Taxonomy|\WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
+	 * @return Taxonomy|WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

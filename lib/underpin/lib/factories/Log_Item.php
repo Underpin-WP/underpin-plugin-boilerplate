@@ -11,6 +11,8 @@
 namespace Underpin\Factories;
 
 
+use WP_Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -114,12 +116,12 @@ class Log_Item {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \WP_Error
+	 * @return WP_Error
 	 */
 	public function error() {
 		$data        = $this->data;
 		$data['ref'] = $this->ref;
 
-		return new \WP_Error( $this->code, $this->message, $data );
+		return new WP_Error( $this->code, $this->message, $data );
 	}
 }

@@ -6,13 +6,14 @@
  * @date  : 12/21/19
  */
 
+use Underpin\Abstracts\Admin_Page;
 use Underpin\Abstracts\Settings_Field;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $template ) || ! $template instanceof \Underpin\Abstracts\Admin_Page ) {
+if ( ! isset( $template ) || ! $template instanceof Admin_Page ) {
 	return;
 }
 

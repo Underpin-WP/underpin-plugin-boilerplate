@@ -11,6 +11,7 @@ namespace Underpin\Abstracts;
 
 
 use Underpin\Traits\Underpin_Templates;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -115,7 +116,7 @@ abstract class Batch_Task {
 	 * @since 1.0.0
 	 *
 	 * @param int $current_tally The current number of times this task has ran.
-	 * @return true|\WP_Error True if the task was successful, otherwise \WP_Error. Errors get logged by run().
+	 * @return true|WP_Error True if the task was successful, otherwise \WP_Error. Errors get logged by run().
 	 */
 	abstract protected function task( $current_tally );
 
@@ -147,7 +148,7 @@ abstract class Batch_Task {
 	 * Runs the actual batch task for this request.
 	 *
 	 * @param int $current_tally The current number of times this task has ran.
-	 * @return int|\WP_Error The current tally if successful, WP_Error if the system was stopped early.
+	 * @return int|WP_Error The current tally if successful, WP_Error if the system was stopped early.
 	 */
 	public function run( $current_tally ) {
 
@@ -220,7 +221,7 @@ abstract class Batch_Task {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return true|\WP_Error True if valid, WP_Error otherwise.
+	 * @return true|WP_Error True if valid, WP_Error otherwise.
 	 */
 	protected function is_valid() {
 

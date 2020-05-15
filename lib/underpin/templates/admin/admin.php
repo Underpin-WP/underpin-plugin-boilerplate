@@ -7,11 +7,13 @@
  */
 
 
+use Underpin\Abstracts\Admin_Page;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $template ) || ! $template instanceof \Underpin\Abstracts\Admin_Page ) {
+if ( ! isset( $template ) || ! $template instanceof Admin_Page ) {
 	return;
 }
 

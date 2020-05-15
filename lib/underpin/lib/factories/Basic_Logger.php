@@ -14,6 +14,7 @@ namespace Underpin\Factories;
 
 use Underpin\Abstracts\Event_Type;
 use Underpin\Abstracts\Writer;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -106,7 +107,7 @@ class Basic_Logger extends Writer {
 
 		// bail early if the max file age is less than zero.
 		if ( $max_file_age < 0 ) {
-			$error = new \WP_Error(
+			$error = new WP_Error(
 				'invalid_max_age',
 				'The provided max file age is less than zero. File age must be greater than zero.'
 			);
@@ -142,12 +143,12 @@ class Basic_Logger extends Writer {
 	 * @since 1.0.0
 	 *
 	 * @param string $path The path to the file, or the file name.
-	 * @return array|\WP_Error Parsed file, or \WP_Error object.
+	 * @return array|WP_Error Parsed file, or \WP_Error object.
 	 */
 	public function parse_file( $path ) {
 		$file       = basename( $path );
 		$file_split = explode( '__', $file );
-		$errors     = new \WP_Error();
+		$errors     = new WP_Error();
 
 		if ( count( $file_split ) !== 2 ) {
 			$errors->add(
@@ -196,7 +197,7 @@ class Basic_Logger extends Writer {
 	 * @since 1.0.0
 	 *
 	 * @param string $date Optional. The log file date to retrieve. Default today.
-	 * @return string|\WP_Error
+	 * @return string|WP_Error
 	 */
 	public function file( $date = 'today' ) {
 

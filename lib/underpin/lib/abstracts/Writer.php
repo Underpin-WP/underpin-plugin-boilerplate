@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 use Underpin\Factories\Log_Item;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,7 +49,7 @@ abstract class Writer {
 	 * Clears the event log.
 	 *
 	 * @since 1.0.0
-	 * @return true|\WP_Error True if the clear was successful, or WP_Error.
+	 * @return true|WP_Error True if the clear was successful, or WP_Error.
 	 */
 	abstract public function clear();
 
@@ -58,7 +59,7 @@ abstract class Writer {
 	 * @since 1.0.0
 	 *
 	 * @param int $max_file_age The maximum number of days worth of log data to keep.
-	 * @return array|\WP_Error List of purged files, or WP_Error.
+	 * @return array|WP_Error List of purged files, or WP_Error.
 	 */
 	abstract public function purge( $max_file_age );
 

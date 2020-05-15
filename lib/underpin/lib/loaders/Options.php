@@ -3,7 +3,7 @@
  * Options
  *
  * @since   1.0.0
- * @package DFS_Monitor\Registries\Loaders
+ * @package Underpin\Registries\Loaders
  */
 
 
@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Factories\Option;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registry for Cron Jobs
  *
  * @since   1.0.0
- * @package DFS_Monitor\Registries\Loaders
+ * @package Underpin\Registries\Loaders
  */
 class Options extends Loader_Registry {
 
@@ -38,7 +39,7 @@ class Options extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Option|\WP_Error Script Resulting block class, if it exists. WP_Error, otherwise.
+	 * @return Option|WP_Error Script Resulting block class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

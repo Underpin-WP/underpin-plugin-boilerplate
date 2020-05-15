@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use ArrayIterator;
 use Exception;
 use \Underpin\Factories\Log_Item;
 use WP_Error;
@@ -24,7 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Event_Type extends \ArrayIterator {
+abstract class Event_Type extends ArrayIterator {
+
 	/**
 	 * Event type
 	 *
@@ -59,16 +61,6 @@ abstract class Event_Type extends \ArrayIterator {
 	 * @var string
 	 */
 	public $name = '';
-
-	/**
-	 * Arbitrary metadata associated with this event type.
-	 * Can be used to extend logger events.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var array
-	 */
-	public $meta = [];
 
 	/**
 	 * The class to instantiate when writing to the error log.
@@ -149,15 +141,15 @@ abstract class Event_Type extends \ArrayIterator {
 	 */
 	public function writer() {
 		if ( true !== $this->write_to_log ) {
-			return new \WP_Error(
+			return new WP_Error(
 				'event_type_does_not_write',
 				'The specified event type does not write to the logger. To change this, set the write_to_log param to true.',
 				[ 'logger' => $this->type, 'write_to_log_value' => $this->write_to_log ]
 			);
 		}
 
-		if ( ! is_subclass_of( $this->writer_class, 'Underpin/Abstracts/Writer' ) ) {
-			return new \WP_Error(
+		if ( ! is_subclass_of( $this->writer_class, 'Underpin\Abstracts\Writer' ) ) {
+			return new WP_Error(
 				'writer_class_invalid',
 				'The writer class must be extend the Writer class.',
 				[ 'writer_class' => $this->writer_class ]
@@ -183,7 +175,7 @@ abstract class Event_Type extends \ArrayIterator {
 		$item = new $this->log_item_class( $this->type, $code, $message, $ref, $data );
 
 		if ( ! $item instanceof Log_Item ) {
-			return new \WP_Error(
+			return new WP_Error(
 				'log_item_class_invalid',
 				'The log item class must be extend the Log_Item class.',
 				[ 'log_item_class' => $this->log_item_class ]
@@ -192,6 +184,8 @@ abstract class Event_Type extends \ArrayIterator {
 
 
 		$this[] = $item;
+
+		do_action( 'underpin/logger/after_logged_item', $item, $this->writer() );
 
 		return $item;
 	}

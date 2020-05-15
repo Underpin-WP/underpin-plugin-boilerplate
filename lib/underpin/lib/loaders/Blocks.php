@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Block;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +41,7 @@ class Blocks extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Block|\WP_Error Script Resulting block class, if it exists. WP_Error, otherwise.
+	 * @return Block|WP_Error Script Resulting block class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

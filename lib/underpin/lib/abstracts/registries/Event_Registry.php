@@ -51,7 +51,7 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @since 1.0.0
 	 *
 	 * @param bool $type The event type to retrieve. If false, this will get all events.
-	 * @return array|\WP_Error list of all events, or a WP_Error if something went wrong.
+	 * @return array|WP_Error list of all events, or a WP_Error if something went wrong.
 	 */
 	public function get_request_events( $type = false ) {
 		if ( false !== $type ) {
@@ -141,7 +141,7 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @param Exception $exception Exception instance to log.
 	 * @param mixed     $ref       Reference value, typically a post ID or some database key.
 	 * @param array     $data      array Data associated with this error message
-	 * @return \WP_Error WP Error, with error message.
+	 * @return WP_Error WP Error, with error message.
 	 */
 	public function log_exception( $type, Exception $exception, $ref = null, $data = array() ) {
 		return $this->log_as_error( $type, $exception->getCode(), $exception->getMessage(), $ref, $data );
@@ -149,7 +149,7 @@ abstract class Event_Registry extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Event_Type|\WP_Error Event type, if it exists. WP_Error, otherwise.
+	 * @return Event_Type|WP_Error Event type, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

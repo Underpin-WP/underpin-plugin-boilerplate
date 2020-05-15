@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Style;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,7 +42,7 @@ class Styles extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Style|\WP_Error Script Resulting script class, if it exists. WP_Error, otherwise.
+	 * @return Style|WP_Error Script Resulting script class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
@@ -56,7 +57,7 @@ class Styles extends Loader_Registry {
 	 * @since 1.0.0
 	 *
 	 * @param string $handle The script that should be enqueued.
-	 * @return true|\WP_Error True if the style was enqueued, a WP Error otherwise.
+	 * @return true|WP_Error True if the style was enqueued, a WP Error otherwise.
 	 */
 	public function enqueue( $handle ) {
 		$style = $this->get( $handle );

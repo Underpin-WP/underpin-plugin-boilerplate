@@ -11,6 +11,7 @@ namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
 use Underpin\Abstracts\Rest_Endpoint;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +41,7 @@ class Rest_Endpoints extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return Rest_Endpoint|\WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
+	 * @return Rest_Endpoint|WP_Error Script Resulting REST Endpoint class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );

@@ -10,6 +10,8 @@
 namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Registries\Loader_Registry;
+use WP_Error;
+use WP_Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -51,7 +53,7 @@ class Widgets extends Loader_Registry {
 
 	/**
 	 * @param string $key
-	 * @return \WP_Widget|\WP_Error Script Resulting WP_Widget class, if it exists. WP_Error, otherwise.
+	 * @return WP_Widget|WP_Error Script Resulting WP_Widget class, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
 		return parent::get( $key );
