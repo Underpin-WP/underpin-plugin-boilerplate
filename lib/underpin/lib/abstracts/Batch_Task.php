@@ -274,6 +274,13 @@ abstract class Batch_Task {
 				'message'     => $this->notice_message,
 				'button_text' => $this->button_text,
 			] );
+
+			underpin()->logger()->log(
+				'notice',
+				'batch_task_enqueued',
+				'A batch task was enqueued.',
+				$this->batch_id,
+				);
 		}
 	}
 
