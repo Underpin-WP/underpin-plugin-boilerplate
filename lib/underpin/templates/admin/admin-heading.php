@@ -21,6 +21,6 @@ $current = $template->get_param( 'section', '' );
 ?>
 <nav class="nav-tab-wrapper">
 	<?php foreach ( $template->get_param( 'sections' ) as $id => $section ): ?>
-		<a class="nav-tab<?= $current === $id ? ' nav-tab-active' : '' ?>" href="<?= $template->get_section_url( $id ) ?>"><?= $section['name'] ?></a>
+		<a class="nav-tab<?= $current === $id ? ' nav-tab-active' : '' ?>" href="<?= $template->get_section_url( $id ) ?>"><?= $template->section( $id )->name; ?></a>
 	<?php endforeach; ?>
 </nav>

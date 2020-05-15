@@ -90,7 +90,6 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @var int the menu position.
 	 */
 	protected $position = null;
-
 	/**
 	 * The nonce action used to validate when interfacing with this page.
 	 *
@@ -100,14 +99,6 @@ abstract class Admin_Page extends Feature_Extension {
 	 */
 	protected $nonce_action;
 
-	/**
-	 * The key to use when updating options.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string The options key
-	 */
-	protected $options_key = false;
 
 	/**
 	 * Admin_Page constructor.
@@ -117,9 +108,9 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @param array $args List of arguments used to create this menu page.
 	 */
 	public function __construct() {
-		$this->options_key  = false === $this->options_key ? $this->parent_slug . '_settings' : $this->options_key;
 		$this->nonce_action = $this->menu_slug . '_nonce';
 	}
+
 
 	/**
 	 * @inheritDoc
@@ -129,90 +120,28 @@ abstract class Admin_Page extends Feature_Extension {
 		$this->register_actions();
 	}
 
-	protected function update_field( Settings_Field $field ) {
-		// Get the field name.
-		$field_name = $field->get_field_param( 'name' );
-
-		// If the field type is a checkbox, update value based on if the field was included.
-		if ( 'checkbox' === $field->get_field_type() ) {
-			$checked = isset( $_POST[ $field_name ] );
-			$updated = $field->update_value( $checked );
-
-			// Otherwise, Update the value if the field is provided.
-		} elseif ( isset( $_POST[ $field_name ] ) && $_POST[ $field_name ] !== $field->get_field_value() ) {
-			$updated = $field->update_value( $_POST[ $field_name ] );
-		}
-
-		if ( ! isset( $updated ) ) {
-			return new WP_Error(
-				'field_not_changed',
-				'The field was not updated because the value is the same as the current field value',
-				[
-					'field_name' => $field_name,
-					'value'      => $_POST[ $field_name ],
-				]
-			);
-		}
-
-		return $updated;
-	}
-
-	/**
-	 * Function that necessitates saving a single field however it needs to be saved.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param Settings_Field $field The field to save.
-	 * @return true|WP_Error true if the field saved, WP_Error otherwise.
-	 */
-	public function save_field( Settings_Field $field ) {
-		$options_key = $this->options_key;
-		$options     = get_option( $options_key );
-		$updated     = $this->update_field( $field );
-
-		// Bail early if this field was already set.
-		if ( is_wp_error( $updated ) ) {
-			underpin()->logger()->log_wp_error( 'notice', $updated );
-
-			return $updated;
-		}
-
-		$options[ $field->get_field_param( 'settings_key' ) ] = $field->get_field_value();
-		$updated = update_option( $options_key, $options );
-
-		if ( true !== $updated ) {
-			$updated = underpin()->logger()->log_as_error(
-				'error',
-				'update_request_settings_failed_to_update',
-				'The ' . $options_key . ' settings failed to update.'
-			);
-		} else {
-			underpin()->logger()->log(
-				'notice',
-				'update_request_settings_succeeded_to_update',
-				'The ' . $options_key . ' settings updated successfully.'
-			);
-		}
-
-		return $updated;
-	}
-
 	/**
 	 * Retrieves the specified section.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $section The section to retrieve. If left blank, this will automatically retrieve from GET.
-	 * @return mixed|WP_Error
+	 * @param string $key The section to retrieve. If left blank, this will automatically retrieve from GET.
+	 * @return Admin_Section|WP_Error
 	 */
-	public function get_section( $section = '' ) {
+	public function section( $key = '' ) {
 
-		if ( '' === $section ) {
-			$section = $this->get_current_section_key();
+		if ( '' === $key ) {
+			$key = $this->get_current_section_key();
 		}
 
-		if ( isset( $this->sections[ $section ] ) ) {
-			return $this->sections[ $section ];
+		if ( isset( $this->sections[ $key ] ) ) {
+			if ( is_string( $this->sections[ $key ] ) ) {
+				$this->sections[ $key ] = new $this->sections[$key];
+			}
+
+			if ( $this->sections[ $key ] instanceof Admin_Section ) {
+				return $this->sections[ $key ];
+			}
 		}
 
 		return underpin()->logger()->log_as_error(
@@ -223,78 +152,8 @@ abstract class Admin_Page extends Feature_Extension {
 		);
 	}
 
-	/**
-	 * Retrieves the name of the current section.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string The current section name, or an empty string.
-	 */
-	public function get_current_section_key() {
-		if ( isset( $_GET['section'] ) && isset( $this->sections[ $_GET['section'] ] ) ) {
-			return $_GET['section'];
-		}
-
-		$section_names = array_keys( $this->sections );
-
-		if ( ! empty( $section_names ) ) {
-			return $section_names[0];
-		}
-
-		return '';
-	}
-
-	/**
-	 * Registers actions to update this admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function update_actions() {
-		add_action( 'admin_init', [ $this, 'handle_update_request' ], 99 );
-	}
-
-	/**
-	 * Registers actions to register this admin page to WordPress.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function register_actions() {
-		add_action( 'admin_menu', [ $this, 'register_sub_menu' ] );
-	}
-
-	/**
-	 * Determines if the current page is the specified section.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $section The section to check
-	 * @return bool
-	 */
-	public function is_admin_section( $section ) {
-		return $this->is_admin_page() && isset( $_GET['section'] ) && $section === $_GET['section'];
-	}
-
-	/**
-	 * Determines if the current page is this admin page.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_admin_page() {
-		return is_admin() && isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'];
-	}
-
-	/**
-	 * Validates this request.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return true|WP_Error True if request is validated, otherwise WP_Error containing what went wrong.
-	 */
 	public function validate_request() {
-		$errors = new WP_Error;
+		$errors = new \WP_Error();
 
 		// If this is not an admin page, bail
 		if ( ! is_admin() ) {
@@ -339,48 +198,7 @@ abstract class Admin_Page extends Feature_Extension {
 			);
 		}
 
-		foreach ( $this->get_section_fields() as $field ) {
-			if ( ! $field instanceof Settings_Field ) {
-				$errors->add(
-					'field_invalid',
-					'The provided field is not an instance of a settings field',
-					[ 'field' => $field ]
-				);
-			}
-		}
-
 		return $errors->has_errors() ? $errors : true;
-	}
-
-	/**
-	 * Action to save all fields.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return true|WP_Error True if all fields were saved, WP_Error containing errors if not.
-	 */
-	public function save() {
-		$errors = new WP_Error;
-
-		foreach ( $this->get_section_fields() as $field ) {
-
-			$saved = $this->save_field( $field );
-
-			if ( is_wp_error( $saved ) ) {
-				$errors->add( $saved->get_error_code(), $saved->get_error_message(), $saved->get_error_data() );
-			}
-		}
-
-		if ( $errors->has_errors() ) {
-			underpin()->logger()->log(
-				'error',
-				'failed_to_save_settings',
-				'some settings failed to save',
-				[ 'errors' => $errors ]
-			);
-		}
-
-		return $errors->has_errors() ? true : $errors;
 	}
 
 	/**
@@ -391,40 +209,89 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @return true|WP_Error True if saved successfully, otherwise WP_Error.
 	 */
 	public function handle_update_request() {
-		$valid = $this->validate_request();
+		$page_valid    = $this->validate_request();
+		$section_valid = $this->section()->validate_request();
+		$errors        = underpin()->logger()->gather_errors( $page_valid, $section_valid );
 
-		if ( is_wp_error( $valid ) ) {
-			return $valid;
+
+		if ( $errors->has_errors() ) {
+			return $errors;
 		}
 
-		return $this->save();
+		return $this->section()->save();
 	}
 
 
 	/**
-	 * Retrieves the fields for the specified section.
+	 * Retrieves the URL of the current section.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $section The name of the section.
-	 * @return array|WP_Error
+	 * @return string a URL of the specified section of this settings page.
 	 */
-	public function get_section_fields( $section = '' ) {
-		$section = $this->get_section( $section );
+	public function get_section_url( $section ) {
 
-		if ( is_wp_error( $section ) ) {
-			return $section;
+		$url = get_admin_url();
+		$url .= $this->parent_slug;
+		$url .= '?page=' . $this->menu_slug;
+
+		if ( isset( $this->sections[ $section ] ) ) {
+			$url .= '&section=' . $section;
 		}
 
-		if ( ! isset( $section['fields'] ) ) {
-			return new WP_Error(
-				'section_has_no_fields',
-				'The specified section has no fields',
-				[ 'section' => $section ]
-			);
+		return $url;
+	}
+
+	/**
+	 * Retrieves the name of the current section.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string The current section name, or an empty string.
+	 */
+	public function get_current_section_key() {
+		if ( isset( $_GET['section'] ) && isset( $this->sections[ $_GET['section'] ] ) ) {
+			return $_GET['section'];
 		}
 
-		return $section['fields'];
+		$section_names = array_keys( $this->sections );
+
+		if ( ! empty( $section_names ) ) {
+			return $section_names[0];
+		}
+
+		return '';
+	}
+
+	/**
+	 * Registers actions to update this admin page.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_actions() {
+		add_action( 'admin_init', [ $this, 'handle_update_request' ], 99 );
+	}
+
+	/**
+	 * Registers actions to register this admin page to WordPress.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function register_actions() {
+		add_action( 'admin_menu', [ $this, 'register_sub_menu' ] );
+	}
+
+	/**
+	 * Determines if the current page is this admin page.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function is_admin_page() {
+		return is_admin() && isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'];
 	}
 
 	/**
@@ -463,33 +330,11 @@ abstract class Admin_Page extends Feature_Extension {
 			'title'        => $this->page_title,
 			'section'      => $this->get_current_section_key(),
 			'sections'     => $this->sections,
-			'nonce_action' => $this->nonce_action,
 			'menu_slug'    => $this->menu_slug,
 		] );
 		if ( ! is_wp_error( $template ) ) {
 			echo $template;
 		}
-	}
-
-	/**
-	 * Retrieves the URL of the current section.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $section The name of the section.
-	 * @return string a URL of the specified section of this settings page.
-	 */
-	public function get_section_url( $section ) {
-
-		$url = get_admin_url();
-		$url .= $this->parent_slug;
-		$url .= '?page=' . $this->menu_slug;
-
-		if ( isset( $this->sections[ $section ] ) ) {
-			$url .= '&section=' . $section;
-		}
-
-		return $url;
 	}
 
 	/**
@@ -508,9 +353,6 @@ abstract class Admin_Page extends Feature_Extension {
 	protected function get_templates() {
 		return [
 			'admin'         => [
-				'override_visibility' => 'private',
-			],
-			'admin-section' => [
 				'override_visibility' => 'private',
 			],
 			'admin-heading' => [

@@ -78,7 +78,7 @@ class Decision_Lists extends Loader_Registry {
 			$decision_result
 		);
 
-		$decision = $decision_list['decision'];
+		$decision = $decision_result['decision'];
 
 		return $decision->valid_actions( $params );
 	}

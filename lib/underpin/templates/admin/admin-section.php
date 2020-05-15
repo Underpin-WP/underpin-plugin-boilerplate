@@ -1,33 +1,35 @@
 <?php
 /**
- * Admin Page Template
+ * Admin Section Template
  *
  * @author: Alex Standiford
  * @date  : 12/21/19
  */
 
-use Underpin\Abstracts\Admin_Page;
+use Underpin\Abstracts\Admin_Section;
 use Underpin\Abstracts\Settings_Field;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $template ) || ! $template instanceof Admin_Page ) {
+if ( ! isset( $template ) || ! $template instanceof Admin_Section ) {
 	return;
 }
 
-$section = $template->get_param( 'section', [ 'fields' => [], 'name' => '' ] );
+if ( is_wp_error( $template->get_fields() ) ) {
+	return;
+}
 
 ?>
 	<tr>
 		<td colspan="2">
-			<h3><?= $section['name']; ?></h3>
+			<h3><?= $template->name ?></h3>
 			<hr>
 		</td>
 	</tr>
 <?php
-foreach ( $section['fields'] as $field ) {
+foreach ( $template->get_fields() as $field ) {
 	if ( $field instanceof Settings_Field ) {
 		echo $field->place( true );
 	}

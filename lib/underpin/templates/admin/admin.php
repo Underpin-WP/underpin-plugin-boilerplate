@@ -37,7 +37,7 @@ if ( count( $sections ) > 1 ) {
 		<table class="form-table">
 			<tbody>
 
-			<?= $template->get_template( 'admin-section', [ 'section' => $sections[ $section ] ] ); ?>
+			<?= $template->section( $section )->get_template( 'admin-section' ); ?>
 
 			</tbody>
 		</table>
