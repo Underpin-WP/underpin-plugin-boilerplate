@@ -55,52 +55,168 @@ abstract class Underpin {
 	 */
 	protected $loader_namespace = "Underpin\Loaders";
 
+	/**
+	 * The minimum PHP version for this bootstrap.
+	 *
+	 * @var string The PHP version
+	 */
 	protected $minimum_php_version;
+
+	/**
+	 * The minimum WP version for this bootstrap.
+	 *
+	 * @var string The WP version
+	 */
 	protected $minimum_wp_version;
+
+	/**
+	 * The current version of this plugin.
+	 *
+	 * @var string The plugin version.
+	 */
 	protected $version;
+
+	/**
+	 * The URL to the file for this plugin.
+	 * The URL is constructed from the path passed to the constructor.
+	 *
+	 * @var string The PHP version.
+	 */
 	protected $url;
+
+	/**
+	 * The URL to the css directory for this plugin.
+	 * The URL to the css directory is constructed from the path passed to the constructor.
+	 * This can be accessed using css_url(), and overridden with the the _setup_params function.
+	 *
+	 *
+	 * @var string The CSS URL. Defaults to $this->url . 'assets/css/build'
+	 */
 	protected $css_url;
+
+	/**
+	 * The URL to the JS directory for this plugin.
+	 * The URL to the JS directory is constructed from the path passed to the constructor.
+	 * This can be accessed using js_url(), and overridden with the the _setup_params function.
+	 *
+	 * @var string The JS URL. Defaults to $this->url . 'assets/js/build'
+	 */
 	protected $js_url;
+
+	/**
+	 * The plugin root directory for this plugin.
+	 * The directory is constructed from the path passed to the constructor.
+	 * This can be accessed using dir(), and overridden with the the _setup_params function.
+	 *
+	 * @var string The root plugin directory.
+	 */
 	protected $dir;
+
+	/**
+	 * The plugin root file for this plugin.
+	 * This is constructed from the path passed to the constructor.
+	 * This can be accessed using file(), and overridden with the the _setup_params function.
+	 *
+	 * @var string The root plugin file.
+	 */
 	protected $file;
+
+	/**
+	 * The plugin root directory for this plugin.
+	 * The directory is constructed from the path passed to the constructor.
+	 * This can be accessed using dir(), and overridden with the the _setup_params function.
+	 *
+	 * @var string The template directory. Defaults to $this->dir . 'templates'
+	 */
 	protected $template_dir;
 
+	/**
+	 * Retrieves the minimum PHP version for this plugin.
+	 *
+	 * @return string
+	 */
 	public function minimum_php_version() {
 		return $this->minimum_php_version;
 	}
 
+	/**
+	 * Retrieves the minimum WP version for this plugin.
+	 *
+	 * @return string
+	 */
 	public function minimum_wp_version() {
 		return $this->minimum_wp_version;
 	}
 
+	/**
+	 * Retrieves the current version of this plugin.
+	 *
+	 * @return string
+	 */
 	public function version() {
 		return $this->version;
 	}
 
+	/**
+	 * Retrieves the URL of this plugin.
+	 *
+	 * @return string
+	 */
 	public function url() {
 		return trailingslashit( $this->url );
 	}
 
+	/**
+	 * Retrieves the CSS URL of this plugin.
+	 *
+	 * @return string
+	 */
 	public function css_url() {
 		return trailingslashit( $this->css_url );
 	}
 
+	/**
+	 * Retrieves the JS URL of this plugin.
+	 *
+	 * @return string
+	 */
 	public function js_url() {
 		return trailingslashit( $this->js_url );
 	}
 
+	/**
+	 * Retrieves the root directory of this plugin.
+	 *
+	 * @return string
+	 */
 	public function dir() {
 		return trailingslashit( $this->dir );
 	}
 
+	/**
+	 * Retrieves the root file of this plugin.
+	 *
+	 * @return string
+	 */
 	public function file() {
 		return $this->file;
 	}
 
+	/**
+	 * Retrieves the template directory of this plugin.
+	 *
+	 * @return string
+	 */
 	public function template_dir() {
 		return trailingslashit( $this->template_dir );
 	}
 
+	/**
+	 * Placeholder to set up the plugin.
+	 * This function runs once during the runtime, the first time the plugin is instantiated.
+	 *
+	 * @return mixed
+	 */
 	abstract protected function _setup();
 
 	/**
@@ -127,6 +243,12 @@ abstract class Underpin {
 		return $this->class_registry[ $class ];
 	}
 
+	/**
+	 * Retrieves A loader. This is generally used in other methods in this class to instantiate loaders.
+	 *
+	 * @param string $loader The namespaced loader class to retrieve.
+	 * @return mixed
+	 */
 	protected function _get_loader( $loader ) {
 		$class = underpin()->_get_class( 'Underpin\Loaders\\' . $loader );
 
@@ -138,6 +260,11 @@ abstract class Underpin {
 		return $class;
 	}
 
+	/**
+	 * Exports registered items to a text-friendly dump. Used by the debug log to display registered items.
+	 *
+	 * @return array list of registered item exports.
+	 */
 	public static function export() {
 		$results = [];
 
