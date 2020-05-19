@@ -1,7 +1,9 @@
 # Boilerplate for Custom Projects
 
 This boilerplate is designed to work well for large, complex WordPress plugins. The goal of this system is to create an
-opinionated pattern for creating a plugin in WordPress.
+opinionated pattern for creating a plugin in WordPress. It also adds support for useful utilities that plugins need as
+they mature, such as a solid error logging utility, a batch processor for upgrade routines, and a decision tree class that
+makes extending _and_ debugging multi-layered decisions way easier than traditional WordPress hooks.
 
 ## Service Provider
 
@@ -31,18 +33,20 @@ things use nearly _exact_ same set of steps to register:
 1. Menu bar Items
 1. Post Types
 1. Taxonomies
-1. Block
+1. Blocks
+1. Admin Pages, Admin sections, and settings fields that don't suck
+
+This plugin also comes bundled with a handful of custom loaders that most plugins _need_ but WordPress doesn't _offer_
+out of the box.
+
+1. **Decision Lists** - These make it possible to create a prioritized list of decisions to choose from. It's extend-able, 
+and provides plenty of opportunities to better-log _what_ was chosen, and _why_.
+1. **Batch Tasks** - This creates a way to add a notice in the WP Admin screen to run a large task in smaller chunks.
+Useful for database upgrade routines.
+1. **Error Logger** - This system comes with a highly-extendable error logging utility.
 
 It is also fairly straightforward to create custom loaders, so if you have your own extend-able registry of items, you
 can add those as well.
-
-The fundamental steps to registering anything with this boilerplate is:
-
-1. Make sure the registry is running. (By default, they're all "off" until you turn them on)
-1. Create a class that extends the item you want to register.
-1. Add the class to the loader registry.
-
-Learn more about Loaders [under "Registering Things"](#registering-things).
 
 ## Template System Trait
 
@@ -54,11 +58,389 @@ provides ways to do things like set default params for values, and declare if a 
 This plugin includes a utility that makes it possible to log events in this plugin. These logs are written to files in
 the `wp_uploads` directory, and comes equipped with a cron job that automatically purges old logs.
 
-It also has the capability of using the DFS logging system, if that plugin is installed.
+### Using the Error Logger
+
+This plugin comes with 3 event types - `error`, `warning`, and `notice`. `error` events get written to a log,
+and `warning` or `notice` only display in the on-screen console when `WP_DEBUG` is enabled. This allows you to add
+a ton of `notices` and `warnings` without bogging down the system with a lot of file writing.
+
+To write to the logger, simply chain into the `logger` method.
+
+```php
+plugin_name_replace_me()->logger()->log(
+'error',
+'error_code',
+'error_message',
+'reference_id', // Used to point out a relevant data id
+['arbitrary' => 'data', 'that' => 'is relevant']
+);
+```
+
+You can also log `WP_Error` objects directly.
+
+```php
+$error = new \WP_Error('code','Message',['data' => 'to use']);
+plugin_name_replace_me()->logger()->log_wp_error('error',$error);
+```
+
+Caught exceptions can be captured, too.
+
+```php
+try{
+echo 'hi';
+}catch(Exception $e ){
+plugin_name_replace_me()->logger()->log_exception('error', $e);
+}
+```
+
+By default, the logger will return a `Log_Item` class, but you can also _return_ a `WP_Error` object, instead with `log_as_error`
+
+```php
+$wp_error_object = plugin_name_replace_me()->logger()->log_as_error(
+'error',
+'error_code',
+'error_message',
+'reference_id', // Used to point out a relevant data id
+['arbitrary' => 'data', 'that' => 'is relevant']
+);
+
+var_dump($wp_error_object); // WP_Error...
+```
+
+### Gather Errors
+
+Sometimes, you will run several functions in a row that could potentially return an error. Gather errors will lump them
+into a single `WP_Error` object, if they are actually errors.
+
+```php
+$item_1 = function_that_returns_errors();
+$item_2 = another_function_that_returns_errors();
+
+$errors = dfsm()->logger()->gather_errors($item_1,$item_2);
+
+if($errors->has_errors()){
+  // Do do something if either of the items were a WP Error.
+} else{
+ // All clear, proceed.
+}
+```
+
+### Event Types
+
+You can register your own custom event types if you want to log things that do not fit in any of the three defaults. A 
+common example is when a background process runs - it would be nice to have a log of when that runs, and what happened.
+
+To do this, you would need to create a custom event type. That is done by extending the `Event_Type` class.
+
+```php
+
+namespace Plugin_Name_Replace_Me\Event_Types;
+/**
+ * Class Background_Process
+ * Error event type.
+ *
+ * @since 1.0.0
+ *
+ * @since
+ * @package
+ */
+class Background_Process extends Event_Type {
+
+	/**
+	 * Event type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	public $type = 'background_process';
+
+	/**
+	 * Writes this to the log.
+	 * Set this to true to cause this event to get written to the log.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var bool
+	 */
+	protected $write_to_log = true;
+
+	/**
+	 * @var inheritDoc
+	 */
+	public $description = 'Logs when background processes run.';
+
+	/**
+	 * @var inheritDoc
+	 */
+	public $name = "Background Processes";
+}
+```
+
+Then, you need to add this item to your logger registry. This is usually done in the `setup` method inside `Service_Locator`
+
+```php
+	/**
+	 * Set up active loader classes.
+	 *
+	 * This is where you can add anything that needs "registered" to WordPress,
+	 * such as shortcodes, rest endpoints, blocks, and cron jobs.
+	 *
+	 * All supported loaders come pre-packaged with this plugin, they just need un-commented here
+	 * to begin using.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function _setup() {
+      plugin_name_replace_me()->logger()->add('background_process', '\Plugin_Name_Replace_Me\Event_Types\Background_Process');
+	}
+```
+
+That's it! Now you can use the background process event type anywhere you want.
+
+### Writers
+
+The Event_Type uses a class, called a `Writer` to write error logs to a file. Underpin comes bundled with a file writing
+system that works for most situations, but if for some reason you wanted your logger to write events in a different manner,
+a good way to-do that is by overriding the `$writer_class` variable of your event type.
+
+Let's say we wanted to receive an email every time our background process logged an event. Writers can help us do that.
+ First, we specify the namespace and class name of the writer that we're going to create.
+
+```php
+
+namespace Plugin_Name_Replace_Me\Event_Types;
+/**
+ * Class Background_Process
+ * Error event type.
+ *
+ * @since 1.0.0
+ *
+ * @since
+ * @package
+ */
+class Background_Process extends Event_Type {
+
+	/**
+	 * Event type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	public $type = 'background_process';
+
+	/**
+	 * Writes this to the log.
+	 * Set this to true to cause this event to get written to the log.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var bool
+	 */
+	protected $write_to_log = true;
+
+	/**
+	 * @var inheritDoc
+	 */
+	public $description = 'Logs when background processes run.';
+
+	/**
+	 * @var inheritDoc
+	 */
+	public $name = "Background Processes";
+
+
+	/**
+	 * The class to instantiate when writing to the error log.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string Namespaced instance of writer class.
+	 */
+	public $writer_class = 'Plugin_Name_Replace_Me\Factories\Email_Logger';
+}
+```
+
+Then, we create the class in the correct directory that matches our namespace. It should extend the `Writer` class.
+
+## Decision Lists
+
+Typically, WordPress plugins rely solely on WordPress hooks to determine extended logic. This works for simple solutions,
+but it becomes cumbersome very fast as soon as several plugins are attempting to override one-another. The biggest issue
+ is that the actual logic that determines the decision is _decentralized_. Since there isn't a single source-of-truth to
+ dictate the order of logic, let along what the actual _choices are_, you have no easy way of understanding _why_ a plugin
+ decided to-do what it did.
+ 
+ Decision lists aim to make this easier to work with by making the extensions all _centralized_ in a single registry. This
+ registry is exported in the Underpin console when `WP_DEBUG` is enabled, so it is abundantly clear _what_ the actual hierarchy
+ is for this site.
+ 
+ If you're debugging a live site, you can output the decision list using a PHP console tool, such as debug bar console.
+ 
+ ```php
+ var_dump(plugin_name_replace_me()->decision_lists()->get('email'));
+```
+ 
+ ### Set Up
+ 
+ Fundamentally a Decision List is nothing more than a loader class, and can be treated in the same way.
+ 
+ Let's say we wanted to create a decision list that allows people to override an email address in a plugin. This would
+ need to check an options value for an email address, and fallback to a hard-coded address. It also needs to be possible
+ to override this value with other plugins.
+ 
+ In traditional WordPress, you would probably see this done using `apply_filters` at the end of the function, something
+ like this:
+ 
+ ```php
+function get_email_address(){
+  
+  return apply_filters('plugin_name_replace_me_email_address',get_option('email_address', 'admin@webmaster.com'));
+}
+```
+
+With a decision list, however, this is put inside of a class, and that class can be extended. Like so:
+
+```php
+
+/**
+ * Class Email To
+ * Class Email to list
+ *
+ * @since   1.1.0
+ * @package DFS_Monitor\Factories
+ */
+class Email_To extends Decision_List {
+
+	public $description = 'Determines which email address this plugin should use.';
+	public $name = 'Email Address';
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function set_default_items() {
+
+		$this->add( 'option', new class extends Integration_Frequency_Decision {
+
+			public $id = 'option';
+			public $name = 'Option Value';
+			public $description = 'Uses the value of the database option, if it is set.';
+			public $priority = 100;
+
+
+			public function is_valid( $params = [] ) {
+				if(!is_email(get_option('email_address'))){
+				  return plugin_name_replace_me()->logger()->log(
+				    'notice',
+                    'email_address_option_invalid',
+                    'A decision tree did not use the option value because it is not set.'
+                  );
+                } else{
+                  return true;  
+              }             
+			}
+
+			/**
+			 * @inheritDoc
+			 */
+			public function valid_actions( $params = [] ) {
+				return get_option('email_address');
+			}
+		} );
+
+
+		$this->add( 'hard_coded', new class extends Integration_Frequency_Decision {
+
+			public $id = 'hard_coded';
+			public $name = 'Hard coded email';
+			public $description = 'Uses a hard-coded email address for this site.';
+			public $priority = 1000;
+
+			public function is_valid( $params = [] ) {
+				return true;
+			}
+
+			public function valid_actions( $params = [] ) {
+				return 'admin@webmaster.com';
+			}
+		} );
+	}
+}
+```
+
+Notice that I'm using anonymous classes here, just to keep everything in a single file. You absolutely _do not_ have to
+use anonymous classes. In fact, in most cases you shouldn't. If you pass a reference to the class as a string, it will
+not instantiate the class unless it's explicitly called. This saves on resources and keeps things fast.
+
+The `$priority` value inside each class tells the decision tree which option to try to use first. If it returns a `WP_Error`, it moves on
+to the next one. As soon as it finds an option that returns `true`, it grabs the value from the `valid_actions` method, and move on.
+
+Like the custom logger class, this needs to be registered inside `Service_Locator`.
+
+
+```php
+	/**
+	 * Set up active loader classes.
+	 *
+	 * This is where you can add anything that needs "registered" to WordPress,
+	 * such as shortcodes, rest endpoints, blocks, and cron jobs.
+	 *
+	 * All supported loaders come pre-packaged with this plugin, they just need un-commented here
+	 * to begin using.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function _setup() {
+      plugin_name_replace_me()->decision_lists()->add('email', '\Plugin_Name_Replace_Me\Decision_Lists\Email_To');
+	}
+```
+
+Finally, we can use this decision list directly in our `get_email_address` function:
+
+ ```php
+function get_email_address(){
+  
+  // Decide which action we should take.
+  $decide = plugin_name_replace_me()->decision_lists()->get('email')->decide();
+
+  // Return the valid decision.
+  if(!is_wp_error($decide) && $decide['decision'] instanceof Decision){
+    return $decide['decision']->valid_actions();
+  }
+
+  // Bubble up the error, otherwise.
+  return $decide;
+}
+```
+
+Now that we have this set up, it can be extended by other plugins using the `add` method. The example below would force
+the decision list to run this _before_ any other option.
+
+```php
+plugin_name_replace_me()->decision_lists()->get('email')->add('custom_option',new class extends \Underpin\Abstracts\Decision{
+
+  // Force this to run before all other options
+  public $priority = 50;
+  public $name = 'Custom Option Name';
+  public $description = 'This custom name is used in an extension, and overrides the default';
+
+  public function is_valid($params = []){
+    // TODO: Implement is_valid() method.
+  }
+
+  public function valid_actions($params = []){
+  // TODO: Implement valid_actions() method.
+  }
+
+
+});
+```
 
 ## Webpack
 
-It comes with a fairly modern webpack config that is tailored for WordPress.
+It comes with a webpack config that is tailored for WordPress. This works well-enough to make React apps in WordPress,
+and has been sufficient for my needs so-far.
 
 ## Admin Field Builder
 
@@ -75,107 +457,6 @@ with the template loader, these fields make it easy to generate form fields usin
 1. Replace `plugin name replace me` with the abbreviation of your plugin, using Plugin Name format.
 1. (Optional) Open `bootstra.php` and change the constants as-necessary.
 1. Start writing.
-
-## Registering Things
-
-A lot of time is spent when WordPress plugins just _registering stuff_ - basically copypasting the scaffolding used to do things like `add_shortcode`, and `register_rest_route`. One key focus of this boilerplate is to better-standardize how this is done across the board.
-
-To register just about anything, the process looks like this:
-
-1. Create a class in the appropriate directory (eg: for shortcodes, use the `lib/shortcode` directory)
-1. Extend the abstract class.
-1. Fill out the class methods as-needed.
-
-Example - Create a rest route to give the current time.
-
-### Step 1 - Create the file:
-
-**File:** `lib/rest/time/current.php`
-```php
-
-<?php
-
-namespace Example_Plugin\Rest\Time;
-
-use Example_Plugin\Abstracts\Rest_Endpoint;
-use WP_Rest_Request;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-class Get_Server_Time extends Rest_Endpoint{
-
-	public function __construct() {
-		parent::__construct( 'time/current', [ 'GET', 'POST' ] );
-	}
-
-	/**
-	 * Endpoint callback.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_Rest_Request $request The request object.
-	 * @return mixed
-	 */
-    function endpoint( WP_Rest_Request $request ){
-       return ['currentTime' => current_time( 'mysql' )]; 
-    }
-}
-
-?>
-```
-
-### Step 2 - Create loader, or activate it.
-
-This plugin comes pre-packaged with some common loaders, which need to be "activated" to use.
-
-To activate, simply un-comment the loader you wish you use inside the `Service_Locator.php`'s `_setup_classes` method.
-
-Alternatively, if you need to create a custom loader, you would create the class and then instantiate in `_setup_classes`.
-
-```php
-<?php
-//...
-
-    private function _setup_classes() {
-        // Cron Job Registry
-        new Initializers\Cron_Jobs;
-
-        // REST Endpoints
-        new Initializers\Rest_Endpoints;
-
-        // Shortcodes
-        // new Initializers\Shortcodes;
-
-        // Widgets
-        // new Initializers\Widgets;
-    }
-
-//...
-?>
-``` 
-
-### Step 3 - Register item inside appropriate loader
-
-In this case, we would simply use the `add` method to add a new end point in the `Rest_Endpoints` loader.
-Loaders classes can be found in `lib/registries/loaders`.
-
-```php
-
-<?php
-use Plugin_Name_Replace_Me\Abstracts\Registries\Loader_Registry;
-//...
-	class Rest_Endpoints extends Loader_Registry {
-    //...
-    protected function set_default_items(){
-      $this->add('time', 'Example_Plugin\Rest\Time\Get_Server_Time');
-    }
-    //...
-  }
-//...
-?>
-```
 
 ## Working With Scripts
 
