@@ -261,7 +261,7 @@ abstract class Admin_Section {
 	 *
 	 * @return array of template properties keyed by the template name
 	 */
-	protected function get_templates() {
+	public function get_templates() {
 		return [
 			'admin-section' => [
 				'override_visibility' => 'private',
@@ -279,4 +279,12 @@ abstract class Admin_Section {
 	protected function get_template_group() {
 		return 'admin';
 	}
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
+
 }

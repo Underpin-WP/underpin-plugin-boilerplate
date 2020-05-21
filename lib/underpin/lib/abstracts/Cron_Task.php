@@ -28,7 +28,7 @@ abstract class Cron_Task extends Feature_Extension {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	private $frequency = 'hourly';
+	protected $frequency = 'hourly';
 
 	/**
 	 * The name of this event.
@@ -104,4 +104,13 @@ abstract class Cron_Task extends Feature_Extension {
 			);
 		}
 	}
+
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
+
 }

@@ -109,7 +109,6 @@ abstract class Batch_Task {
 	 */
 	public $name = "";
 
-
 	/**
 	 * The actual upgrade task. Intended to run on a single item.
 	 *
@@ -143,6 +142,14 @@ abstract class Batch_Task {
 	 * @since 1.1.0
 	 */
 	protected function finish_task( $current_tally ) { }
+
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
 
 	/**
 	 * Runs the actual batch task for this request.
@@ -287,7 +294,7 @@ abstract class Batch_Task {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_templates() {
+	public function get_templates() {
 		return [
 			'notice' => [
 				'override_visibility' => 'private',

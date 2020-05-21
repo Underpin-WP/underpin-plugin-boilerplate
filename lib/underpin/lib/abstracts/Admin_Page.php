@@ -90,6 +90,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @var int the menu position.
 	 */
 	protected $position = null;
+
 	/**
 	 * The nonce action used to validate when interfacing with this page.
 	 *
@@ -350,7 +351,7 @@ abstract class Admin_Page extends Feature_Extension {
 	 *
 	 * @return array of template properties keyed by the template name
 	 */
-	protected function get_templates() {
+	public function get_templates() {
 		return [
 			'admin'         => [
 				'override_visibility' => 'private',
@@ -371,4 +372,12 @@ abstract class Admin_Page extends Feature_Extension {
 	protected function get_template_group() {
 		return 'admin';
 	}
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
+
 }

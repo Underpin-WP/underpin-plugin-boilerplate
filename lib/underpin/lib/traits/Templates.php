@@ -64,7 +64,7 @@ trait Templates {
 	 *
 	 * @return array of template properties keyed by the template name
 	 */
-	protected abstract function get_templates();
+	public abstract function get_templates();
 
 	/**
 	 * Fetches the template group name. This determines the sub-directory for the templates.
@@ -341,7 +341,7 @@ trait Templates {
 	 * @param $template_name string The template name to check.
 	 * @return bool True if the template is valid, false otherwise.
 	 */
-	private function is_valid_template( $template_name ) {
+	public function is_valid_template( $template_name ) {
 		$valid_templates = array_keys( $this->get_templates() );
 
 		return in_array( $template_name, $valid_templates );
@@ -355,7 +355,7 @@ trait Templates {
 	 * @param $template_name string The template name to check.
 	 * @return bool True if the template file exists, false otherwise.
 	 */
-	protected function template_file_exists( $template_name ) {
+	public function template_file_exists( $template_name ) {
 		return file_exists( $this->get_template_path( $template_name ) );
 	}
 

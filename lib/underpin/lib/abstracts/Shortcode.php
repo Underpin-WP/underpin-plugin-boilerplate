@@ -85,5 +85,12 @@ abstract class Shortcode extends Feature_Extension {
 
 		return $this->shortcode_actions();
 	}
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
 
 }

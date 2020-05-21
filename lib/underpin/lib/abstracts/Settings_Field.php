@@ -251,7 +251,7 @@ abstract class Settings_Field {
 	 *
 	 * @return array of template properties keyed by the template name
 	 */
-	protected function get_templates() {
+	public function get_templates() {
 		return [
 			'settings-field' => [
 				'override_visibility' => 'private',
@@ -303,7 +303,7 @@ abstract class Settings_Field {
 	 * @param $template_name string The template name to check.
 	 * @return bool True if the template file exists, false otherwise.
 	 */
-	protected function template_file_exists( $template_name ) {
+	public function template_file_exists( $template_name ) {
 		$template_file_exists = file_exists( $this->get_template_path( $template_name ) );
 		$settings_file_exists = file_exists( $this->get_admin_template_path( $template_name ) );
 
@@ -319,6 +319,13 @@ abstract class Settings_Field {
 	 */
 	protected function get_template_group() {
 		return 'admin/settings-fields/' . $this->get_field_type();
+	}
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
 	}
 
 }

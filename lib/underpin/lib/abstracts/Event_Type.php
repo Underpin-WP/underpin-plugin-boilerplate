@@ -216,4 +216,12 @@ abstract class Event_Type extends ArrayIterator {
 	public function log_exception( Exception $exception, $ref = null, $data = array() ) {
 		return $this->log( $exception->getCode(), $exception->getMessage(), $ref, $data );
 	}
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
+	}
+
 }
