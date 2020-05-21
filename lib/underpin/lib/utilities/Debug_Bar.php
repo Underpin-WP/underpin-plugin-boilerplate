@@ -98,7 +98,14 @@ class Debug_Bar extends Admin_Bar_Menu {
 	public function render_callback() {
 
 		// If this is rest, or feed, don't output the render
-		if ( defined( 'WP_CLI' ) || wp_doing_ajax() || wp_doing_cron() || defined( 'REST_REQUEST' ) ) {
+		if (
+			defined( 'ABSPATH' ) ||
+			defined( 'WP_CLI' ) ||
+			wp_doing_ajax() ||
+			wp_doing_cron() ||
+			defined( 'REST_REQUEST' ) ||
+			defined( 'WP_TESTS_DOMAIN' )
+		) {
 			return;
 		}
 		$events_section = new Debug_Bar_Section(
