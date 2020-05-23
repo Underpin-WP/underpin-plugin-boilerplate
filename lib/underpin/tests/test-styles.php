@@ -17,7 +17,7 @@ class Test_Styles extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->styles() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->styles() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->styles() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 

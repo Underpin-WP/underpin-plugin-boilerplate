@@ -18,7 +18,7 @@ class Custom_Post_Types extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->custom_post_types() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->custom_post_types() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->custom_post_types() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 

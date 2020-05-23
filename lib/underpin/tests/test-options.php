@@ -17,7 +17,7 @@ class Test_Options extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->options() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->options() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->options() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 

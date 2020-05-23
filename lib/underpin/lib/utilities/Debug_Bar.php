@@ -67,13 +67,13 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 */
 	public function get_templates() {
 		return [
-			'wrapper' => [
+			'wrapper'         => [
 				'override_visibility' => 'private',
 			],
-			'section' => [
+			'section'         => [
 				'override_visibility' => 'private',
 			],
-			'console' => [
+			'console'         => [
 				'override_visibility' => 'private',
 			],
 			'tabs'    => [

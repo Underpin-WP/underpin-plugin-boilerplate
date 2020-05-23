@@ -18,7 +18,7 @@ class Decision_Lists extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->decision_lists() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->decision_lists() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->decision_lists() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 

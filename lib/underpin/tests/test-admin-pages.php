@@ -13,76 +13,22 @@ require_once underpin()->dir() . 'tests/phpunit/Loader_Tests.php';
 /**
  * Sample test case.
  */
-class Underpin_Batch_Tasks extends WP_UnitTestCase {
+class Underpin_Admin_Pages extends WP_UnitTestCase {
 	use Template_Tests;
 	use Loader_Tests;
 
 	public static function wpSetUpBeforeClass() {
-		if ( empty( (array) underpin()->batch_tasks() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->batch_tasks() ) . ' does not have anything registered to it.' );
+		if ( empty( (array) underpin()->admin_pages() ) ) {
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->admin_pages() ) . ' does not have anything registered to it.' );
 		}
 	}
 
 	/**
 	 * A single example test.
 	 */
-	public function test_number_of_tasks_is_int() {
+	public function test_has_parent_slug() {
 		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertInternalType( 'int', $value->tasks_per_request, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_number_of_tasks_is_positive() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertGreaterThan( 0 , $value->tasks_per_request , get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_total_items_is_int() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertInternalType( 'int', $value->total_items, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_total_items_is_positive() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertGreaterThan( 0 , $value->total_items, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_stop_on_error_is_boolean() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertInternalType( 'bool', $value->stop_on_error, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_notice_message_is_set() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertNotEmpty( $value->notice_message, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
-	public function test_button_text_is_set() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertNotEmpty( $value->button_text, get_class( $value ) . ' is not set properly.' );
+			$this->assertNotEmpty( $value->parent_slug, get_class( $value ) . ' is not set properly.' );
 		}
 	}
 
@@ -96,9 +42,44 @@ class Underpin_Batch_Tasks extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A single example test.
+	 */
+	public function test_has_menu_title() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			$this->assertNotEmpty( $value->menu_title, get_class( $value ) . ' is not set properly.' );
+		}
+	}
+
+	/**
+	 * A single example test.
+	 */
+	public function test_has_menu_slug() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			$this->assertNotEmpty( $value->menu_slug, get_class( $value ) . ' is not set properly.' );
+		}
+	}
+
+	/**
+	 * A single example test.
+	 */
+	public function test_has_nonce_action() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			$this->assertNotNull( $value->nonce_action, get_class( $value ) . ' is not set properly.' );
+		}
+	}
+
+	public function test_sections_are_instances_of_section_class() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			foreach ( $value->sections as $section ) {
+				$this->assertInstanceOf( 'Underpin\Abstracts\Admin_Section', new $section, get_class( $value ) . ' is not set properly.' );
+			}
+		}
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	protected function get_loader() {
-		return underpin()->batch_tasks();
+		return underpin()->admin_pages();
 	}
 }

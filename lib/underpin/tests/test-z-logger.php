@@ -18,7 +18,7 @@ class Test_Logger extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->logger() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->logger() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->logger() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 
@@ -30,6 +30,12 @@ class Test_Logger extends WP_UnitTestCase {
 			$errors = ob_get_clean();
 		}
 		$this->assertEmpty( underpin()->logger()->get( 'error' ), $errors );
+	}
+
+	public function test_writer_is_instance_of_writer_class() {
+		foreach ( $this->get_loader() as $logger ) {
+			$this->assertInstanceOf( 'Underpin\Abstracts\Writer', new $logger->writer_class( $logger ), 'The writer for logger ' . get_class( $logger ) . ' Is not a valid instance of the Writer class.' );
+		}
 	}
 
 	/**

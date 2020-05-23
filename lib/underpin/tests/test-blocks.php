@@ -18,7 +18,7 @@ class Underpin_Blocks extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->blocks() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->blocks() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->blocks() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 

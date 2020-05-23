@@ -17,7 +17,7 @@ class Test_Rest_Endpoints extends WP_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		if ( empty( (array) underpin()->rest_endpoints() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( underpin()->rest_endpoints() ) . ' does not have anything registered to it., so it has been skipped.' );
+			self::markTestSkipped( 'The loader ' . get_class( underpin()->rest_endpoints() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
 
