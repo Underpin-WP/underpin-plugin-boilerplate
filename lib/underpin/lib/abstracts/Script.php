@@ -9,6 +9,7 @@
 
 namespace Underpin\Abstracts;
 
+use Underpin\Traits\Feature_Extension;
 use WP_Error;
 use function Underpin\underpin;
 
@@ -23,7 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Script extends Feature_Extension {
+abstract class Script {
+	use Feature_Extension;
 
 	/**
 	 * The handle for this script.
@@ -74,6 +76,26 @@ abstract class Script extends Feature_Extension {
 	 * @var array Array of params.
 	 */
 	protected $localized_params = [];
+
+	/**
+	 * The variable name for the localized object.
+	 * Defaults to the handle if not set.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string The localized object name.
+	 */
+	protected $localized_var;
+
+	/**
+	 * Script constructor.
+	 */
+	public function __construct() {
+		if ( empty( $this->localized_var ) ) {
+			$this->localized_var = $this->handle;
+		}
+	}
+
 
 	/**
 	 * @inheritDoc
@@ -186,7 +208,7 @@ abstract class Script extends Feature_Extension {
 
 		// If we actually have localized params, localize and enqueue.
 		if ( ! empty( $localized_params ) ) {
-			$localized = wp_localize_script( $this->handle, $this->handle, $localized_params );
+			$localized = wp_localize_script( $this->handle, $this->localized_var, $localized_params );
 
 			if ( false === $localized ) {
 				underpin()->logger()->log(

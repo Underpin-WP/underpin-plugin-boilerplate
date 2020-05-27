@@ -8,6 +8,7 @@
 
 namespace Underpin\Abstracts;
 
+use Underpin\Traits\Feature_Extension;
 use WP_Rest_Request;
 use function Underpin\underpin;
 
@@ -22,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package Underpin\Abstracts
  */
-abstract class Rest_Endpoint extends Feature_Extension {
+abstract class Rest_Endpoint {
+	use Feature_Extension;
 
 	/**
 	 * The REST API's namespace.

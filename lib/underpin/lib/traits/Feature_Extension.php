@@ -6,13 +6,13 @@
  * @package $PACKAGE
  */
 
-namespace Underpin\Abstracts;
+namespace Underpin\Traits;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-abstract class Feature_Extension {
+trait Feature_Extension {
 
 
 	/**

@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use Underpin\Traits\Feature_Extension;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,8 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Taxonomy extends Feature_Extension {
-
+abstract class Taxonomy {
+	use Feature_Extension;
 	/**
 	 * The taxonomy name.
 	 *

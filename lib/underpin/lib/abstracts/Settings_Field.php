@@ -306,7 +306,7 @@ abstract class Settings_Field {
 	 * @param string $template_name The template name to locate.
 	 * @return string The path to the admin template.
 	 */
-	private function get_admin_template_path( $template_name ) {
+	protected function get_admin_template_path( $template_name ) {
 		return trailingslashit( underpin()->dir() ) . 'templates/admin/settings-fields/' . $template_name . '.php';
 	}
 

@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use Underpin\Traits\Feature_Extension;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Custom_Post_Type extends Feature_Extension {
+abstract class Custom_Post_Type {
+	use Feature_Extension;
 
 	/**
 	 * The post type.

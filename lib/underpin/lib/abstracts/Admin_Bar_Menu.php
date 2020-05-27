@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use Underpin\Traits\Feature_Extension;
 use WP_Admin_Bar;
 use WP_User;
 use function Underpin\underpin;
@@ -25,7 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Admin_Bar_Menu extends Feature_Extension {
+abstract class Admin_Bar_Menu {
+use Feature_Extension;
 
 	/**
 	 * The children of this admin bar menu.

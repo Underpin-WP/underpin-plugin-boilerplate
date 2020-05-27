@@ -9,6 +9,7 @@
 
 namespace Underpin\Abstracts;
 
+use Underpin\Traits\Feature_Extension;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,7 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Shortcode extends Feature_Extension {
+abstract class Shortcode {
+	use Feature_Extension;
 
 	/**
 	 * The shortcode attributes, parsed by shortcode atts.

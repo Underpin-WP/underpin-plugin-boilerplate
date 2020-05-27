@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use Underpin\Traits\Feature_Extension;
 use Underpin\Traits\Underpin_Templates;
 use WP_Error;
 use function Underpin\underpin;
@@ -24,8 +25,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Admin_Page extends Feature_Extension {
+abstract class Admin_Page {
 	use Underpin_Templates;
+	use Feature_Extension;
 
 	/**
 	 * List of sections.

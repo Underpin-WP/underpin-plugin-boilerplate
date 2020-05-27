@@ -20,7 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Lib\Core\Abstracts
  */
-class Option extends Feature_Extension {
+class Option {
+	use Feature_Extension;
 
 	protected $key = false;
 

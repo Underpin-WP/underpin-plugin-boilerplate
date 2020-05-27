@@ -10,6 +10,7 @@
 namespace Underpin\Abstracts;
 
 
+use Underpin\Traits\Feature_Extension;
 use Underpin\Traits\Underpin_Templates;
 use function Underpin\underpin;
 

@@ -8,6 +8,7 @@
 
 namespace Underpin\Abstracts;
 
+use Underpin\Traits\Feature_Extension;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Cron_Task extends Feature_Extension {
+abstract class Cron_Task {
+	use Feature_Extension;
 
 	/**
 	 * How often the cron task should recur. See wp_get_schedules() for accepted values.

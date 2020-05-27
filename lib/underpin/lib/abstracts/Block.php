@@ -9,6 +9,7 @@
 
 namespace Underpin\Abstracts;
 
+use Underpin\Traits\Feature_Extension;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Lib\Core\Abstracts
  */
-abstract class Block extends Feature_Extension {
+abstract class Block {
+	use Feature_Extension;
 
 	/**
 	 * The registered block.

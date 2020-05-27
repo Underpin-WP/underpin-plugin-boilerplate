@@ -236,7 +236,7 @@ trait Templates {
 	 * @param $template_name string the template name to include.
 	 * @return string The complete template path.
 	 */
-	private function get_template_path( $template_name ) {
+	protected function get_template_path( $template_name ) {
 		return trailingslashit( $this->get_template_directory() ) . $template_name . '.php';
 	}
 

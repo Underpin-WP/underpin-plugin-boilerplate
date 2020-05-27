@@ -70,7 +70,7 @@ abstract class Loader_Registry extends Registry {
 		}
 
 		// If this implements registry actions, go ahead and start those up, too.
-		if ( $this->get( $key ) instanceof Feature_Extension ) {
+		if ( self::has_trait( 'RV_Share_Core\Traits\Feature_Extension', $this->get( $key ) ) ) {
 			$this->get( $key )->do_actions();
 
 			underpin()->logger()->log(
@@ -86,10 +86,44 @@ abstract class Loader_Registry extends Registry {
 	}
 
 	/**
+	 * Checks to see if the class, or any of its parents, uses the specified trait.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string              $trait The trait to check for
+	 * @param object|string|false $class The class to check.
+	 * @return bool true if the class uses the specified trait, otherwise false.
+	 */
+	public static function has_trait( $trait, $class ) {
+
+		if ( false === $class ) {
+			return false;
+		}
+
+		$traits = class_uses( $class );
+
+		if ( in_array( $trait, $traits ) ) {
+			return true;
+		}
+
+		while( get_parent_class( $class ) ){
+			$class = get_parent_class( $class );
+
+			$has_trait = self::has_trait( $trait, $class );
+
+			if ( true === $has_trait ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function validate_item( $key, $value ) {
-		if ( is_subclass_of( $value, $this->abstraction_class ) || $value instanceof $this->abstraction_class) {
+		if ( is_subclass_of( $value, $this->abstraction_class ) || $value instanceof $this->abstraction_class ) {
 			return true;
 		}
 
