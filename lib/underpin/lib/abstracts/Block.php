@@ -44,7 +44,7 @@ abstract class Block extends Feature_Extension {
 
 	/**
 	 * The script that should be registered alongside this block, if any.
-	 * This expects to be the name of a Script class that can be instantiated.
+	 * This expects to be the key for a registered script.
 	 *
 	 * @since 1.0.0
 	 *
@@ -83,7 +83,38 @@ abstract class Block extends Feature_Extension {
 	 */
 	public function do_actions() {
 		add_action( 'init', [ $this, 'register' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles_and_scripts' ] );
 	}
+
+	/**
+	 * Prepares the script. Generally used to localize last-minute params without overriding the enqueue method.
+	 *
+	 * @since 1.0.0
+	 */
+	public function prepare_script() {
+		$script = underpin()->scripts()->get( $this->script );
+		$script->set_param( 'nonce', wp_create_nonce( 'wp_rest' ) );
+		$script->set_param( 'rest_url', get_rest_url() );
+	}
+
+	/**
+	 * Enqueues admin styles and scripts.
+	 *
+	 * @since 1.0.0
+	 */
+	public function enqueue_styles_and_scripts() {
+		if ( ! is_wp_error( underpin()->scripts()->get( $this->script ) ) ) {
+			$this->prepare_script();
+			underpin()->scripts()->get( $this->script )->enqueue();
+		}
+
+		$style = underpin()->styles()->get( $this->style );
+
+		if ( ! is_wp_error( $style ) ) {
+			$style->enqueue();
+		}
+	}
+
 
 	/**
 	 * Registers the block type.
@@ -114,7 +145,7 @@ abstract class Block extends Feature_Extension {
 		if ( isset( $this->$key ) ) {
 			return $this->$key;
 		} else {
-			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+			return new WP_error( 'block_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
 		}
 	}
 

@@ -18,18 +18,9 @@ if ( ! isset( $template ) || ! $template instanceof Admin_Page ) {
 }
 
 $sections = $template->get_param( 'sections', [] );
-$section  = $template->get_param( 'section', '' );
-
-if ( count( $sections ) > 1 ) {
-	echo $template->get_template( 'admin-heading', [
-		'section'   => $section,
-		'sections'  => $sections,
-		'menu_slug' => $template->get_param( 'menu_slug' ),
-	] );
-}
 
 ?>
-<?php if ( ! empty( $section ) && isset( $sections[ $section ] ) ): ?>
+<?php if ( ! empty( $sections ) ): ?>
 
 	<form method="post" id="runner-dispatch">
 		<h2><?= $template->get_param( 'title', '' ) ?></h2>
@@ -37,11 +28,13 @@ if ( count( $sections ) > 1 ) {
 		<table class="form-table">
 			<tbody>
 
-			<?= $template->section( $section )->get_template( 'admin-section' ); ?>
+			<?php foreach ( array_keys( $sections ) as $section ): ?>
+				<?= $template->section( $section )->get_template( 'admin-section' ); ?>
+			<?php endforeach; ?>
 
 			</tbody>
 		</table>
-		<?php wp_nonce_field( $template->get_param( 'nonce_action', '' ), 'underpin_nonce' ); ?>
+		<?php wp_nonce_field( $template->get_param( 'nonce_action', '' ), 'rvshare_core_nonce' ); ?>
 		<?php submit_button(); ?>
 	</form>
 

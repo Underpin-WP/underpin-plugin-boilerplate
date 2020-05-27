@@ -41,6 +41,7 @@ class Option extends Feature_Extension {
 	 *
 	 * @param string $key           The option key
 	 * @param string $description   A human-readable description of this option
+	 * @param        $name          Human readable name.
 	 * @param mixed  $default_value The default value to set for this setting
 	 */
 	public function __construct( $key, $description, $name, $default_value = [] ) {
@@ -119,4 +120,21 @@ class Option extends Feature_Extension {
 		return $this;
 	}
 
+	/**
+	 * Plucks a single value from an array of options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $setting The setting to retrieve
+	 * @return mixed|\WP_Error The value if it is set, otherwise WP_Error.
+	 */
+	public function pluck( $setting ) {
+		$settings = $this->get();
+
+		if ( isset( $settings[ $setting ] ) ) {
+			return $settings[ $setting ];
+		}
+
+		return new \WP_Error( 'setting_not_set', 'The provided setting ' . $setting . ' is not set in this option.' );
+	}
 }

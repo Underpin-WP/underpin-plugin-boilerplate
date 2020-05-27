@@ -68,6 +68,30 @@ class Underpin_Admin_Pages extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * A single example test.
+	 */
+	public function test_sections_use_valid_options_keys() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			foreach ( $value->sections as $section ) {
+				$section = new $section;
+				$this->assertInstanceOf( 'Underpin\Factories\Option', underpin()->options()->get( $section->options_key ), get_class( $value ) . ' is not set properly.' );
+			}
+		}
+	}
+
+	/**
+	 * A single example test.
+	 */
+	public function test_sections_have_ids() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			foreach ( $value->sections as $section ) {
+				$section = new $section;
+				$this->assertNotEmpty( $section->id, get_class( $value ) . ' is not set properly.' );
+			}
+		}
+	}
+
 	public function test_sections_are_instances_of_section_class() {
 		foreach ( $this->get_loader() as $key => $value ) {
 			foreach ( $value->sections as $section ) {

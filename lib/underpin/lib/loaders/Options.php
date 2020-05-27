@@ -44,4 +44,23 @@ class Options extends Loader_Registry {
 	public function get( $key ) {
 		return parent::get( $key );
 	}
+
+	/**
+	 * Retrieves a single option value from an array of options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $key        The Options key to use.
+	 * @param string $option_key The array key from the option.
+	 * @return mixed|WP_Error The value if set, otherwise WP_Error.
+	 */
+	public function pluck( $key, $option_key ) {
+		$option = $this->get( $key );
+
+		if ( is_wp_error( $option ) ) {
+			return $option;
+		}
+
+		return $option->pluck( $option_key );
+	}
 }

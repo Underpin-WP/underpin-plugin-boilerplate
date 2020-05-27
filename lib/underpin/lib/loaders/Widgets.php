@@ -12,6 +12,7 @@ namespace Underpin\Loaders;
 use Underpin\Abstracts\Registries\Loader_Registry;
 use WP_Error;
 use WP_Widget;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +30,7 @@ class Widgets extends Loader_Registry {
 	/**
 	 * @inheritDoc
 	 */
-	protected $abstraction_class = '\WP_Widget';
+	protected $abstraction_class = 'Underpin\Abstracts\Widget';
 
 	/**
 	 * @inheritDoc
@@ -42,13 +43,20 @@ class Widgets extends Loader_Registry {
 	 * @inheritDoc
 	 */
 	public function add( $key, $value ) {
-		$valid = $this->validate_item( $key, $value );
+		$valid = parent::add( $key, $value );
 
 		if ( true === $valid ) {
 			add_action( 'widgets_init', function() use ( $value ) {
 				register_widget( $value );
+				underpin()->logger()->log(
+					'notice',
+					'widget_registered_successfully',
+					'The widget ' . $value . ' Was successfully registered.'
+				);
 			} );
 		}
+
+		return $valid;
 	}
 
 	/**

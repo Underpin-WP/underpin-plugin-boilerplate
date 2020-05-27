@@ -36,7 +36,7 @@ class Underpin_Blocks extends WP_UnitTestCase {
 	 */
 	public function test_has_script() {
 		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertInstanceOf( 'Underpin\Abstracts\Script', $value->script, get_class( $value ) . ' is not set properly.' );
+			$this->assertInstanceOf( 'Underpin\Abstracts\Script', underpin()->scripts()->get( $value->script ), get_class( $value ) . ' is not set properly.' );
 		}
 	}
 
@@ -45,7 +45,9 @@ class Underpin_Blocks extends WP_UnitTestCase {
 	 */
 	public function test_has_style() {
 		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertNotFalse( $value->nonce_action, get_class( $value ) . ' is not set properly.' );
+			if ( false !== $value->style ) {
+				$this->assertInstanceOf( 'RV_Share_Core\Abstracts\Style', underpin()->styles()->get( $value->style ), get_class( $value ) . ' is not set properly.' );
+			}
 		}
 	}
 

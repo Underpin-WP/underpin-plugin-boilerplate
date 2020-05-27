@@ -100,6 +100,17 @@ abstract class Admin_Page extends Feature_Extension {
 	 */
 	protected $nonce_action;
 
+	/**
+	 * Determines how this settings page will be laid out.
+	 * This can be set to "single" or "tabbed".
+	 * If it's set to "single", all sections will be put on a single settings page.
+	 * If it is set to "tabbed", each section will be placed in its own tab.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string The layout type. Either "single", or "tabbed"
+	 */
+	protected $layout = 'single';
 
 	/**
 	 * Admin_Page constructor.
@@ -219,7 +230,24 @@ abstract class Admin_Page extends Feature_Extension {
 			return $errors;
 		}
 
-		return $this->section()->save();
+		if ( 'single' === $this->layout ) {
+			$errors = new \WP_Error();
+			foreach ( array_keys( $this->sections ) as $section ) {
+				$saved = $this->section( $section )->save();
+
+				if ( is_wp_error( $saved ) ) {
+					$errors->add( $saved->get_error_code(), $saved->get_error_message(), $saved->get_error_data() );
+				}
+			}
+
+			if ( $errors->has_errors() ) {
+				return $errors;
+			} else {
+				return true;
+			}
+		} else {
+			return $this->section()->save();
+		}
 	}
 
 
@@ -332,6 +360,7 @@ abstract class Admin_Page extends Feature_Extension {
 			'section'      => $this->get_current_section_key(),
 			'sections'     => $this->sections,
 			'menu_slug'    => $this->menu_slug,
+			'nonce_action' => $this->nonce_action,
 		] );
 		if ( ! is_wp_error( $template ) ) {
 			echo $template;
@@ -370,8 +399,9 @@ abstract class Admin_Page extends Feature_Extension {
 	 * @return string The template group name
 	 */
 	protected function get_template_group() {
-		return 'admin';
+		return 'admin/layouts/' . $this->layout;
 	}
+
 	public function __get( $key ) {
 		if ( isset( $this->$key ) ) {
 			return $this->$key;

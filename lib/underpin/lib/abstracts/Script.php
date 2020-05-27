@@ -104,6 +104,23 @@ abstract class Script extends Feature_Extension {
 		return (bool) wp_scripts()->query( $this->handle, 'enqueued' );
 	}
 
+
+	/**
+	 * Retrieves the specified localized param.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $param
+	 * @return mixed|WP_Error
+	 */
+	public function get_param( $param ) {
+		if ( isset( $this->localized_params[ $param ] ) ) {
+			return $this->localized_params[ $param ];
+		}
+
+		return new \WP_Error( 'param_not_set', 'The localized param ' . $param . ' is not set.' );
+	}
+
 	/**
 	 * Adds a param to localize to this script.
 	 *

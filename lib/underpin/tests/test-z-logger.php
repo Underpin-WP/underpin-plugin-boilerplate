@@ -22,16 +22,6 @@ class Test_Logger extends WP_UnitTestCase {
 		}
 	}
 
-	public function test_no_errors_occurred_during_runtime() {
-		$errors = underpin()->logger()->get( 'error' );
-		if ( ! empty( $errors ) ) {
-			ob_start();
-			var_export( $errors );
-			$errors = ob_get_clean();
-		}
-		$this->assertEmpty( underpin()->logger()->get( 'error' ), $errors );
-	}
-
 	public function test_writer_is_instance_of_writer_class() {
 		foreach ( $this->get_loader() as $logger ) {
 			$this->assertInstanceOf( 'Underpin\Abstracts\Writer', new $logger->writer_class( $logger ), 'The writer for logger ' . get_class( $logger ) . ' Is not a valid instance of the Writer class.' );
