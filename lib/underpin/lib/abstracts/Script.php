@@ -266,12 +266,23 @@ abstract class Script {
 		$this->localize();
 		wp_enqueue_script( $this->handle );
 
-		underpin()->logger()->log(
-			'notice',
-			'script_was_enqueued',
-			'The script ' . $this->handle . ' has been enqueued.',
-			$this->handle
-		);
+		// Confirm it was enqueued.
+		if ( wp_script_is( $this->handle, 'enqueued' ) ) {
+			underpin()->logger()->log(
+				'notice',
+				'script_was_enqueued',
+				'The script ' . $this->handle . ' has been enqueued.',
+				$this->handle
+			);
+		} else {
+			underpin()->logger()->log(
+				'error',
+				'script_failed_to_enqueue',
+				'The script ' . $this->handle . ' failed to enqueue.',
+				$this->handle
+			);
+		}
+
 	}
 	public function __get( $key ) {
 		if ( isset( $this->$key ) ) {

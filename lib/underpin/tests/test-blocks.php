@@ -46,7 +46,7 @@ class Underpin_Blocks extends WP_UnitTestCase {
 	public function test_has_style() {
 		foreach ( $this->get_loader() as $key => $value ) {
 			if ( false !== $value->style ) {
-				$this->assertInstanceOf( 'RV_Share_Core\Abstracts\Style', underpin()->styles()->get( $value->style ), get_class( $value ) . ' is not set properly.' );
+				$this->assertInstanceOf( 'Underpin\Abstracts\Style', underpin()->styles()->get( $value->style ), get_class( $value ) . ' is not set properly.' );
 			}
 		}
 	}

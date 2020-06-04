@@ -41,7 +41,7 @@ if ( count( $sections ) > 1 ) {
 
 			</tbody>
 		</table>
-		<?php wp_nonce_field( $template->get_param( 'nonce_action', '' ), 'rvshare_core_nonce' ); ?>
+		<?php wp_nonce_field( $template->get_param( 'nonce_action', '' ), 'underpin_nonce' ); ?>
 		<?php submit_button(); ?>
 	</form>
 

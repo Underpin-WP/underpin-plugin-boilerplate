@@ -110,7 +110,7 @@ abstract class Admin_Page {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var string The layout type. Either "single", or "tabbed"
+	 * @var string The layout type. Either "single", or "tabs"
 	 */
 	protected $layout = 'single';
 

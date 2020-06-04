@@ -23,7 +23,7 @@ class Test_Widgets extends WP_UnitTestCase {
 
 	public function test_fields_are_is_set() {
 		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertContainsOnlyInstancesOf( 'RV_Share_Core\Abstracts\Settings_Field', $value->get_fields( $value->get_settings() ), get_class( $value ) . ' is not set properly.' );
+			$this->assertContainsOnlyInstancesOf( 'Underpin\Abstracts\Settings_Field', $value->get_fields( $value->get_settings() ), get_class( $value ) . ' is not set properly.' );
 		}
 	}
 

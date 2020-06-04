@@ -8,7 +8,7 @@
 
 
 namespace Underpin\Factories;
-use Underpin\Abstracts\Feature_Extension;
+use Underpin\Traits\Feature_Extension;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -26,16 +26,6 @@ class Option {
 	protected $key = false;
 
 	protected $default_value = [];
-
-	/**
-	 * @var string
-	 */
-	public $description;
-
-	/**
-	 * @var string
-	 */
-	public $name;
 
 	/**
 	 * Option constructor.

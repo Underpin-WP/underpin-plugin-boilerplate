@@ -95,13 +95,27 @@ abstract class Style {
 	public function enqueue() {
 		wp_enqueue_style( $this->handle );
 
-		underpin()->logger()->log(
-			'notice',
-			'style_was_enqueued',
-			'The style ' . $this->handle . ' has been enqueued.',
-			$this->handle
-		);
+		// Confirm it was enqueued.
+		if ( wp_style_is( $this->handle, 'enqueued' ) ) {
+
+			underpin()->logger()->log(
+				'notice',
+				'style_was_enqueued',
+				'The style ' . $this->handle . ' has been enqueued.',
+				$this->handle
+			);
+
+		} else {
+			underpin()->logger()->log(
+				'error',
+				'style_failed_to_enqueue',
+				'The style ' . $this->handle . ' failed to enqueue.',
+				$this->handle
+			);
+		}
+
 	}
+
 	public function __get( $key ) {
 		if ( isset( $this->$key ) ) {
 			return $this->$key;

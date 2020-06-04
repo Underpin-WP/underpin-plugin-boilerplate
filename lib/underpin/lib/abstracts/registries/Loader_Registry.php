@@ -70,7 +70,7 @@ abstract class Loader_Registry extends Registry {
 		}
 
 		// If this implements registry actions, go ahead and start those up, too.
-		if ( self::has_trait( 'RV_Share_Core\Traits\Feature_Extension', $this->get( $key ) ) ) {
+		if ( self::has_trait( 'Underpin\Traits\Feature_Extension', $this->get( $key ) ) ) {
 			$this->get( $key )->do_actions();
 
 			underpin()->logger()->log(
