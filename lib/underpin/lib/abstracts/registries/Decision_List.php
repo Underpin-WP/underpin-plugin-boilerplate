@@ -65,6 +65,16 @@ abstract class Decision_List extends Loader_Registry {
 			}
 		}
 
+		// If the decision did not get set, return an error.
+		if ( ! isset( $decision ) ) {
+			return underpin()->logger()->log_as_error(
+				'error',
+				'decision_list_could_not_decide',
+				'A decision list ran, but all decisions returned false.',
+				$this->get_registry_id()
+			);
+		}
+
 		return [ 'decision' => $decision, 'invalid_decisions' => $invalid_decisions ];
 	}
 

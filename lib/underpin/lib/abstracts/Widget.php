@@ -62,7 +62,7 @@ abstract class Widget extends \WP_Widget {
 	 * @param $instance
 	 * @return array|\WP_Error Array of field classes, or WP_Error
 	 */
-	abstract protected function get_fields( $instance );
+	abstract public function get_fields( $instance );
 
 	/**
 	 * @inheritDoc

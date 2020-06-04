@@ -230,7 +230,7 @@ abstract class Admin_Section {
 
 			if ( is_wp_error( $saved ) || ! $field instanceof Settings_Field ) {
 				if ( 'field_not_changed' !== $saved->get_error_code() ) {
-					$errors->add( $saved->get_error_code(), $saved->get_error_message(), $saved->get_error_data() );
+					Logger::extract( $errors, $saved );
 				}
 			} else {
 				$this->saved_fields[ $field->get_field_param( 'name' ) ] = $field;

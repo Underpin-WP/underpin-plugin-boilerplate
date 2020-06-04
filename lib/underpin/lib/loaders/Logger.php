@@ -51,13 +51,33 @@ class Logger extends Event_Registry {
 		$errors = new WP_Error();
 		$items  = func_get_args();
 		foreach ( $items as $item ) {
-			if ( $item instanceof WP_Error ) {
-				$errors->add( $item->get_error_code(), $item->get_error_message(), $item->get_error_data() );
-			} elseif ( $item instanceof Log_Item ) {
-				$errors->add( $item->code, $item->message, $item->data );
-			}
+			self::extract( $errors, $item );
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Appends errors to a WP_Error object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Error          $error    The error to append to. Passed by reference.
+	 * @param Log_Item|WP_Error $log_item The log item to append. If this has multiple errors, it will append all of them.
+	 * @return void
+	 */
+	public static function extract( WP_Error &$error, $log_item ) {
+
+		// Transform the log item into a WP_Error, if it is a Log_item
+		if ( $log_item instanceof Log_Item ) {
+			$log_item = $log_item->error();
+		}
+
+		// Append the error, if it is an error.
+		if ( $log_item instanceof WP_Error ) {
+			foreach ( $log_item->get_error_codes() as $code ) {
+				$error->add( $code, $log_item->get_error_message( $code ), $log_item->get_error_data( $code ) );
+			}
+		}
 	}
 }

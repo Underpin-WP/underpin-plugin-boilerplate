@@ -234,12 +234,9 @@ abstract class Admin_Page {
 
 		if ( 'single' === $this->layout ) {
 			$errors = new \WP_Error();
-			foreach ( array_keys( $this->sections ) as $section ) {
-				$saved = $this->section( $section )->save();
 
-				if ( is_wp_error( $saved ) ) {
-					$errors->add( $saved->get_error_code(), $saved->get_error_message(), $saved->get_error_data() );
-				}
+			foreach ( array_keys( $this->sections ) as $section ) {
+				Logger::extract( $this->section( $section )->save() );
 			}
 
 			if ( $errors->has_errors() ) {

@@ -384,6 +384,17 @@ abstract class Underpin {
 	}
 
 	/**
+	 * Fetches the Batch_Tasks instance.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Admin_Notices
+	 */
+	public function admin_notices() {
+		return $this->_get_loader( 'Admin_Notices' );
+	}
+
+	/**
 	 * Retrieves the widgets loader.
 	 *
 	 * @since 1.0.0
