@@ -9,6 +9,7 @@
 namespace Underpin\Abstracts;
 
 use Underpin\Traits\Feature_Extension;
+use WP_Error;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {

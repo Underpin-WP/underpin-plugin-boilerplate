@@ -37,9 +37,22 @@ class Number extends Settings_Field {
 
 		// If we have set the step value of the field so that it cannot be a decimal, cast as an int.
 		if ( 1 === $this->get_field_param( 'step' ) ) {
-			return (int) $value;
+			$value = (int) $value;
+		} else {
+			$value = (float) $value;
 		}
 
-		return (float) $value;
+		$min = $this->get_field_param( 'min' );
+		$max = $this->get_field_param( 'max' );
+
+		if ( ! is_wp_error( $min ) && $min > $value ) {
+			$value = (int) $min;
+		}
+
+		if ( ! is_wp_error( $max ) && $max <= $value ) {
+			$value = (int) $max;
+		}
+
+		return $value;
 	}
 }

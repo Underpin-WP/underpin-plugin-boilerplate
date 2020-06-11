@@ -234,8 +234,18 @@ abstract class Underpin {
 				$directory = str_replace( '_', '-', strtolower( implode( DIRECTORY_SEPARATOR, $class ) ) );
 				$file      = $root . $directory . '/' . $file_name . '.php';
 
+				// If the file exists in this form, use it.
 				if ( file_exists( $file ) ) {
-					require $file;
+					require_once $file;
+
+					return true;
+				}
+
+				$lowercase_file = strtolower( $file );
+
+				// If it does not, try to retrieve a lowercase version. Some operating systems are sensitive to this.
+				if ( file_exists( $lowercase_file ) ) {
+					require_once $lowercase_file;
 
 					return true;
 				}

@@ -9,7 +9,7 @@
 
 namespace Underpin\Abstracts;
 
-
+use Underpin\Loaders\Logger;
 use Underpin\Traits\Feature_Extension;
 use Underpin\Traits\Underpin_Templates;
 use WP_Error;
@@ -188,7 +188,7 @@ abstract class Admin_Page extends Admin_Sub_Menu {
 			$errors = new \WP_Error();
 
 			foreach ( array_keys( $this->sections ) as $section ) {
-				Logger::extract( $this->section( $section )->save() );
+				Logger::extract( $errors, $this->section( $section )->save() );
 			}
 
 			if ( $errors->has_errors() ) {
