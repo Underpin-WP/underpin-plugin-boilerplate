@@ -38,7 +38,7 @@ abstract class Upgrade_Registry extends Loader_Registry {
 
 		foreach ( $this as $version => $upgrade ) {
 			if ( version_compare( $this->get_stored_version(), $version, '<' ) ) {
-				dfsm()->batch_tasks()->get( $this->get_batch_task_key( $version ) )->enqueue();
+				underpin()->batch_tasks()->get( $this->get_batch_task_key( $version ) )->enqueue();
 
 				return;
 			}

@@ -117,7 +117,7 @@ abstract class Admin_Menu {
 		if ( empty( $this->name ) ) {
 			Logger::extract( $errors, Underpin()->logger()->log(
 				'warning',
-				'dfsmcore_primary_menu_name_missing',
+				'underpin_primary_menu_name_missing',
 				'A name for the primary menu is required.',
 				'',
 				[ 'menu_slug' => $this->menu_slug ]
@@ -127,7 +127,7 @@ abstract class Admin_Menu {
 		if ( empty( $this->menu_slug ) ) {
 			Logger::extract( $errors, Underpin()->logger()->log(
 				'warning',
-				'dfsmcore_primary_menu_slug_missing',
+				'underpin_primary_menu_slug_missing',
 				'A slug for the primary menu is required.',
 				'',
 				[ 'menu_name' => $this->name ]

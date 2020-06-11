@@ -5,21 +5,21 @@
  * @package Dfs_Monitor
  */
 
-use function DFSMCore\DFSMCore;
+use function Underpin\Underpin;
 
-require_once DFSMCore()->dir() . 'tests/phpunit/Template_Tests.php';
-require_once DFSMCore()->dir() . 'tests/phpunit/Loader_Tests.php';
+require_once Underpin()->dir() . 'tests/phpunit/Template_Tests.php';
+require_once Underpin()->dir() . 'tests/phpunit/Loader_Tests.php';
 
 /**
  * Sample test case.
  */
-class DFSMCore_Admin_Pages extends WP_UnitTestCase {
+class Underpin_Admin_Pages extends WP_UnitTestCase {
 	use Template_Tests;
 	use Loader_Tests;
 
 	public static function wpSetUpBeforeClass() {
-		if ( empty( (array) DFSMCore()->admin_sub_menus() ) ) {
-			self::markTestSkipped( 'The loader ' . get_class( DFSMCore()->admin_sub_menus() ) . ' does not have anything registered to it.' );
+		if ( empty( (array) Underpin()->admin_sub_menus() ) ) {
+			self::markTestSkipped( 'The loader ' . get_class( Underpin()->admin_sub_menus() ) . ' does not have anything registered to it.' );
 		}
 	}
 
@@ -75,6 +75,6 @@ class DFSMCore_Admin_Pages extends WP_UnitTestCase {
 	 * @inheritDoc
 	 */
 	protected function get_loader() {
-		return DFSMCore()->admin_menus();
+		return Underpin()->admin_menus();
 	}
 }
