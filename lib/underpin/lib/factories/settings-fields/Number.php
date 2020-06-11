@@ -34,6 +34,12 @@ class Number extends Settings_Field {
 	 * @inheritDoc
 	 */
 	function sanitize( $value ) {
+
+		// If we have set the step value of the field so that it cannot be a decimal, cast as an int.
+		if ( 1 === $this->get_field_param( 'step' ) ) {
+			return (int) $value;
+		}
+
 		return (float) $value;
 	}
 }

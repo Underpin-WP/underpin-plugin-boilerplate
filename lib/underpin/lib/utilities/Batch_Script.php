@@ -41,6 +41,7 @@ class Batch_Script extends Script {
 		$this->src = underpin()->js_url() . 'batch.min.js';
 		$this->ver = underpin()->version();
 		$this->set_param( 'ajaxUrl', admin_url( 'admin-ajax.php' ) );
+		parent::__construct();
 	}
 
 }

@@ -24,12 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Registries\Loaders
  */
-class Admin_Pages extends Loader_Registry {
+class Admin_Sub_Menus extends Loader_Registry {
 
 	/**
 	 * @inheritDoc
 	 */
-	protected $abstraction_class = 'Underpin\Abstracts\Admin_Page';
+	protected $abstraction_class = 'Underpin\Abstracts\Admin_Sub_Menu';
 
 	/**
 	 * @inheritDoc

@@ -53,15 +53,6 @@ class Underpin_Batch_Tasks extends WP_UnitTestCase {
 	/**
 	 * A single example test.
 	 */
-	public function test_total_items_is_positive() {
-		foreach ( $this->get_loader() as $key => $value ) {
-			$this->assertGreaterThan( 0 , $value->total_items, get_class( $value ) . ' is not set properly.' );
-		}
-	}
-
-	/**
-	 * A single example test.
-	 */
 	public function test_stop_on_error_is_boolean() {
 		foreach ( $this->get_loader() as $key => $value ) {
 			$this->assertInternalType( 'bool', $value->stop_on_error, get_class( $value ) . ' is not set properly.' );

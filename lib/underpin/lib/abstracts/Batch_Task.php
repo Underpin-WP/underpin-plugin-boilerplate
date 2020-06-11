@@ -115,9 +115,10 @@ abstract class Batch_Task {
 	 * @since 1.0.0
 	 *
 	 * @param int $current_tally The current number of times this task has ran.
+	 * @param int $iteration     The current loop iteration
 	 * @return true|WP_Error True if the task was successful, otherwise \WP_Error. Errors get logged by run().
 	 */
-	abstract protected function task( $current_tally );
+	abstract protected function task( $current_tally, $iteration );
 
 	/**
 	 * This action runs when this batch processor has completely finished.
@@ -184,7 +185,7 @@ abstract class Batch_Task {
 				return true;
 			}
 
-			$status = $this->task( $current_tally );
+			$status = $this->task( $current_tally, $i );
 
 			if ( is_wp_error( $status ) ) {
 				underpin()->logger()->log_wp_error( 'batch_error', $status );
@@ -286,7 +287,7 @@ abstract class Batch_Task {
 				'notice',
 				'batch_task_enqueued',
 				'A batch task was enqueued.',
-				$this->batch_id,
+				$this->batch_id
 				);
 		}
 	}

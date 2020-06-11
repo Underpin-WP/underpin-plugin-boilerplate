@@ -43,6 +43,8 @@ abstract class Event_Registry extends Loader_Registry {
 		if ( true === $valid ) {
 			$this->get( $key )->do_actions();
 		}
+
+		return $valid;
 	}
 
 	/**

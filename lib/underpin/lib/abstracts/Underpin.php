@@ -340,6 +340,17 @@ abstract class Underpin {
 	}
 
 	/**
+	 * Retrieves the admin menus loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Admin_Menus
+	 */
+	public function admin_menus() {
+		return $this->_get_loader( 'Admin_Menus' );
+	}
+
+	/**
 	 * Retrieves the rest endpoints loader.
 	 *
 	 * @since 1.0.0
@@ -406,14 +417,14 @@ abstract class Underpin {
 	}
 
 	/**
-	 * Retrieves the admin_pages loader.
+	 * Retrieves the admin_sub_menus loader.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Loaders\Admin_Pages
+	 * @return Loaders\Admin_Sub_Menus
 	 */
-	public function admin_pages() {
-		return $this->_get_loader( 'Admin_Pages' );
+	public function admin_sub_menus() {
+		return $this->_get_loader( 'Admin_Sub_Menus' );
 	}
 
 	/**

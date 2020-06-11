@@ -159,20 +159,18 @@ abstract class Admin_Section {
 	 * @return true|WP_Error true if the field saved, WP_Error otherwise.
 	 */
 	public function save_field( Settings_Field $field ) {
-		$options_key    = $this->options_key;
-		$options_loader = underpin()->options()->get( $options_key );
-		$options        = $options_loader->get();
-		$updated        = $this->update_field( $field );
+		$options_key = $this->options_key;
+		$updated     = $this->update_field( $field );
 
 		// Bail early if this field was already set.
 		if ( is_wp_error( $updated ) ) {
-			underpin()->logger()->log_wp_error( 'notice', $updated );
+			Underpin()->logger()->log_wp_error( 'notice', $updated );
 
 			return $updated;
 		}
 
-		$options[ $field->get_setting_key() ] = $field->get_field_value();
-		$updated                              = $options_loader->update( $options );
+		// Update the option.
+		$updated = Underpin()->options()->get( $options_key )->update( $updated, $field->get_setting_key() );
 
 		if ( true !== $updated ) {
 			$updated = underpin()->logger()->log_as_error(

@@ -65,10 +65,18 @@ class Option {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $value
+	 * @param      $value The value to update this setting to.
+	 * @param bool $key The key to update, if this option is an array of options.
 	 * @return bool
 	 */
-	public function update( $value ) {
+	public function update( $value, $key = false ) {
+
+		if ( false !== $key ) {
+			$option         = (array) $this->get();
+			$option[ $key ] = $value;
+			$value          = $option;
+		}
+
 		return update_option( $this->key, $value );
 	}
 

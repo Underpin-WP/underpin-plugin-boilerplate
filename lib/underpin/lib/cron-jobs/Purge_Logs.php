@@ -42,6 +42,14 @@ class Purge_Logs extends Cron_Task {
 	 * @inheritDoc
 	 */
 	function cron_action() {
-		underpin()->logger()->purge( 30 );
+
+		/**
+		 * Filters the max file age for items purged via the cron.
+		 *
+		 * @since 1.0.0
+		 */
+		$max_age = apply_filters( 'underpin/cron/purge_logs/max_age', 30 );
+
+		underpin()->logger()->purge( $max_age );
 	}
 }

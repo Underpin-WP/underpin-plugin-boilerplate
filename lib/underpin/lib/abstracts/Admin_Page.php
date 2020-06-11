@@ -13,7 +13,7 @@ namespace Underpin\Abstracts;
 use Underpin\Traits\Feature_Extension;
 use Underpin\Traits\Underpin_Templates;
 use WP_Error;
-use function Underpin\underpin;
+use function Underpin\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Abstracts
  */
-abstract class Admin_Page {
+abstract class Admin_Page extends Admin_Sub_Menu {
 	use Underpin_Templates;
 	use Feature_Extension;
 
@@ -37,61 +37,6 @@ abstract class Admin_Page {
 	 * @var array
 	 */
 	protected $sections = [];
-
-	/**
-	 * Parent slug for this menu.
-	 * If no slug is specified, this menu will still be registered, but it will not appear in the WordPress menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string the parent slug.
-	 */
-	protected $parent_slug = 'options-general.php';
-
-	/**
-	 * The title to display in the admin menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string the menu title.
-	 */
-	protected $menu_title = '';
-
-	/**
-	 * The page title to display on the page.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string the page title.
-	 */
-	protected $page_title = '';
-
-	/**
-	 * The capability required to visit this admin page.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string the capability.
-	 */
-	protected $capability = 'administrator';
-
-	/**
-	 * The unique identifier for this menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string the menu slug.
-	 */
-	protected $menu_slug = '';
-
-	/**
-	 * The position in the menu order this item should appear.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var int the menu position.
-	 */
-	protected $position = null;
 
 	/**
 	 * The nonce action used to validate when interfacing with this page.
@@ -122,16 +67,16 @@ abstract class Admin_Page {
 	 * @param array $args List of arguments used to create this menu page.
 	 */
 	public function __construct() {
+		parent::__construct();
 		$this->nonce_action = $this->menu_slug . '_nonce';
 	}
-
 
 	/**
 	 * @inheritDoc
 	 */
 	public function do_actions() {
-		$this->update_actions();
-		$this->register_actions();
+		parent::do_actions();
+		add_action( 'admin_init', [ $this, 'handle_update_request' ], 99 );
 	}
 
 	/**
@@ -158,14 +103,21 @@ abstract class Admin_Page {
 			}
 		}
 
-		return underpin()->logger()->log_as_error(
+		return Underpin()->logger()->log_as_error(
 			'error',
 			'no_admin_section_found',
 			'No valid section could be found',
-			[ 'sections' => $this->sections, 'admin_page' => $this->parent_slug ]
+			[ 'sections' => $this->sections, 'admin_page' => $this->parent_menu ]
 		);
 	}
 
+	/**
+	 * Validates a submitted request
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool|WP_Error
+	 */
 	public function validate_request() {
 		$errors = new \WP_Error();
 
@@ -188,7 +140,7 @@ abstract class Admin_Page {
 		}
 
 		// If we don't have a nonce, bail.
-		if ( ! isset( $_POST['underpin_nonce'] ) ) {
+		if ( ! isset( $_POST['Underpin_nonce'] ) ) {
 			$errors->add(
 				'update_request_settings_no_nonce',
 				__( 'An update request attempted to run without a nonce.' )
@@ -205,7 +157,7 @@ abstract class Admin_Page {
 		}
 
 		// If the nonce is invalid, bail
-		if ( isset( $_POST['underpin_nonce'] ) && 1 !== wp_verify_nonce( $_POST['underpin_nonce'], $this->nonce_action ) ) {
+		if ( isset( $_POST['Underpin_nonce'] ) && 1 !== wp_verify_nonce( $_POST['Underpin_nonce'], $this->nonce_action ) ) {
 			$errors->add(
 				'update_request_settings_invalid_nonce',
 				__( 'An update requested attempted to run with an invalid nonce.' )
@@ -225,7 +177,7 @@ abstract class Admin_Page {
 	public function handle_update_request() {
 		$page_valid    = $this->validate_request();
 		$section_valid = $this->section()->validate_request();
-		$errors        = underpin()->logger()->gather_errors( $page_valid, $section_valid );
+		$errors        = Underpin()->logger()->gather_errors( $page_valid, $section_valid );
 
 
 		if ( $errors->has_errors() ) {
@@ -260,8 +212,7 @@ abstract class Admin_Page {
 	 */
 	public function get_section_url( $section ) {
 
-		$url = get_admin_url();
-		$url .= $this->parent_slug;
+		$url = get_admin_url( null, 'admin.php' );
 		$url .= '?page=' . $this->menu_slug;
 
 		if ( isset( $this->sections[ $section ] ) ) {
@@ -290,61 +241,6 @@ abstract class Admin_Page {
 		}
 
 		return '';
-	}
-
-	/**
-	 * Registers actions to update this admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function update_actions() {
-		add_action( 'admin_init', [ $this, 'handle_update_request' ], 99 );
-	}
-
-	/**
-	 * Registers actions to register this admin page to WordPress.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function register_actions() {
-		add_action( 'admin_menu', [ $this, 'register_sub_menu' ] );
-	}
-
-	/**
-	 * Determines if the current page is this admin page.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_admin_page() {
-		return is_admin() && isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'];
-	}
-
-	/**
-	 * Registers sub menus
-	 *
-	 * @since 1.0.0
-	 */
-	public function register_sub_menu() {
-		add_submenu_page(
-			$this->parent_slug,
-			$this->page_title,
-			$this->menu_title,
-			$this->capability,
-			$this->menu_slug,
-			[ $this, 'render_callback' ],
-			$this->position
-		);
-
-		underpin()->logger()->log(
-			'notice',
-			'submenu_page_added',
-			'The submenu page ' . $this->page_title . ' Has been added.',
-			$this->parent_slug,
-			[ 'parent' => $this->parent_slug, 'menu_title' => $this->menu_title ]
-		);
 	}
 
 	/**

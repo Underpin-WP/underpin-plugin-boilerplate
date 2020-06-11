@@ -9,8 +9,6 @@
 
 namespace Underpin\Utilities;
 
-use Underpin\Abstracts\Underpin;
-
 use Underpin\Abstracts\Script;
 use function Underpin\underpin;
 
@@ -38,7 +36,8 @@ class Debug_Bar_Script extends Script {
 	public $name = "Debug Bar Script";
 
 	public function __construct() {
-		$this->src = underpin()->js_url(). 'debug.min.js';
+		$this->src = underpin()->js_url() . 'debug.min.js';
+		parent::__construct();
 	}
 
 }
