@@ -9,8 +9,6 @@
 
 namespace Plugin_Name_Replace_Me;
 
-use Underpin\Abstracts\Batch_Task;
-use Underpin\Abstracts\Event_Type;
 use Underpin\Abstracts\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {

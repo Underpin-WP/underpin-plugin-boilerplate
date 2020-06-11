@@ -116,7 +116,7 @@ into a single `WP_Error` object, if they are actually errors.
 $item_1 = function_that_returns_errors();
 $item_2 = another_function_that_returns_errors();
 
-$errors = dfsm()->logger()->gather_errors($item_1,$item_2);
+$errors = underpin()->logger()->gather_errors($item_1,$item_2);
 
 if($errors->has_errors()){
   // Do do something if either of the items were a WP Error.
