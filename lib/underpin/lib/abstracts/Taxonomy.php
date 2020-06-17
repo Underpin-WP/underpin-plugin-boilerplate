@@ -72,6 +72,7 @@ abstract class Taxonomy {
 				'notice',
 				'registered_taxonomy',
 				'The taxonomy ' . $this->name . ' has been registered to ' . $this->post_type . '.',
+				[ 'ref' => $this->name, 'post_type' => $this->post_type ]
 			);
 		}
 	}

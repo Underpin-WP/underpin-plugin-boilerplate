@@ -160,8 +160,7 @@ abstract class Script {
 				'error',
 				'param_set_too_late',
 				'The localized param ' . $key . ' was set after the script was already enqueued.',
-				$this->handle,
-				[ 'key' => $key, 'value' => $value ]
+				[ 'handle' => $this->handle, 'key' => $key, 'value' => $value ]
 			);
 		}
 
@@ -186,8 +185,7 @@ abstract class Script {
 				'error',
 				'param_removed_too_late',
 				'The localized param ' . $key . ' attempted to be removed after the script was already enqueued.',
-				$this->handle,
-				[ 'key' => $key ]
+				[ 'handle' => $this->handle, 'key' => $key ]
 			);
 		}
 
@@ -215,16 +213,14 @@ abstract class Script {
 					'error',
 					'script_was_not_localized',
 					'The script ' . $this->handle . ' failed to localize. That is all I know, unfortunately.',
-					$this->handle,
-					[ 'params' => $localized_params ]
+					[ 'handle' => $this->handle, 'params' => $localized_params ]
 				);
 			} else {
 				underpin()->logger()->log(
 					'notice',
 					'script_was_localized',
 					'The script ' . $this->handle . ' localized successfully.',
-					$this->handle,
-					[ 'params' => $localized_params ]
+					[ 'handle' => $this->handle, 'params' => $localized_params ]
 				);
 			}
 		}
@@ -244,14 +240,14 @@ abstract class Script {
 				'error',
 				'script_was_not_registered',
 				'The script ' . $this->handle . ' failed to register. That is all I know, unfortunately.',
-				$this->handle
+				['ref' => $this->handle]
 			);
 		} else {
 			underpin()->logger()->log(
 				'notice',
 				'script_was_registered',
 				'The script ' . $this->handle . ' registered successfully.',
-				$this->handle
+				['ref' => $this->handle]
 			);
 		}
 
@@ -272,14 +268,14 @@ abstract class Script {
 				'notice',
 				'script_was_enqueued',
 				'The script ' . $this->handle . ' has been enqueued.',
-				$this->handle
+				['ref' => $this->handle]
 			);
 		} else {
 			underpin()->logger()->log(
 				'error',
 				'script_failed_to_enqueue',
 				'The script ' . $this->handle . ' failed to enqueue.',
-				$this->handle
+				['ref' => $this->handle]
 			);
 		}
 

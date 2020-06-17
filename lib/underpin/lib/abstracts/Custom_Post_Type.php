@@ -67,8 +67,7 @@ abstract class Custom_Post_Type {
 				'notice',
 				'custom_post_type_registered',
 				'The custom post type ' . $this->type . ' has been registered.',
-				$this->type,
-				[ 'args' => $this->args ]
+				[ 'type' => $this->type, 'args' => $this->args ]
 			);
 		}
 	}

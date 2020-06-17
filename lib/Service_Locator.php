@@ -33,7 +33,7 @@ final class Service_Locator extends Underpin {
 	 *
 	 * @var string
 	 */
-	protected $loader_namespace = 'Plugin_Name_Replace_Me\Loaders';
+	protected $root_namespace = 'Plugin_Name_Replace_Me';
 
 	/**
 	 * Current version of this plugin. Bump this when you update.

@@ -80,14 +80,14 @@ abstract class Style {
 				'error',
 				'style_was_not_registered',
 				'The style ' . $this->handle . ' failed to register. That is all I know, unfortunately.',
-				$this->handle
+				[ 'ref' => $this->handle ]
 			);
 		} else {
 			underpin()->logger()->log(
 				'notice',
 				'style_was_registered',
-				'The style ' . $this->handle . ' registered successfully.',
-				$this->handle
+				'A style registered successfully.',
+				[ 'ref' => $this->handle ]
 			);
 		}
 	}
@@ -101,16 +101,16 @@ abstract class Style {
 			underpin()->logger()->log(
 				'notice',
 				'style_was_enqueued',
-				'The style ' . $this->handle . ' has been enqueued.',
-				$this->handle
+				'A style has been enqueued.',
+				[ 'ref' => $this->handle ]
 			);
 
 		} else {
 			underpin()->logger()->log(
 				'error',
 				'style_failed_to_enqueue',
-				'The style ' . $this->handle . ' failed to enqueue.',
-				$this->handle
+				'A style failed to enqueue.',
+				[ 'ref' => $this->handle ]
 			);
 		}
 

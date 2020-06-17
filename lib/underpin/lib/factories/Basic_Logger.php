@@ -172,8 +172,7 @@ class Basic_Logger extends Writer {
 				'warning',
 				'errors_while_parsing_file',
 				'A file failed to parse',
-				$file,
-				[ 'errors' => $errors ]
+				[ 'file' => $file, 'errors' => $errors ]
 			);
 
 			return $errors;

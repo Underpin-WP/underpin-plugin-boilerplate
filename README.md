@@ -71,8 +71,7 @@ plugin_name_replace_me()->logger()->log(
 'error',
 'error_code',
 'error_message',
-'reference_id', // Used to point out a relevant data id
-['arbitrary' => 'data', 'that' => 'is relevant']
+['arbitrary' => 'data', 'that' => 'is relevant', 'ref' => 1]
 );
 ```
 
@@ -100,7 +99,6 @@ $wp_error_object = plugin_name_replace_me()->logger()->log_as_error(
 'error',
 'error_code',
 'error_message',
-'reference_id', // Used to point out a relevant data id
 ['arbitrary' => 'data', 'that' => 'is relevant']
 );
 

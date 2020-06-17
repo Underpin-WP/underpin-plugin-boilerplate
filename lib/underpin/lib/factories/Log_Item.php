@@ -53,6 +53,15 @@ class Log_Item {
 	public $ref;
 
 	/**
+	 * Context.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var mixed Reference Context. Usually a slug that offers context to what the ID is.
+	 */
+	public $context;
+
+	/**
 	 * Event data.
 	 *
 	 * @since 1.0.0
@@ -78,15 +87,24 @@ class Log_Item {
 	 * @param string $type    Event log type
 	 * @param string $code    The event code to use.
 	 * @param string $message The message to log.
-	 * @param int    $ref     A reference ID related to this error, such as a post ID.
 	 * @param array  $data    Arbitrary data associated with this event message.
 	 */
-	public function __construct( $type, $code, $message, $ref = null, $data = array() ) {
+	public function __construct( $type, $code, $message, $data = array() ) {
 		$this->type    = $type;
 		$this->code    = $code;
 		$this->message = $message;
-		$this->ref     = $ref;
-		$this->data    = $data;
+		$this->data = $data;
+
+		if ( isset( $this->data['context'] ) ) {
+			$this->context = $this->data['context'];
+			unset( $this->data['context'] );
+		}
+
+		if ( isset( $this->data['ref'] ) ) {
+			$this->ref = $this->data['ref'];
+			unset( $this->data['ref'] );
+		}
+
 	}
 
 	/**
@@ -99,10 +117,6 @@ class Log_Item {
 	public function format() {
 
 		$log_message = $this->code . ' - ' . $this->message;
-
-		if ( $this->ref !== null ) {
-			$this->data['ref'] = $this->ref;
-		}
 
 		if ( ! empty( $this->data ) ) {
 			$log_message .= "\n data:" . var_export( (object) $this->data, true );
@@ -119,9 +133,21 @@ class Log_Item {
 	 * @return WP_Error
 	 */
 	public function error() {
-		$data        = $this->data;
-		$data['ref'] = $this->ref;
+		return new WP_Error( $this->code, $this->message, $this->data );
+	}
 
-		return new WP_Error( $this->code, $this->message, $data );
+	public function __get( $key ) {
+		switch ( $key ) {
+			case 'ref':
+				$value = isset( $this->data['ref'] ) ? $this->data['ref'] : null;
+				break;
+			case 'context':
+				$value = isset( $this->data['context'] ) ? $this->data['context'] : null;
+				break;
+			default:
+				$value = $this->$key;
+		}
+
+		return $value;
 	}
 }

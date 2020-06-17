@@ -74,8 +74,7 @@ abstract class Block {
 				'error',
 				'invalid_block_type',
 				'The provided block does not appear to have a type set',
-				get_class( $this ),
-				[ 'type' => $this->type, 'expects' => 'string' ]
+				[ 'class' => get_class( $this ), 'type' => $this->type, 'expects' => 'string' ]
 			);
 		}
 	}
@@ -130,16 +129,14 @@ abstract class Block {
 				'error',
 				'block_not_registered',
 				'The provided block failed to register. Register block type provides a __doing_it_wrong warning explaining more.',
-				$this->type,
-				[ 'type' => $this->type, 'expects' => 'string' ]
+				[ 'ref' => $this->type, 'expects' => 'string' ]
 			);
 		} else {
 			underpin()->logger()->log(
 				'notice',
 				'block_registered',
 				'The provided block was registered successfully.',
-				$this->type,
-				[ 'args' => $this->args ]
+				[ 'ref' => $this->type, 'args' => $this->args ]
 			);
 		}
 	}

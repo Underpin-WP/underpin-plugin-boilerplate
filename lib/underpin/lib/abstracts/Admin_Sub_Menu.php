@@ -155,8 +155,7 @@ abstract class Admin_Sub_Menu {
 			'notice',
 			'submenu_page_added',
 			'The submenu page ' . $this->page_title . ' Has been added.',
-			$this->parent_menu,
-			[ 'parent' => $this->parent_menu, 'menu_title' => $this->menu_title ]
+			[ 'ref' => $this->parent_menu, 'menu_title' => $this->menu_title ]
 		);
 	}
 

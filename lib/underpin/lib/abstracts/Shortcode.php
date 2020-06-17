@@ -70,7 +70,8 @@ abstract class Shortcode {
 		underpin()->logger()->log(
 			'notice',
 			'shortcode_added',
-			'The shortcode ' . $this->shortcode . ' has been added'
+			'A shortcode has been added',
+			['ref' => $this->shortcode]
 		);
 	}
 

@@ -47,7 +47,7 @@ abstract class Decision_List extends Loader_Registry {
 				'error',
 				'decision_list_has_no_decisions',
 				'A decision list ran, but there were no decisions to make.',
-				$this->get_registry_id()
+				['ref' => $this->get_registry_id()]
 			);
 		}
 
@@ -71,7 +71,7 @@ abstract class Decision_List extends Loader_Registry {
 				'error',
 				'decision_list_could_not_decide',
 				'A decision list ran, but all decisions returned false.',
-				$this->get_registry_id()
+				['ref' => $this->get_registry_id()]
 			);
 		}
 

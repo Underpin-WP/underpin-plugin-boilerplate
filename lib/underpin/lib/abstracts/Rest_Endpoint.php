@@ -78,16 +78,14 @@ abstract class Rest_Endpoint {
 				'error',
 				'rest_route_was_not_registered',
 				'The rest route ' . $this->route . ' was not registered. There is probably a __doing_it_wrong notice explaining this further.',
-				$this->route,
-				[ 'namespace' => $this->rest_namespace, 'args' => $this->args ]
+				[ 'route' => $this->route, 'namespace' => $this->rest_namespace, 'args' => $this->args ]
 			);
 		} else {
 			underpin()->logger()->log(
 				'notice',
 				'rest_route_registered',
 				'The rest route ' . $this->route . ' was registered successfully',
-				$this->route,
-				[ 'namespace' => $this->rest_namespace, 'args' => $this->args ]
+				[ 'route' => $this->route, 'namespace' => $this->rest_namespace, 'args' => $this->args ]
 			);
 		}
 	}

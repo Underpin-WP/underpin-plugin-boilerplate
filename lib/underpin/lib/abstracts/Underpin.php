@@ -53,7 +53,7 @@ abstract class Underpin {
 	 *
 	 * @var string Complete namespace for all loaders.
 	 */
-	protected $loader_namespace = "Underpin\Loaders";
+	protected $root_namespace = "Underpin";
 
 	protected $minimum_php_version;
 	protected $minimum_wp_version;
@@ -132,7 +132,7 @@ abstract class Underpin {
 
 		// If this is not a core loader, attempt to get it from this plugin.
 		if ( is_wp_error( $class ) ) {
-			$class = $this->_get_class( $this->loader_namespace . '\\' . $loader );
+			$class = $this->_get_class( $this->root_namespace . '\\Loaders\\' . $loader );
 		}
 
 		return $class;
@@ -228,7 +228,12 @@ abstract class Underpin {
 
 				$root = trailingslashit( $this->dir ) . 'lib/';
 
-				array_shift( $class );
+				$root_namespace = array_shift( $class );
+
+				// Bail early if the namespace roots do not match.
+				if($this->root_namespace !== $root_namespace){
+					return false;
+				}
 
 				$file_name = array_pop( $class );
 				$directory = str_replace( '_', '-', strtolower( implode( DIRECTORY_SEPARATOR, $class ) ) );

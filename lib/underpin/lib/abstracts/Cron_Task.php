@@ -74,7 +74,6 @@ abstract class Cron_Task {
 				'error',
 				'cron_event_exists',
 				__( 'A cron event was not registered because an event of the same name has already been registered.' ),
-				'',
 				array( 'event' => $event, 'frequency' => $frequency )
 			);
 		}

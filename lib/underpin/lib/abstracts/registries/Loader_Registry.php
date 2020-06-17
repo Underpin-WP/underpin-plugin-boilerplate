@@ -78,7 +78,7 @@ abstract class Loader_Registry extends Registry {
 				'loader_actions_ran',
 				'The actions for the ' . $this->registry_id . ' item called ' . $key . ' ran.',
 				$this->registry_id,
-				[ 'key' => $key, 'value' => $value ]
+				[ 'ref' => $this->registry_id, 'key' => $key, 'value' => $value ]
 			);
 		}
 
@@ -131,8 +131,7 @@ abstract class Loader_Registry extends Registry {
 			'error',
 			'invalid_service_type',
 			'The specified item could not be instantiated. Invalid instance type',
-			$key,
-			[ 'key' => $key, 'value' => $value, 'expects_type' => $this->abstraction_class ]
+			[ 'ref' => $key, 'value' => $value, 'expects_type' => $this->abstraction_class ]
 		);
 	}
 }

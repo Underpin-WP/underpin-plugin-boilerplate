@@ -167,12 +167,11 @@ abstract class Event_Type extends ArrayIterator {
 	 *
 	 * @param string $code    The event code to use.
 	 * @param string $message The message to log.
-	 * @param int    $ref     A reference ID related to this error, such as a post ID.
 	 * @param array  $data    Arbitrary data associated with this event message.
 	 * @return Log_Item|WP_Error The logged item, or a WP_Error if something went wrong.
 	 */
-	public function log( $code, $message, $ref = null, $data = array() ) {
-		$item = new $this->log_item_class( $this->type, $code, $message, $ref, $data );
+	public function log( $code, $message, $data = array() ) {
+		$item = new $this->log_item_class( $this->type, $code, $message, $data );
 
 		if ( ! $item instanceof Log_Item ) {
 			return new WP_Error(
@@ -196,11 +195,10 @@ abstract class Event_Type extends ArrayIterator {
 	 * @since 1.0.0
 	 *
 	 * @param WP_Error $wp_error Instance of WP_Error to use for log
-	 * @param mixed    $ref      Reference value, typically a post ID or some database key.
 	 * @return Log_Item The logged item.
 	 */
-	public function log_wp_error( WP_Error $wp_error, $ref = null ) {
-		return $this->log( $wp_error->get_error_code(), $wp_error->get_error_message(), $ref, $wp_error->get_error_data() );
+	public function log_wp_error( WP_Error $wp_error ) {
+		return $this->log( $wp_error->get_error_code(), $wp_error->get_error_message(), $wp_error->get_error_data() );
 	}
 
 	/**
@@ -209,18 +207,24 @@ abstract class Event_Type extends ArrayIterator {
 	 * @since 1.0.0
 	 *
 	 * @param Exception $exception Exception instance to log.
-	 * @param mixed     $ref       Reference value, typically a post ID or some database key.
 	 * @param array     $data      array Data associated with this error message
 	 * @return Log_Item The logged item.
 	 */
-	public function log_exception( Exception $exception, $ref = null, $data = array() ) {
-		return $this->log( $exception->getCode(), $exception->getMessage(), $ref, $data );
+	public function log_exception( Exception $exception, $data = array() ) {
+		return $this->log( $exception->getCode(), $exception->getMessage(), $data );
 	}
+
+	/**
+	 * Getter method.
+	 *
+	 * @param $key
+	 * @return mixed|WP_Error
+	 */
 	public function __get( $key ) {
 		if ( isset( $this->$key ) ) {
 			return $this->$key;
 		} else {
-			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+			return new WP_error( 'logger_param_not_set', 'The logger param ' . $key . ' could not be found.' );
 		}
 	}
 

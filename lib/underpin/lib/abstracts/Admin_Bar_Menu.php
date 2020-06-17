@@ -153,7 +153,7 @@ use Feature_Extension;
 				'warning',
 				'user_cannot_view_menu',
 				'The specified user cannot view the ' . $this->name . ' menu. It will not be displayed.',
-				array( 'menu' => $this->id, 'capability_required' => $this->capability )
+				array( 'ref' => $this->id, 'capability_required' => $this->capability )
 			);
 		}
 	}

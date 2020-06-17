@@ -39,9 +39,6 @@ abstract class Admin_Notice {
 
 	public $message = '';
 
-	public $name;
-
-	public $description;
 
 	/**
 	 * Returns true when this admin notice should display.
@@ -68,7 +65,6 @@ abstract class Admin_Notice {
 				'notice',
 				'underpin_notice_did_not_display',
 				'A notice did not display.',
-				'',
 				[ 'reason' => $should_display ]
 			);
 

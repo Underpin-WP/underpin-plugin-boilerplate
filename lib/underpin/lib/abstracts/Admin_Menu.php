@@ -119,7 +119,6 @@ abstract class Admin_Menu {
 				'warning',
 				'underpin_primary_menu_name_missing',
 				'A name for the primary menu is required.',
-				'',
 				[ 'menu_slug' => $this->menu_slug ]
 			) );
 		}
@@ -129,7 +128,6 @@ abstract class Admin_Menu {
 				'warning',
 				'underpin_primary_menu_slug_missing',
 				'A slug for the primary menu is required.',
-				'',
 				[ 'menu_name' => $this->name ]
 			) );
 		}

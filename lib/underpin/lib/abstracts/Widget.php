@@ -125,8 +125,8 @@ abstract class Widget extends \WP_Widget {
 			underpin()->logger()->log(
 				'error',
 				'failed_to_save_widget_settings',
-				$this->id_base,
-				[ 'errors' => $errors ]
+				'Failed to save widget settings',
+				[ 'ref' => $this->id_base, 'errors' => $errors ]
 			);
 
 			$instance = false;

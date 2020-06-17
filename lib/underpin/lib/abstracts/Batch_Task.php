@@ -178,8 +178,7 @@ abstract class Batch_Task {
 					'notice',
 					'batch_action_complete',
 					'The batch action called ' . $this->name . ' is complete.',
-					$this->batch_id,
-					[ 'tally' => $current_tally ]
+					[ 'ref' => $this->batch_id, 'tally' => $current_tally ]
 				);
 
 				return true;
@@ -197,7 +196,7 @@ abstract class Batch_Task {
 						'warning',
 						'batch_action_stopped_early',
 						'The batch action called ' . $this->name . ' stopped early because of an error.',
-						[ 'tally' => $current_tally, 'batch_id' => $this->batch_id, 'error' => $status ]
+						[ 'ref' => $current_tally, 'batch_id' => $this->batch_id, 'error' => $status ]
 					);
 
 					return $status;
@@ -287,7 +286,7 @@ abstract class Batch_Task {
 				'notice',
 				'batch_task_enqueued',
 				'A batch task was enqueued.',
-				$this->batch_id
+				[ 'ref' => $this->batch_id ]
 				);
 		}
 	}

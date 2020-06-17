@@ -65,9 +65,9 @@ class Option {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param      $value The value to update this setting to.
-	 * @param bool $key The key to update, if this option is an array of options.
-	 * @return bool
+	 * @param mixed $value The value to update this setting to.
+	 * @param bool  $key The key to update, if this option is an array of options.
+	 * @return bool True if updated, otherwise false
 	 */
 	public function update( $value, $key = false ) {
 

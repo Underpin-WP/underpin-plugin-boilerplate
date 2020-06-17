@@ -99,7 +99,7 @@ abstract class Settings_Field {
 				'warning',
 				'invalid_field_missing_required_field_params',
 				'A constructed field is missing required field params.',
-				[ 'required_params' => [ 'name' ], 'field' => $this ]
+				[ 'ref' => $this->get_field_type(), 'required_params' => [ 'name' ], 'field' => $this ]
 			);
 		}
 

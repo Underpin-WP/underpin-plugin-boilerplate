@@ -30,7 +30,7 @@ if ( ! function_exists( 'Underpin\underpin' ) ) {
 		protected $minimum_php_version = '5.6';
 		protected $minimum_wp_version = '5.0';
 		protected $version = '1.0.0';
-		protected $loader_namespace = 'Underpin\Loaders\\';
+		protected $root_namespace = 'Underpin';
 
 
 		protected function _setup_params( $file ) {
