@@ -16,7 +16,7 @@ class Test_Shortcodes extends WP_UnitTestCase {
 	use Loader_Tests;
 
 	public static function wpSetUpBeforeClass() {
-		if ( empty( (array) underpin()->scripts() ) ) {
+		if ( empty( (array) underpin()->shortcodes() ) ) {
 			self::markTestSkipped( 'The loader ' . get_class( underpin()->scripts() ) . ' does not have anything registered to it, so it has been skipped.' );
 		}
 	}
