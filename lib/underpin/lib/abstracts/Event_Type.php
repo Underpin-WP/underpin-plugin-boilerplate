@@ -195,9 +195,16 @@ abstract class Event_Type extends ArrayIterator {
 	 * @since 1.0.0
 	 *
 	 * @param WP_Error $wp_error Instance of WP_Error to use for log
+	 * @param array    $data     Additional data to log
 	 * @return Log_Item The logged item.
 	 */
-	public function log_wp_error( WP_Error $wp_error ) {
+	public function log_wp_error( WP_Error $wp_error, $data = [] ) {
+		if ( ! empty( $data ) ) {
+			$current_data = $wp_error->get_error_data();
+			$data         = array_merge( (array) $current_data, $data );
+			$wp_error->add_data( $data );
+		}
+
 		return $this->log( $wp_error->get_error_code(), $wp_error->get_error_message(), $wp_error->get_error_data() );
 	}
 

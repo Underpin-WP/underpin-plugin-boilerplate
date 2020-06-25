@@ -38,4 +38,10 @@ trait Loader_Tests {
 		}
 	}
 
+	public function test_is_valid() {
+		foreach ( $this->get_loader() as $key => $value ) {
+			$this->assertFalse( is_wp_error( $value ), 'Item ' . $key . ' is invalid. This most likely means the class could not be instantiated.' );
+		}
+	}
+
 }

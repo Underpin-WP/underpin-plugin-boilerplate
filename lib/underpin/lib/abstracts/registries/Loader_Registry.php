@@ -67,6 +67,8 @@ abstract class Loader_Registry extends Registry {
 			} else {
 				$this[ $key ] = $value;
 			}
+		} else{
+			$this[ $key ] = $valid;
 		}
 
 		// If this implements registry actions, go ahead and start those up, too.

@@ -158,4 +158,23 @@ abstract class Admin_Menu {
 			);
 		}
 	}
+
+	/**
+	 * Retrieves the admin url of this admin page.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array $query
+	 * @return string
+	 */
+	public function get_url( $query = [] ) {
+
+		$query['page'] = $this->menu_slug;
+
+		$url = get_admin_url();
+		$url .= 'admin.php';
+		$url = add_query_arg( $query, $url );
+
+		return $url;
+	}
 }

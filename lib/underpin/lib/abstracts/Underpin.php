@@ -333,6 +333,28 @@ abstract class Underpin {
 	}
 
 	/**
+	 * Retrieves the cron jobs loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Erasers
+	 */
+	public function erasers() {
+		return $this->_get_loader( 'Erasers' );
+	}
+
+	/**
+	 * Retrieves the cron jobs loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Exporters
+	 */
+	public function exporters() {
+		return $this->_get_loader( 'Exporters' );
+	}
+
+	/**
 	 * Retrieves the blocks loader.
 	 *
 	 * @since 1.0.0
