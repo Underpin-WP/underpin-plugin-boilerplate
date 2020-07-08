@@ -36,7 +36,7 @@ class Decision_Lists extends Loader_Registry {
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-		// $this->add();
+		$this->add( 'event_type_purge_frequency', 'Underpin\Decisions\Event_Type_Purge_Frequency\Event_Type_Purge_Frequency' );
 	}
 
 	/**

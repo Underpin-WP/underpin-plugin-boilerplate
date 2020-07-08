@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -lt 3 ]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-db-creation]"
 	exit 1
 fi
 
@@ -146,7 +146,7 @@ install_db() {
 		fi
 	fi
 
-	# create database
+	# create db
 	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
 }
 

@@ -132,7 +132,7 @@ abstract class Admin_Section {
 			$updated = $field->update_value( $checked );
 
 			// Otherwise, Update the value if the field is provided.
-		} elseif ( isset( $_POST[ $field_name ] ) && $_POST[ $field_name ] !== $field->get_field_value() ) {
+		} elseif ( isset( $_POST[ $field_name ] ) && $field->sanitize( $_POST[ $field_name ] ) !== $field->value ) {
 			$updated = $field->update_value( $_POST[ $field_name ] );
 		}
 
@@ -151,7 +151,7 @@ abstract class Admin_Section {
 	}
 
 	/**
-	 * Saves a single field to the database.
+	 * Saves a single field to the db.
 	 *
 	 * @since 1.0.0
 	 *
@@ -176,13 +176,15 @@ abstract class Admin_Section {
 			$updated = underpin()->logger()->log_as_error(
 				'error',
 				'update_request_settings_failed_to_update',
-				'The ' . $options_key . ' settings failed to update.'
+				'A setting failed to update.',
+				[ 'setting' => $options_key, 'updated_return' => $updated ]
 			);
 		} else {
 			underpin()->logger()->log(
 				'notice',
 				'update_request_settings_succeeded_to_update',
-				'The ' . $options_key . ' settings updated successfully.'
+				'A setting failed to update.',
+				[ 'setting' => $options_key ]
 			);
 		}
 

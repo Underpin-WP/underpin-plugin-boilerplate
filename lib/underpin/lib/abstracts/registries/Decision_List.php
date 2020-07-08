@@ -47,35 +47,77 @@ abstract class Decision_List extends Loader_Registry {
 				'error',
 				'decision_list_has_no_decisions',
 				'A decision list ran, but there were no decisions to make.',
-				['ref' => $this->get_registry_id()]
+				[ 'ref' => $this->get_registry_id() ]
 			);
 		}
 
-		// Sort decisions before looping through them.
-		$this->sort_decisions();
+		// Sort the params. This is necessary to ensure the cache key is consistent.
+		sort( $params );
 		$invalid_decisions = [];
+		$decision          = null;
 
-		foreach ( $this as $decision ) {
-			$valid = $decision->is_valid( $params );
-			if ( is_wp_error( $valid ) ) {
-				underpin()->logger()->log_wp_error( 'notice', $valid );
-				$invalid_decisions[ $decision->id ] = $valid;
-			} else {
-				break;
+		// Attempt to fetch the decision from the cache.
+		$result = wp_cache_get( serialize( $params ), $this->registry_id );
+
+		// If the decision isn't in the cache, run this decision list.
+		if ( false === $result ) {
+			// Sort decisions before looping through them.
+			$this->sort_decisions();
+
+			foreach ( $this as $decision ) {
+
+				// Determine if the decision is valid based on provided params.
+				$valid = $decision->is_valid( $params );
+
+				// If the decision generated a WP_Error, it's not valid.
+				if ( is_wp_error( $valid ) ) {
+
+					// Record a notice for future reference.
+					underpin()->logger()->log_wp_error( 'notice', $valid );
+
+					// Add this to the list of invalid decisions, with the error explaining why.
+					$invalid_decisions[ $decision->id ] = $valid;
+				} else {
+
+					// Otherwise, we have found the decision to run, so break outta here.
+					break;
+				}
 			}
+
+			// If the decision did not get set, return an error.
+			if ( ! isset( $decision ) ) {
+				$decision = underpin()->logger()->log_as_error(
+					'error',
+					'decision_list_could_not_decide',
+					'A decision list ran, but all decisions returned false.',
+					[ 'ref' => $this->get_registry_id() ]
+				);
+			}
+
+			$result = [ 'decision' => $decision, 'invalid_decisions' => $invalid_decisions ];
 		}
 
-		// If the decision did not get set, return an error.
-		if ( ! isset( $decision ) ) {
-			return underpin()->logger()->log_as_error(
-				'error',
-				'decision_list_could_not_decide',
-				'A decision list ran, but all decisions returned false.',
-				['ref' => $this->get_registry_id()]
-			);
-		}
+		// Fire actions specific to this list that should happen every time a decision list runs.
+		$this->decision_actions( $decision, $invalid_decisions, $params );
 
-		return [ 'decision' => $decision, 'invalid_decisions' => $invalid_decisions ];
+		// Return the pertinent information.
+		return $result;
+	}
+
+	/**
+	 * Fires actions that run on entire decision lists.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $decision          The decision that was made
+	 * @param array $invalid_decisions The list of invalid decision WP Errors that were made.
+	 * @param array $params            The decision params
+	 */
+	protected function decision_actions( $decision, $invalid_decisions, $params ) {
+		wp_cache_add( serialize( $params ), [
+			'decision'          => $decision,
+			'invalid_decisions' => $invalid_decisions,
+		], $this->registry_id );
 	}
 
 	/**

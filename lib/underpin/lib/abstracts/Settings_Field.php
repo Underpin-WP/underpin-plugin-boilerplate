@@ -74,7 +74,7 @@ abstract class Settings_Field {
 	 *     Moz standards. For more information about field-specific attributes, check out the moz documentation.
 	 *
 	 *     @var string $name          Required. The name to use for this field in HTML.
-	 *     @var string $setting_key   The name to use when to use when saving, or looking this item up in the database.
+	 *     @var string $setting_key   The name to use when to use when saving, or looking this item up in the db.
 	 *                                Defaults to field name
 	 *     @var string $id            The field's html ID value. Defaults to the field name.
 	 *     @var string $description   A description to use when displaying this field. Defaults to no description.

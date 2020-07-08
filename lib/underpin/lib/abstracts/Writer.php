@@ -64,6 +64,15 @@ abstract class Writer {
 	abstract public function purge( $max_file_age );
 
 	/**
+	 * Cleans up old logs.
+	 *
+	 * @since 1.0.0
+	 */
+	public function cleanup() {
+		return $this->purge( $this->event_type->frequency );
+	}
+
+	/**
 	 * Writes events.
 	 *
 	 * @since 1.0.0

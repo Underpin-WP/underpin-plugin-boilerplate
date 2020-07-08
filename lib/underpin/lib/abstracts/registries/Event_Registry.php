@@ -127,7 +127,7 @@ abstract class Event_Registry extends Loader_Registry {
 	 *
 	 * @param string   $type     Error log type
 	 * @param WP_Error $wp_error Instance of WP_Error to use for log
-	 * @param mixed    $ref      Reference value, typically a post ID or some database key.
+	 * @param mixed    $ref      Reference value, typically a post ID or some db key.
 	 * @return WP_Error WP Error, with error message.
 	 */
 	public function log_wp_error( $type, WP_Error $wp_error, $ref = null ) {
@@ -141,7 +141,7 @@ abstract class Event_Registry extends Loader_Registry {
 	 *
 	 * @param string    $type      Error log type
 	 * @param Exception $exception Exception instance to log.
-	 * @param mixed     $ref       Reference value, typically a post ID or some database key.
+	 * @param mixed     $ref       Reference value, typically a post ID or some db key.
 	 * @param array     $data      array Data associated with this error message
 	 * @return WP_Error WP Error, with error message.
 	 */
@@ -162,14 +162,13 @@ abstract class Event_Registry extends Loader_Registry {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $max_file_age The maximum number of days worth of log data to keep.
 	 */
-	public function purge( $max_file_age ) {
+	public function cleanup() {
 		foreach ( $this as $key => $class ) {
 			$writer = $this->get( $key )->writer();
 
 			if ( ! is_wp_error( $writer ) ) {
-				$purged = $writer->purge( $max_file_age );
+				$purged = $writer->cleanup();
 
 				if ( is_wp_error( $purged ) ) {
 					$this->log_wp_error( 'error', $purged );

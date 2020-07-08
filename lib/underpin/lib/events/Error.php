@@ -55,4 +55,9 @@ class Error extends Event_Type {
 	 * @var inheritDoc
 	 */
 	public $name = "Error";
+
+	/**
+	 * @inheritDoc
+	 */
+	protected $purge_frequency = 7;
 }

@@ -42,7 +42,7 @@ out of the box.
 1. **Decision Lists** - These make it possible to create a prioritized list of decisions to choose from. It's extend-able, 
 and provides plenty of opportunities to better-log _what_ was chosen, and _why_.
 1. **Batch Tasks** - This creates a way to add a notice in the WP Admin screen to run a large task in smaller chunks.
-Useful for database upgrade routines.
+Useful for db upgrade routines.
 1. **Error Logger** - This system comes with a highly-extendable error logging utility.
 
 It is also fairly straightforward to create custom loaders, so if you have your own extend-able registry of items, you
@@ -323,7 +323,7 @@ class Email_To extends Decision_List {
 
 			public $id = 'option';
 			public $name = 'Option Value';
-			public $description = 'Uses the value of the database option, if it is set.';
+			public $description = 'Uses the value of the db option, if it is set.';
 			public $priority = 100;
 
 

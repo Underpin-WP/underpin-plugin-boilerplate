@@ -1,6 +1,6 @@
 <?php
 /**
- * Cron task to purge error logs.
+ * Cron task to cleanup error logs.
  *
  * @since   1.0.0
  * @package Underpin\Cron
@@ -35,21 +35,16 @@ class Purge_Logs extends Cron_Task {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		parent::__construct( 'underpin_logs', 'daily' );
+
+		$frequency = apply_filters( 'underpin/cron/purge_logs/frequency', 'daily' );
+
+		parent::__construct( 'underpin_logs', $frequency );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	function cron_action() {
-
-		/**
-		 * Filters the max file age for items purged via the cron.
-		 *
-		 * @since 1.0.0
-		 */
-		$max_age = apply_filters( 'underpin/cron/purge_logs/max_age', 30 );
-
-		underpin()->logger()->purge( $max_age );
+		underpin()->logger()->cleanup();
 	}
 }
