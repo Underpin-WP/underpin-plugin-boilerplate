@@ -36,6 +36,15 @@ abstract class Loader_Registry extends Registry {
 	protected $abstraction_class = '';
 
 	/**
+	 * The class list.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array
+	 */
+	private $class_list = [];
+
+	/**
 	 * Loader_Registry constructor.
 	 *
 	 */
@@ -63,9 +72,11 @@ abstract class Loader_Registry extends Registry {
 		$valid = $this->validate_item( $key, $value );
 		if ( true === $valid ) {
 			if ( is_string( $value ) ) {
-				$this[ $key ] = new $value;
+				$this[ $key ]             = new $value;
+				$this->class_list[ $key ] = $value;
 			} else {
-				$this[ $key ] = $value;
+				$this[ $key ]             = $value;
+				$this->class_list[ $key ] = get_class( $this[ $key ] );
 			}
 		} else{
 			$this[ $key ] = $valid;
@@ -135,5 +146,110 @@ abstract class Loader_Registry extends Registry {
 			'The specified item could not be instantiated. Invalid instance type',
 			[ 'ref' => $key, 'value' => $value, 'expects_type' => $this->abstraction_class ]
 		);
+	}
+
+	/**
+	 * Retrieves the key from the provided instance.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @param $instance
+	 * @return \WP_Error
+	 */
+	public function get_key( $instance ) {
+		$class = get_class( $instance );
+
+		$items = array_flip( $this->class_list );
+
+		if ( isset( $items[ $class ] ) ) {
+			return $items[ $class ];
+		}
+
+		return new \WP_Error( 'key_not_found', 'The key for the provided class could not be found', [
+			'class' => $class,
+		] );
+
+	}
+
+	/**
+	 * Queries a loader registry.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	public function filter( $args = [] ) {
+		$results = [];
+
+		// Filter out items, if loader keys are specified
+		if ( isset( $args['loader_key__in'] ) ) {
+			$items = array_intersect( array_keys( (array) $this ), $args['loader_key__in'] );
+			unset( $args['loader_key__in'] );
+		} else {
+			$items = array_keys( (array) $this );
+		}
+
+		foreach ( $items as $item_key ) {
+			$item = $this->get( $item_key );
+
+			if ( ! is_wp_error( $item ) ) {
+
+				foreach ( $args as $key => $arg ) {
+					// Process the argument key
+					$processed = explode( '__', $key );
+
+					// Set the field type to the first item in the array.
+					$field = $processed[0];
+
+					// If there was some specificity after a __, use it.
+					$type = count( $processed ) > 1 ? $processed[1] : 'in';
+
+					// Bail early if this field is not in this object.
+					if ( ! isset( $item->$field ) ) {
+						continue;
+					}
+
+					$object_field = $item->$field;
+
+					// Convert argument to an array. This allows us to always use array functions for checking.
+					if ( ! is_array( $arg ) ) {
+						$arg = array( $arg );
+					}
+
+
+					// Convert field to array. This allows us to always use array functions to check.
+					if ( ! is_array( $object_field ) ) {
+						$object_field = array( $object_field );
+					}
+
+					// Run the intersection.
+					$fields = array_intersect( $arg, $object_field );
+
+					// Check based on type.
+					switch ( $type ) {
+						case 'not_in':
+							$valid = empty( $fields );
+							break;
+						case 'and':
+							$valid = count( $fields ) === count( $arg );
+							break;
+						default:
+							$valid = ! empty( $fields );
+							break;
+					}
+
+					if ( false === $valid ) {
+						break;
+					}
+				}
+
+				if ( true === $valid ) {
+					$results[ $item_key ] = $item;
+				}
+			}
+		}
+
+		return $results;
 	}
 }
