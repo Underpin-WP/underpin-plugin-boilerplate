@@ -47,6 +47,44 @@ abstract class Event_Type extends ArrayIterator {
 	protected $write_to_log = false;
 
 	/**
+	 * Force logged events to include a backtrace.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var bool
+	 */
+	protected $include_backtrace = false;
+
+	/**
+	 * List of capabilities.
+	 * If a user has any of these capabilities, they will be able to see events of this type.
+	 * Administrator ALWAYS has access, even if they're not on this list.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array
+	 */
+	protected $capabilities = [];
+
+	/**
+	 * The minimum volume to be able to see events of this type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var int
+	 */
+	protected $volume = 2;
+
+	/**
+	 * A string used to group different event types together.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $group = '';
+
+	/**
 	 * A human-readable description of this event type.
 	 * This is used in debug logs to make it easier to understand why this exists.
 	 *
@@ -81,6 +119,15 @@ abstract class Event_Type extends ArrayIterator {
 	public $log_item_class = 'Underpin\Factories\Log_Item';
 
 	/**
+	 * Determines how often this event type should be purged.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var int The number of days an event type will be kept before it is purged.
+	 */
+	protected $purge_frequency = 30;
+
+	/**
 	 * Event_Type constructor.
 	 *
 	 * @since 1.0.0
@@ -107,6 +154,38 @@ abstract class Event_Type extends ArrayIterator {
 		 * @param string $writer_class   The writer class to instantiate when a writer is created.
 		 */
 		$this->log_item_class = apply_filters( 'underpin/event_type/log_item_class', $this->log_item_class, $this->type, $this->writer_class );
+
+		/**
+		 * Filters the capabilities for event types.
+		 *
+		 * @since 1.0.0
+		 * @param array $capabilities The list of capabilities to set for this event type.
+		 * @param type  $type         The current event type
+		 * @param type  $group        The current event group
+		 */
+		$this->capabilities   = apply_filters( 'underpin/event_type/capabilities', $this->capabilities, $this->type );
+		$this->capabilities[] = 'administrator';
+
+
+		/**
+		 * Filters the group for event types.
+		 *
+		 * @since 1.0.0
+		 * @param array $capabilities The list of capabilities to set for this event type.
+		 * @param type  $type         The current event type
+		 * @param type  $group        The current event group
+		 */
+		$this->group = apply_filters( 'underpin/event_type/group', $this->group, $this->type );
+
+		/**
+		 * Filters the volume for event types.
+		 *
+		 * @since 1.0.0
+		 * @param array $capabilities The list of capabilities to set for this event type.
+		 * @param type  $type         The current event type
+		 * @param type  $group        The current event group
+		 */
+		$this->volume = apply_filters( 'underpin/event_type/volume', $this->volume, $this->type );
 	}
 
 	/**
@@ -146,6 +225,12 @@ abstract class Event_Type extends ArrayIterator {
 				'The specified event type does not write to the logger. To change this, set the write_to_log param to true.',
 				[ 'logger' => $this->type, 'write_to_log_value' => $this->write_to_log ]
 			);
+		} elseif ( true === underpin()->logger()->is_muted() ) {
+			return new WP_Error(
+				'events_are_muted',
+				'The specified event type was not logged because events are muted.',
+				[ 'logger' => $this->type ]
+			);
 		}
 
 		if ( ! is_subclass_of( $this->writer_class, 'Underpin\Abstracts\Writer' ) ) {
@@ -171,6 +256,11 @@ abstract class Event_Type extends ArrayIterator {
 	 * @return Log_Item|WP_Error The logged item, or a WP_Error if something went wrong.
 	 */
 	public function log( $code, $message, $data = array() ) {
+
+		if ( true === $this->include_backtrace ) {
+			$data['backtrace'] = wp_debug_backtrace_summary( null, 3, false );
+		}
+
 		$item = new $this->log_item_class( $this->type, $code, $message, $data );
 
 		if ( ! $item instanceof Log_Item ) {
@@ -233,6 +323,15 @@ abstract class Event_Type extends ArrayIterator {
 		} else {
 			return new WP_error( 'logger_param_not_set', 'The logger param ' . $key . ' could not be found.' );
 		}
+	}
+
+	public function __isset( $key ) {
+		$key = $this->$key;
+		if ( is_wp_error( $key ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
