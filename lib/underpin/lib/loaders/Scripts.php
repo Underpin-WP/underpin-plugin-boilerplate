@@ -64,7 +64,7 @@ class Scripts extends Loader_Registry {
 		if ( is_wp_error( $script ) ) {
 			return underpin()->logger()->log_as_error(
 				'error',
-				'set_param_inavlid_script',
+				'set_param_invalid_script',
 				'A param was not set because the script could not be found',
 				$script
 			);

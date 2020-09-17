@@ -3,7 +3,7 @@
  * Registers a personal data eraser
  *
  * @since   1.0.0
- * @package FlareWPCore\Abstracts
+ * @package Underpin\Abstracts
  */
 
 
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class Shortcode
  *
  * @since   1.0.0
- * @package FlareWPCore\Abstracts
+ * @package Underpin\Abstracts
  */
 abstract class Eraser {
 	use Feature_Extension;
@@ -79,7 +79,7 @@ abstract class Eraser {
 	 * @since 1.0.0
 	 *
 	 * @param string $email The email address to remove
-	 * @param int    $page  The current page.
+	 * @param int    $page  The current page
 	 * @return mixed The shortcode action result.
 	 */
 	public function erase( $email, $page ) {

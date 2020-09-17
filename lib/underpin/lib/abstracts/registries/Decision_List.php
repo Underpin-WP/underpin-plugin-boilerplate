@@ -52,12 +52,12 @@ abstract class Decision_List extends Loader_Registry {
 		}
 
 		// Sort the params. This is necessary to ensure the cache key is consistent.
-		sort( $params );
+		ksort( $params );
 		$invalid_decisions = [];
 		$decision          = null;
 
 		// Attempt to fetch the decision from the cache.
-		$result = wp_cache_get( serialize( $params ), $this->registry_id );
+		$result = wp_cache_get( serialize( $params ), $this->get_registry_id() );
 
 		// If the decision isn't in the cache, run this decision list.
 		if ( false === $result ) {
@@ -117,7 +117,18 @@ abstract class Decision_List extends Loader_Registry {
 		wp_cache_add( serialize( $params ), [
 			'decision'          => $decision,
 			'invalid_decisions' => $invalid_decisions,
-		], $this->registry_id );
+		], $this->get_registry_id() );
+	}
+
+	/**
+	 * Clears the cache based on the provided params.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $params
+	 */
+	public function clear_cache( $params ) {
+		wp_cache_delete( serialize( $params ), $this->get_registry_id() );
 	}
 
 	/**

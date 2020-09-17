@@ -26,10 +26,11 @@ if ( ! is_array( $items ) ) {
 	$items = [ $items ];
 }
 
+// THIS IS FLATTENED INTENTIONALLY. THE CONSOLE RENDERS WHITESPACES (INCLUDING TABS)
 ?>
 <pre class="console-wrap" id="<?= $item_type ?>">
 <?php foreach ( $items as $item ): ?>
-<?php if($item instanceof Log_Item):?>
+<?php if ( $item instanceof Log_Item ): ?>
 <?= $item->format() . "\n\n" ?>
 <?php else: ?>
 <?= $item; ?>

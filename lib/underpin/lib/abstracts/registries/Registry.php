@@ -106,7 +106,6 @@ abstract class Registry extends ArrayIterator {
 				'notice',
 				'valid_event_added',
 				'A valid item for the ' . $this->registry_id . ' registry called ' . $key . ' was registered.',
-				$this->registry_id,
 				[ 'ref' => $this->registry_id, 'key' => $key, 'value' => $value ]
 			);
 		} else {
@@ -133,7 +132,7 @@ abstract class Registry extends ArrayIterator {
 		} else {
 			$error = new WP_Error( 'key_not_set', 'Specified key is not set.', [ 'key' => $key ] );
 
-			if ( true === WP_DEBUG ) {
+			if ( underpin()->is_debug_mode_enabled() ) {
 				underpin()->logger()->log_wp_error( 'warning', $error );
 			}
 

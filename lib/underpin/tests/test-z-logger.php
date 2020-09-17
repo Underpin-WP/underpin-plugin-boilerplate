@@ -28,6 +28,12 @@ class Test_Logger extends WP_UnitTestCase {
 		}
 	}
 
+	public function test_logger_has_frequency() {
+		foreach ( $this->get_loader() as $logger ) {
+			$this->assertTrue( is_numeric( $logger->purge_frequency ), 'The purge frequency for logger ' . get_class( $logger ) . ' does not have a valid purge frequency.' );
+		}
+	}
+
 	/**
 	 * @inheritDoc
 	 */

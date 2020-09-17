@@ -6,9 +6,7 @@
  * @package Underpin\Factories
  */
 
-namespace Underpin\Factories;
-
-use Underpin\Traits\Templates;
+namespace Underpin\Abstracts;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,15 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  * @package Underpin\Factories
  */
-class Debug_Bar_Section {
-
-	/**
-	 * The list of items (tabs) this section will display.
-	 *
-	 * @since 1.0.0
-	 * @var array list of items keyed by their id.
-	 */
-	public $items;
+abstract class Debug_Bar_Section {
 
 	/**
 	 * Subtitle to display with this section.
@@ -52,11 +42,5 @@ class Debug_Bar_Section {
 	 */
 	public $id;
 
-	public function __construct( $id, $items, $title = 'Section Name', $subtitle = '' ) {
-		$this->id       = $id;
-		$this->items    = $items;
-		$this->title    = $title;
-		$this->subtitle = $subtitle;
-	}
-
+	abstract public function get_items();
 }

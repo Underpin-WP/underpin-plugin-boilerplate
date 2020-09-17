@@ -1,6 +1,6 @@
 <?php
 /**
- * Cron task to cleanup error logs.
+ * Cron task to purge error logs.
  *
  * @since   1.0.0
  * @package Underpin\Cron

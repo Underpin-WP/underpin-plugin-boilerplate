@@ -14,6 +14,7 @@ use ArrayIterator;
 use Exception;
 use \Underpin\Factories\Log_Item;
 use WP_Error;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

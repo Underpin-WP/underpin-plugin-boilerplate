@@ -55,4 +55,6 @@ class Notice extends Event_Type {
 	 * @var inheritDoc
 	 */
 	public $name = "Notice";
+
+	protected $group = 'flare_wp';
 }

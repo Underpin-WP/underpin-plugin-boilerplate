@@ -46,18 +46,26 @@ class Error extends Event_Type {
 	 */
 	protected $write_to_log = true;
 
+	protected $group = 'flare_wp';
+
 	/**
-	 * @var inheritDoc
+	 * @inheritDoc
 	 */
 	public $description = 'Intended to log events when something goes wrong while running this plugin.';
 
 	/**
-	 * @var inheritDoc
+	 * @inheritDoc
 	 */
 	public $name = "Error";
 
 	/**
 	 * @inheritDoc
 	 */
+	protected $include_backtrace = true;
+
+	/**
+	 * @inheritDoc
+	 */
 	protected $purge_frequency = 7;
+
 }

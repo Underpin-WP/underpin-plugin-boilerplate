@@ -36,15 +36,6 @@ abstract class Loader_Registry extends Registry {
 	protected $abstraction_class = '';
 
 	/**
-	 * The class list.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var array
-	 */
-	private $class_list = [];
-
-	/**
 	 * Loader_Registry constructor.
 	 *
 	 */
@@ -74,6 +65,11 @@ abstract class Loader_Registry extends Registry {
 			if ( is_string( $value ) ) {
 				$this[ $key ]             = new $value;
 				$this->class_list[ $key ] = $value;
+			} elseif ( is_array( $value ) ) {
+				$class                    = $value['class'];
+				$args                     = isset( $value['args'] ) ? $value['args'] : [];
+				$this[ $key ]             = new $class( ...$args );
+				$this->class_list[ $key ] = $value['class'];
 			} else {
 				$this[ $key ]             = $value;
 				$this->class_list[ $key ] = get_class( $this[ $key ] );
@@ -90,7 +86,6 @@ abstract class Loader_Registry extends Registry {
 				'notice',
 				'loader_actions_ran',
 				'The actions for the ' . $this->registry_id . ' item called ' . $key . ' ran.',
-				$this->registry_id,
 				[ 'ref' => $this->registry_id, 'key' => $key, 'value' => $value ]
 			);
 		}
@@ -119,7 +114,7 @@ abstract class Loader_Registry extends Registry {
 			return true;
 		}
 
-		while( get_parent_class( $class ) ){
+		while ( get_parent_class( $class ) ) {
 			$class = get_parent_class( $class );
 
 			$has_trait = self::has_trait( $trait, $class );
@@ -136,7 +131,12 @@ abstract class Loader_Registry extends Registry {
 	 * @inheritDoc
 	 */
 	public function validate_item( $key, $value ) {
-		if ( is_subclass_of( $value, $this->abstraction_class ) || $value instanceof $this->abstraction_class ) {
+
+		if ( is_array( $value ) ) {
+			$value = isset( $value['class'] ) ? $value['class'] : '';
+		}
+
+		if ( $value === $this->abstraction_class || is_subclass_of( $value, $this->abstraction_class ) || $value instanceof $this->abstraction_class ) {
 			return true;
 		}
 
@@ -194,6 +194,7 @@ abstract class Loader_Registry extends Registry {
 			$item = $this->get( $item_key );
 
 			if ( ! is_wp_error( $item ) ) {
+				$valid = true;
 
 				foreach ( $args as $key => $arg ) {
 					// Process the argument key

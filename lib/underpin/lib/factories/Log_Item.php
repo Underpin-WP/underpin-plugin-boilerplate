@@ -3,7 +3,7 @@
  * Single Log item instance.
  * Handles output and formatting for log item.
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Underpin\Factories
  */
 
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Log_Item
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Underpin\Factories
  */
 class Log_Item {
@@ -118,8 +118,20 @@ class Log_Item {
 
 		$log_message = $this->code . ' - ' . $this->message;
 
-		if ( ! empty( $this->data ) ) {
-			$log_message .= "\n data:" . var_export( (object) $this->data, true );
+		if(!empty($this->ref)) {
+			$data = array_merge(
+				[
+					'ref'     => $this->ref,
+					'context' => $this->context,
+				],
+				$this->data
+			);
+		} else{
+			$data = $this->data;
+		}
+
+		if ( ! empty( $data ) ) {
+			$log_message .= "\n data:" . var_export( (object) $data, true );
 		}
 
 		return date( 'm/d/Y H:i:s' ) . ': ' . $log_message;
@@ -136,18 +148,4 @@ class Log_Item {
 		return new WP_Error( $this->code, $this->message, $this->data );
 	}
 
-	public function __get( $key ) {
-		switch ( $key ) {
-			case 'ref':
-				$value = isset( $this->data['ref'] ) ? $this->data['ref'] : null;
-				break;
-			case 'context':
-				$value = isset( $this->data['context'] ) ? $this->data['context'] : null;
-				break;
-			default:
-				$value = $this->$key;
-		}
-
-		return $value;
-	}
 }

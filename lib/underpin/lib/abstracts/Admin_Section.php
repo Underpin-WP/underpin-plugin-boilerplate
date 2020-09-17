@@ -151,7 +151,7 @@ abstract class Admin_Section {
 	}
 
 	/**
-	 * Saves a single field to the db.
+	 * Saves a single field to the database.
 	 *
 	 * @since 1.0.0
 	 *
@@ -183,7 +183,7 @@ abstract class Admin_Section {
 			underpin()->logger()->log(
 				'notice',
 				'update_request_settings_succeeded_to_update',
-				'A setting failed to update.',
+				'A setting updated successfully.',
 				[ 'setting' => $options_key ]
 			);
 		}

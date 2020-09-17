@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Core functionality for Underpin
  *
  * @since
  * @package
@@ -54,6 +54,8 @@ if ( ! function_exists( 'Underpin\underpin' ) ) {
 			$this->scripts();
 			$this->styles();
 			$this->options();
+			$this->logger();
+			$this->decision_lists();
 		}
 	}
 

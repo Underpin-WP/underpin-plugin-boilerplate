@@ -48,12 +48,23 @@ abstract class Rest_Endpoint {
 	abstract function endpoint( WP_Rest_Request $request );
 
 	/**
+	 * Has permission callback.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Rest_Request $request The request object.
+	 * @return mixed the REST endpoint response.
+	 */
+	abstract function has_permission( WP_Rest_Request $request );
+
+	/**
 	 * Rest_Endpoint constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->args['callback'] = [ $this, 'endpoint' ];
+		$this->args['callback']            = [ $this, 'endpoint' ];
+		$this->args['permission_callback'] = [ $this, 'has_permission' ];
 	}
 
 	/**

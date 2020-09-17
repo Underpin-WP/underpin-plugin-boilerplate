@@ -97,6 +97,35 @@ abstract class Underpin {
 		return $this->file;
 	}
 
+	/**
+	 * Determines if debug mode is enabled.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool True if debug mode is enabled, otherwise false.
+	 */
+	public function is_debug_mode_enabled() {
+		$is_invalid_request = defined( 'WP_TESTS_DOMAIN' ) || defined( 'WP_CLI' ) || wp_doing_ajax() || wp_doing_cron() || defined( 'REST_REQUEST' );
+
+		// Bail early if this is not a valid request for debug mode.
+		if ( $is_invalid_request ) {
+			return false;
+		}
+
+		$debug_enabled_with_querystring = isset( $_GET['underpin_debug'] ) && '1' === $_GET['underpin_debug'];
+
+		if ( $debug_enabled_with_querystring ) {
+			return true;
+		}
+
+		$debug_enabled_option = underpin()->options()->get( 'debug_mode_enabled' );
+		if ( isset( $_POST[ $debug_enabled_option->key ] ) && 'on' === $_POST[ $debug_enabled_option->key ] ) {
+			return false;
+		}
+
+		return (bool) $debug_enabled_option->get();
+	}
+
 	public function template_dir() {
 		return trailingslashit( $this->template_dir );
 	}
@@ -330,6 +359,17 @@ abstract class Underpin {
 	 */
 	public function cron_jobs() {
 		return $this->_get_loader( 'Cron_Jobs' );
+	}
+
+	/**
+	 * Retrieves the debug bar items loader.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Loaders\Debug_Bar_Sections
+	 */
+	public function debug_bar_sections() {
+		return $this->_get_loader( 'Debug_Bar_Sections' );
 	}
 
 	/**

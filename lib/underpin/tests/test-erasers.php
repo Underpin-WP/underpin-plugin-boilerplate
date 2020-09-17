@@ -5,7 +5,7 @@
  * @package Dfs_Monitor
  */
 
-use function underpin\underpin;
+use function Underpin\underpin;
 
 require_once underpin()->dir() . 'tests/phpunit/Loader_Tests.php';
 

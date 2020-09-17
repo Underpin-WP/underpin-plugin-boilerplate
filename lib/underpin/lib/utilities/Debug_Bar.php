@@ -11,10 +11,8 @@ namespace Underpin\Utilities;
 
 
 use Underpin\Abstracts\Admin_Bar_Menu;
-use Underpin\Factories\Debug_Bar_Section;
 use Underpin\Traits\Underpin_Templates;
 use function Underpin\underpin;
-use Underpin\Abstracts\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,7 +44,10 @@ class Debug_Bar extends Admin_Bar_Menu {
 				'onclick' => '',
 			],
 		] );
+	}
 
+	public function do_actions() {
+		parent::do_actions();
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ], 11 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ], 11 );
 		add_action( 'shutdown', [ $this, 'render_callback' ] );
@@ -58,6 +59,10 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 * @since 1.0.0
 	 */
 	public function enqueue_assets() {
+		if ( ! underpin()->is_debug_mode_enabled() ) {
+			return;
+		}
+
 		underpin()->scripts()->enqueue( 'debug' );
 		underpin()->styles()->enqueue( 'debug' );
 	}
@@ -96,29 +101,12 @@ class Debug_Bar extends Admin_Bar_Menu {
 	 * Renders the actual debug bar.
 	 */
 	public function render_callback() {
-
-		if ( defined( 'WP_TESTS_DOMAIN' ) || defined( 'WP_CLI' ) || wp_doing_ajax() || wp_doing_cron() || defined( 'REST_REQUEST' )  ) {
+		if ( ! underpin()->is_debug_mode_enabled() ) {
 			return;
 		}
-		$events_section = new Debug_Bar_Section(
-			'logged-events',
-			underpin()->logger()->get_request_events(),
-			'Logged Events',
-			"Here's what was logged during this session."
-		);
-
-		$registered_section = new Debug_Bar_Section(
-			'registered-items',
-			Underpin::export(),
-			'Registered Items',
-			"Here's what items were registered during this session."
-		);
 
 		echo $this->get_template( 'wrapper', [
-			'sections' => [
-				$events_section,
-				$registered_section,
-			],
+			'sections' => (array) underpin()->debug_bar_sections(),
 		] );
 	}
 }

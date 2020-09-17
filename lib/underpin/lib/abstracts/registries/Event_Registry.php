@@ -34,6 +34,13 @@ abstract class Event_Registry extends Loader_Registry {
 	protected $abstraction_class = 'Underpin\Abstracts\Event_Type';
 
 	/**
+	 * Determines if the logger should log events, or not. Can be changed with mute, and unmute.
+	 *
+	 * @var bool
+	 */
+	protected $is_muted = false;
+
+	/**
 	 * @inheritDoc
 	 */
 	public function add( $key, $value ) {
@@ -84,18 +91,68 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @param string $type    Event log type
 	 * @param string $code    The event code to use.
 	 * @param string $message The message to log.
-	 * @param int    $ref     A reference ID related to this error, such as a post ID.
 	 * @param array  $data    Arbitrary data associated with this event message.
 	 * @return Log_Item|WP_Error Log item, with error message. WP_Error if something went wrong.
 	 */
-	public function log( $type, $code, $message, $ref = null, $data = array() ) {
+	public function log( $type, $code, $message, $data = array() ) {
 		$event_type = $this->get( $type );
 
 		if ( is_wp_error( $event_type ) ) {
 			return $event_type;
 		}
 
-		return $event_type->log( $code, $message, $ref, $data );
+		return $event_type->log( $code, $message, $data );
+	}
+
+	/**
+	 * Mutes the logger.
+	 *
+	 * @since 1.0.0
+	 */
+	private function mute() {
+		$this->is_muted = true;
+	}
+
+	/**
+	 * Un-Mutes the logger.
+	 *
+	 * @since 1.0.0
+	 */
+	private function unmute() {
+		$this->is_muted = false;
+	}
+
+	/**
+	 * Does a flareWP action, muting all events that would otherwise happen.
+	 *
+	 * @since 1.2.4
+	 *
+	 * @param callable $action The muted action to call.
+	 * @return mixed|WP_Error The action returned result, or WP_Error if something went wrong.
+	 */
+	public function do_muted_action( $action ) {
+		if ( is_callable( $action ) ) {
+			$this->mute();
+			$result = $action();
+			$this->unmute();
+		} else {
+			$result = new WP_Error(
+				'muted_action_not_callable',
+				'The provided muted action is not callable',
+				[ 'ref' => $action, 'type' => 'function' ]
+			);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Fetches the mute status of the logger.
+	 *
+	 * @since 1.0.0
+	 */
+	public function is_muted() {
+		return $this->is_muted;
 	}
 
 	/**
@@ -106,12 +163,11 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @param string $type    Event log type
 	 * @param string $code    The event code to use.
 	 * @param string $message The message to log.
-	 * @param int    $ref     A reference ID related to this error, such as a post ID.
 	 * @param array  $data    Arbitrary data associated with this event message.
 	 * @return WP_Error Log item, with error message. WP_Error if something went wrong.
 	 */
-	public function log_as_error( $type, $code, $message, $ref = null, $data = array() ) {
-		$item = $this->log( $type, $code, $message, $ref, $data );
+	public function log_as_error( $type, $code, $message, $data = array() ) {
+		$item = $this->log( $type, $code, $message, $data );
 
 		if ( ! is_wp_error( $item ) ) {
 			$item = $item->error();
@@ -127,11 +183,19 @@ abstract class Event_Registry extends Loader_Registry {
 	 *
 	 * @param string   $type     Error log type
 	 * @param WP_Error $wp_error Instance of WP_Error to use for log
-	 * @param mixed    $ref      Reference value, typically a post ID or some db key.
-	 * @return WP_Error WP Error, with error message.
+	 * @param array    $data     Additional data to log
+	 * @return Log_Item|WP_Error The logged item, if successful, otherwise WP_Error.
 	 */
-	public function log_wp_error( $type, WP_Error $wp_error, $ref = null ) {
-		return $this->log( $type, $wp_error->get_error_code(), $wp_error->get_error_message(), $ref, $wp_error->get_error_data() );
+	public function log_wp_error( $type, WP_Error $wp_error, $data = [] ) {
+		$item = $this->get( $type );
+
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$error = $item->log_wp_error( $wp_error, $data );
+
+		return $error;
 	}
 
 	/**
@@ -141,12 +205,19 @@ abstract class Event_Registry extends Loader_Registry {
 	 *
 	 * @param string    $type      Error log type
 	 * @param Exception $exception Exception instance to log.
-	 * @param mixed     $ref       Reference value, typically a post ID or some db key.
 	 * @param array     $data      array Data associated with this error message
-	 * @return WP_Error WP Error, with error message.
+	 * @return Log_Item|WP_Error Log Item, with error message if successful, otherwise WP_Error.
 	 */
-	public function log_exception( $type, Exception $exception, $ref = null, $data = array() ) {
-		return $this->log_as_error( $type, $exception->getCode(), $exception->getMessage(), $ref, $data );
+	public function log_exception( $type, Exception $exception, $data = array() ) {
+		$item = $this->get( $type );
+
+		if ( is_wp_error( $type ) ) {
+			return $item;
+		}
+
+		$error = $item->log_exception( $exception, $data );
+
+		return $error;
 	}
 
 	/**
@@ -154,7 +225,24 @@ abstract class Event_Registry extends Loader_Registry {
 	 * @return Event_Type|WP_Error Event type, if it exists. WP_Error, otherwise.
 	 */
 	public function get( $key ) {
-		return parent::get( $key );
+		$result = parent::get( $key );
+
+		// If the logged event could not be found, search event type keys.
+		if ( is_wp_error( $result ) ) {
+			$event_types = $this->filter( [
+				'type' => $key,
+			] );
+
+			// If that also comes up empty, return the error.
+			if ( empty( $event_types ) ) {
+				return $result;
+			}
+
+			// Return the discovered event.
+			$result = $event_types[0];
+		}
+
+		return $result;
 	}
 
 	/**

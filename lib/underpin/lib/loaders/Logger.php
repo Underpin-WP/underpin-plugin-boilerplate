@@ -33,7 +33,7 @@ class Logger extends Event_Registry {
 	protected function set_default_items() {
 		$this->add( 'error', 'Underpin\Events\Error' );
 
-		if ( true === WP_DEBUG ) {
+		if ( underpin()->is_debug_mode_enabled() ) {
 			$this->add( 'warning', 'Underpin\Events\Warning' );
 			$this->add( 'notice', 'Underpin\Events\Notice' );
 		}
@@ -79,5 +79,25 @@ class Logger extends Event_Registry {
 				$error->add( $code, $log_item->get_error_message( $code ), $log_item->get_error_data( $code ) );
 			}
 		}
+	}
+
+	/**
+	 * Retrieves a list of all capabilities of all logged items.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function capabilities() {
+		$capabilities = [];
+
+		foreach ( (array) $this as $key => $item ) {
+			$item = $this->get( $key );
+			if ( ! is_wp_error( $item ) ) {
+				$capabilities = array_merge( $capabilities, $item->capabilities );
+			}
+		}
+
+		return array_unique( $capabilities );
 	}
 }

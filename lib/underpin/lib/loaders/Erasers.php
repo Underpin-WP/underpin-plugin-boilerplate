@@ -3,11 +3,11 @@
  * Erasers
  *
  * @since   1.0.0
- * @package FlareWPCore\Registries\Loaders
+ * @package Underpin\Registries\Loaders
  */
 
 
-namespace FlareWPCore\Loaders;
+namespace Underpin\Loaders;
 
 use Underpin\Abstracts\Eraser;
 use Underpin\Abstracts\Registries\Loader_Registry;
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registry for Erasers
  *
  * @since   1.0.0
- * @package FlareWPCore\Registries\Loaders
+ * @package Underpin\Registries\Loaders
  */
 
 class Erasers extends Loader_Registry {

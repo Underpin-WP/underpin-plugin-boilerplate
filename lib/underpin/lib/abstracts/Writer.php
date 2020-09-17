@@ -11,6 +11,7 @@ namespace Underpin\Abstracts;
 
 use Underpin\Factories\Log_Item;
 use WP_Error;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,7 +55,7 @@ abstract class Writer {
 	abstract public function clear();
 
 	/**
-	 * Purges logs older than the specified date. Intended to run on a cron.
+	 * Purges logs older than the specified date.
 	 *
 	 * @since 1.0.0
 	 *
@@ -69,7 +70,9 @@ abstract class Writer {
 	 * @since 1.0.0
 	 */
 	public function cleanup() {
-		return $this->purge( $this->event_type->frequency );
+		$frequency = underpin()->decision_lists()->decide( 'event_type_purge_frequency', [ 'event_type' => $this->event_type ] );
+
+		return $this->purge( $frequency );
 	}
 
 	/**

@@ -12,6 +12,11 @@
 	border-left: 1px solid #aaa;
 }
 
+#underpin-debug-bar-tabs {
+	display: flex;
+	overflow: scroll;
+}
+
 #debug-bar-wrap h2, #debug-bar-wrap em, #debug-bar-wrap p, #debug-bar-wrap h3 {
 	font-family: sans-serif;
 	font-size: initial;
@@ -89,7 +94,6 @@
 }
 
 .nav-tab {
-	float: left;
 	border: 1px solid #ccc;
 	border-bottom: none;
 	margin-left: .5em;

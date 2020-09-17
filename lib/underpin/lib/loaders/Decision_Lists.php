@@ -74,7 +74,7 @@ class Decision_Lists extends Loader_Registry {
 			'notice',
 			'decision_was_made',
 			'A decision list was resolved.',
-			['key' => $key, 'result' => $decision_result]
+			[ 'key' => $key, 'result' => $decision_result, 'params' => $params ]
 		);
 
 		$decision = $decision_result['decision'];

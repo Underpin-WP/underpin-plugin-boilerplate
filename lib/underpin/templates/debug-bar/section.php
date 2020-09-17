@@ -15,25 +15,25 @@ if ( ! isset( $template ) || ! $template instanceof Underpin\Utilities\Debug_Bar
 
 $section = $template->get_param( 'section' );
 
-if ( ! $section instanceof Underpin\Factories\Debug_Bar_Section ) {
+if ( ! $section instanceof Underpin\Abstracts\Debug_Bar_Section ) {
 	return;
 }
 
 $class = $template->get_param( 'active' ) ? " active" : "";
-
+$items = $section->get_items();
 ?>
 <div class="debug-bar-section<?= $class ?>" id="<?= $section->id; ?>">
 	<h2><?= $section->title ?></h2>
 	<p><?= $section->subtitle ?></p>
 
-	<?php if ( empty( $section->items ) ): ?>
+	<?php if ( empty( $items ) ): ?>
 		<em>Well, that's boring (or perhaps exciting!). Nothing was logged.</em>
 	<?php endif; ?>
 
-	<?= $template->get_template( 'tabs', [ 'items' => array_keys( $section->items ) ] ) ?>
+	<?= $template->get_template( 'tabs', [ 'items' => $items ] ) ?>
 
 	<div class="section-listing">
-		<?php foreach ( $section->items as $item_type => $item ): ?>
+		<?php foreach ( $items as $item_type => $item ): ?>
 			<?= $template->get_template( 'console', [ 'item_type' => $item_type, 'items' => $item ] ); ?>
 		<?php endforeach; ?>
 	</div>

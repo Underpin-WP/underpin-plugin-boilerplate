@@ -9,6 +9,8 @@
 
 namespace Underpin\Factories;
 use Underpin\Traits\Feature_Extension;
+use WP_Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -21,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package Lib\Core\Abstracts
  */
 class Option {
-	use Feature_Extension;
 
 	protected $key = false;
 
@@ -32,7 +33,7 @@ class Option {
 	 *
 	 * @param string $key           The option key
 	 * @param string $description   A human-readable description of this option
-	 * @param        $name          Human readable name.
+	 * @param string $name          Human readable name.
 	 * @param mixed  $default_value The default value to set for this setting
 	 */
 	public function __construct( $key, $description, $name, $default_value = [] ) {
@@ -40,13 +41,6 @@ class Option {
 		$this->description   = $description;
 		$this->name          = $name;
 		$this->default_value = $default_value;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function do_actions() {
-		$this->add();
 	}
 
 	/**
@@ -135,5 +129,13 @@ class Option {
 		}
 
 		return new \WP_Error( 'setting_not_set', 'The provided setting ' . $setting . ' is not set in this option.' );
+	}
+
+	public function __get( $key ) {
+		if ( isset( $this->$key ) ) {
+			return $this->$key;
+		} else {
+			return new WP_error( 'batch_task_param_not_set', 'The batch task key ' . $key . ' could not be found.' );
+		}
 	}
 }

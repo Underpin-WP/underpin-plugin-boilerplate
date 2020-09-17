@@ -19,9 +19,23 @@ if ( empty( $template->get_param( 'items' ) ) ) {
 	return;
 }
 
+$item_keys = array_keys( $template->get_param( 'items', [] ) );
+
 ?>
 <nav id="underpin-debug-bar-tabs" class="nav-tab-wrapper">
 	<?php foreach ( $template->get_param( 'items', [] ) as $key => $item ): ?>
-		<a class="nav-tab<?= $key === 0 ? ' nav-tab-active' : '' ?>" href="#" data-event="<?= $item ?>"><?= $item ?></a>
+		<?php if ( ! empty( $item ) ): ?>
+			<?php
+			if ( is_array( $item ) ) {
+				$item_count = count( $item );
+				$tab        = "$key ($item_count)";
+			} else {
+				$tab = $key;
+			}
+			?>
+			<a class="nav-tab<?= $item_keys[0] === $key ? ' nav-tab-active' : '' ?>" href="#" data-event="<?= $key ?>">
+				<?= $tab ?>
+			</a>
+		<?php endif; ?>
 	<?php endforeach; ?>
 </nav>

@@ -12,6 +12,7 @@ namespace Underpin\Loaders;
 use Underpin\Abstracts\Admin_Bar_Menu;
 use Underpin\Abstracts\Registries\Loader_Registry;
 use WP_Error;
+use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,12 +36,9 @@ class Admin_Bar_Menus extends Loader_Registry {
 	 * @inheritDoc
 	 */
 	protected function set_default_items() {
-
-		// If WP_DEBUG is active, turn on the debug bar.
-		if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+		if ( underpin()->is_debug_mode_enabled() ) {
 			$this->add( 'debug_bar', 'Underpin\Utilities\Debug_Bar' );
 		}
-
 	}
 
 	/**

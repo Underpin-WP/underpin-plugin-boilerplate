@@ -10,8 +10,9 @@
 namespace Underpin\Abstracts;
 
 
-use Underpin\Traits\Core_Templates;
+use Flare_WP\Traits\Flare_WP_Templates;
 use Underpin\Traits\Feature_Extension;
+use Underpin\Traits\Underpin_Templates;
 use function Underpin\underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class Admin_Notice {
 	use Feature_Extension;
-	use Core_Templates;
+	use Underpin_Templates;
 
 	public $type = 'info';
 
@@ -38,7 +39,6 @@ abstract class Admin_Notice {
 	public $id;
 
 	public $message = '';
-
 
 	/**
 	 * Returns true when this admin notice should display.

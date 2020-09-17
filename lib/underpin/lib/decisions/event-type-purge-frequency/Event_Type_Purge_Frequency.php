@@ -25,6 +25,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Event_Type_Purge_Frequency extends Decision_List {
 
+	public $name = 'Event Type Purge Frequency.';
+	public $description = 'Determines how often an event type should be purged.';
+
 	/**
 	 * @inheritDoc
 	 */
