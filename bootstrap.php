@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Setup Underpin
-require_once( plugin_dir_path( __FILE__ ) . 'lib/underpin/Underpin.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 
 // Load in the bootstrap that runs the rest of the plugin.
 require_once( plugin_dir_path( __FILE__ ) . 'lib/Service_Locator.php' );
@@ -29,7 +29,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'lib/Service_Locator.php' );
  *
  * @since 1.0.0
  *
- * @return Service_Locator|Underpin\Abstracts\Underpin The bootstrap for this plugin
+ * @return Plugin_Name_Replace_Me\Service_Locator|Underpin\Abstracts\Underpin The bootstrap for this plugin
  */
 function plugin_name_replace_me() {
 	return ( new Plugin_Name_Replace_Me\Service_Locator )->get( __FILE__ );
