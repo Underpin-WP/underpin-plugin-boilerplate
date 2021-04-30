@@ -15,9 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Setup Underpin
-require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
-
 // Load in the bootstrap that runs the rest of the plugin.
 require_once( plugin_dir_path( __FILE__ ) . 'lib/Service_Locator.php' );
 
