@@ -6,17 +6,16 @@ Version: 1.0.0
 Author: DesignFrame Solutions
 Text Domain: plugin_name_replace_me
 Domain Path: /languages
-Requires at least: 4.7
-Requires PHP: 5.6
+Requires at least: 5.1
+Requires PHP: 7.9
 Author URI: https://www.designframesolutions.com
 */
+
+use Underpin\Abstracts\Underpin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-// Load in the bootstrap that runs the rest of the plugin.
-require_once( plugin_dir_path( __FILE__ ) . 'lib/Service_Locator.php' );
 
 /**
  * Fetches the instance of the plugin.
@@ -26,11 +25,10 @@ require_once( plugin_dir_path( __FILE__ ) . 'lib/Service_Locator.php' );
  *
  * @since 1.0.0
  *
- * @return Plugin_Name_Replace_Me\Service_Locator|Underpin\Abstracts\Underpin The bootstrap for this plugin
+ * @return \Underpin\Factories\Underpin_Instance The bootstrap for this plugin.
  */
 function plugin_name_replace_me() {
-	return ( new Plugin_Name_Replace_Me\Service_Locator )->get( __FILE__ );
-}
+	return Underpin::make_class([
 
-//Instantiate, and set up the plugin.
-plugin_name_replace_me();
+	])->get( __FILE__ );
+}
