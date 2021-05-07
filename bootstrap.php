@@ -7,7 +7,7 @@ Author: DesignFrame Solutions
 Text Domain: plugin_name_replace_me
 Domain Path: /languages
 Requires at least: 5.1
-Requires PHP: 7.9
+Requires PHP: 7.0
 Author URI: https://www.designframesolutions.com
 */
 
@@ -28,7 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return \Underpin\Factories\Underpin_Instance The bootstrap for this plugin.
  */
 function plugin_name_replace_me() {
-	return Underpin::make_class([
-
-	])->get( __FILE__ );
+	return Underpin::make_class( [
+		'root_namespace'      => 'Plugin_Name_Replace_Me',
+		'text_domain'         => 'plugin_name_replace_me',
+		'minimum_php_version' => '7.0',
+		'minimum_wp_version'  => '5.1',
+		'version'             => '1.0.0',
+	] )->get( __FILE__ );
 }
