@@ -36,3 +36,6 @@ function plugin_name_replace_me() {
 		'version'             => '1.0.0',
 	] )->get( __FILE__ );
 }
+
+// Lock and load.
+plugin_name_replace_me();
