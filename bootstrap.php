@@ -3,7 +3,7 @@
 Plugin Name: Plugin Name Replace Me
 Description: Plugin Description Replace Me
 Version: 1.0.0
-Author: DesignFrame Solutions
+Author: An awesome developer
 Text Domain: plugin_name_replace_me
 Domain Path: /languages
 Requires at least: 5.1
