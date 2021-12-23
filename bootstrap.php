@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Plugin Name Replace Me
-Description: Plugin Description Replace Me
+Plugin Name: Custom Blocks
+Description: Custom blocks for this site
 Version: 1.0.0
 Author: An awesome developer
-Text Domain: plugin_name_replace_me
+Text Domain: blocks
 Domain Path: /languages
 Requires at least: 5.1
 Requires PHP: 7.0
@@ -27,10 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return \Underpin\Factories\Underpin_Instance The bootstrap for this plugin.
  */
-function plugin_name_replace_me() {
+function custom_blocks() {
 	return Underpin::make_class( [
-		'root_namespace'      => 'Plugin_Name_Replace_Me',
-		'text_domain'         => 'plugin_name_replace_me',
+		'root_namespace'      => 'Blocks',
+		'text_domain'         => 'blocks',
 		'minimum_php_version' => '7.0',
 		'minimum_wp_version'  => '5.1',
 		'version'             => '1.0.0',
@@ -38,4 +38,13 @@ function plugin_name_replace_me() {
 }
 
 // Lock and load.
-plugin_name_replace_me();
+custom_blocks()->scripts()->add( 'custom_blocks', [
+	'handle'      => 'custom_blocks',
+	'name'        => 'Editor Blocks',
+	'description' => 'Registers blocks in the editor',
+	'src'         => custom_blocks()->js_url() . 'index.js',
+	'deps'        => custom_blocks()->dir() . 'build/index.asset.php',
+	'middlewares' => [
+		new \Underpin\Scripts\Factories\Enqueue_Block_Script( 'enqueue_script' ),
+	],
+] );
