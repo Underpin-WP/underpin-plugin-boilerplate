@@ -1,7 +1,7 @@
 {
-  "name": "blocks",
+  "name": "plugin_name_replace_me",
   "version": "1.0.0",
-  "description": "Custom blocks for this site",
+  "description": "Plugin Description Replace Me",
   "scripts": {
     "build": "wp-scripts build",
     "format:js": "wp-scripts format-js",
@@ -10,7 +10,7 @@
     "start": "wp-scripts start"
   },
   "devDependencies": {
-    "@wordpress/scripts": "*"
+    "@wordpress/scripts": "15.0"
   },
   "author": "",
   "license": "ISC"
