@@ -10,7 +10,7 @@
     "start": "wp-scripts start"
   },
   "devDependencies": {
-    "@wordpress/scripts": "15.0"
+    "@wordpress/scripts": "24.6"
   },
   "author": "",
   "license": "ISC"
